@@ -16,7 +16,7 @@ const pretendard = localFont({
   variable: '--font-pretendard',
 });
 
-const globalFont = pretendard;
+// const globalFont = pretendard;
 
 export const metadata: Metadata = {
   title: 'Create Next App',

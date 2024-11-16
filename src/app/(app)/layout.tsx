@@ -5,11 +5,11 @@ import { Footer } from '@/components/footer/footer';
 export default function Layout({ children }: ChildrenProps) {
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-dvh">
         <Navigator />
         <div className="flex-1">{children}</div>
-        <Footer />
       </div>
+        <Footer/>
     </>
   );
 }

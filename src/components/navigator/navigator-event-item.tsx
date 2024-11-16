@@ -1,20 +1,25 @@
-import Link from 'next/link';
 import {
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import React from 'react';
-import { cn } from '@/lib/utils';
 
 export function NavigatorEventItem() {
   return (
     <NavigationMenuItem>
-      <Link href="/events" legacyBehavior passHref>
-        <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-semibold')}>
-          이벤트
-        </NavigationMenuLink>
-      </Link>
+      <NavigationMenuTrigger>이벤트</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <div className="min-w-64 p-4">
+          <NavigationMenuLink
+            className={`${navigationMenuTriggerStyle()} select-none`}
+          >
+            이벤트
+          </NavigationMenuLink>
+        </div>
+      </NavigationMenuContent>
     </NavigationMenuItem>
   );
 }

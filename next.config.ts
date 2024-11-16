@@ -4,9 +4,11 @@ import { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'cnitsstudio-api.com', port: '570' },
-    ],
+    remotePatterns: [{ protocol: 'https', hostname: '**', port: '' }],
+    dangerouslyAllowSVG: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

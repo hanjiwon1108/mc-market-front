@@ -16,7 +16,7 @@ import { SearchIcon } from 'lucide-react';
 export function Navigator() {
   return (
     <>
-      <div className="fixed h-[3.375rem] border-b-2 p-2 backdrop-blur-2xl bg-background/80 w-full">
+      <div className="fixed h-[3.375rem] border-b-2 p-2 backdrop-blur-2xl bg-background/80 w-full z-50">
         <NavigationMenu className="max-w-full">
           <NavigationMenuList>
             <NavigatorHomeItem />
