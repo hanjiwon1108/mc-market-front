@@ -1,17 +1,16 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { animated, useSpringValue } from '@react-spring/web';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
-const AnimatedCard = animated(Card);
+// const AnimatedCard = animated(Card);
 
 const BANNER_COUNT = 7;
-const DISPLAY_BANNERS = 3;
+// const DISPLAY_BANNERS = 3;
 const BANNER_WIDTH = 52;
-const BANNER_HEIGHT = 24;
+// const BANNER_HEIGHT = 24;
 const BANNER_GAP = 4;
 
 function BannerItem({ index, page }: { index: number; page: number }) {
@@ -49,12 +48,15 @@ function BannerItem({ index, page }: { index: number; page: number }) {
     }
     return page - index;
   }
-  function getTranslate(relative: number) {
-    return `${calculateRelative(index, page) * (BANNER_WIDTH + BANNER_GAP)}rem`;
-  }
-  function getOpacity(relative: number) {
-    return Math.abs(relative) > 1 ? 0.5 : index == page ? 1 : 0.8;
-  }
+  const getTranslate = useCallback(
+    (relative: number) => `${relative * (BANNER_WIDTH + BANNER_GAP)}rem`,
+    [],
+  );
+  const getOpacity = useCallback(
+    (relative: number) =>
+      Math.abs(relative) > 1 ? 0.5 : index == page ? 1 : 0.8,
+    [index, page],
+  );
 
   const translate = useSpringValue(
     getTranslate(calculateRelative(index, page)),
@@ -74,7 +76,7 @@ function BannerItem({ index, page }: { index: number; page: number }) {
     void opacity.start(getOpacity(currentRelative));
 
     indexRef.current = index;
-  }, [index, opacity, page, translate]);
+  }, [getOpacity, getTranslate, index, opacity, page, translate]);
 
   return (
     <animated.div

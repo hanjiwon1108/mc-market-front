@@ -1,5 +1,5 @@
 import { ChildrenProps } from '@/util/types-props';
-import { ComponentProps, JSX } from 'react';
+import { JSX } from 'react';
 import Link, { LinkProps } from 'next/link';
 
 export function OptionalLink({

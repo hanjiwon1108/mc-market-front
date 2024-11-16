@@ -3,13 +3,7 @@ import './globals.css';
 import React from 'react';
 import { Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
-import { Toaster } from 'sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Navigator } from '@/components/navigator/navigator';
-import { Footer } from '@/components/footer/footer';
 import { ChildrenProps } from '@/util/types-props';
-import { AnimatePresence } from 'framer-motion';
-import { FrozenRouter } from '@/components/router/frozen-router';
 import { ClientProvider } from '@/app/client-provider';
 
 const poppins = Poppins({

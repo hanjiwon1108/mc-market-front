@@ -1,4 +1,3 @@
-import { Category } from '@/features/category';
 import { Sonyflake } from '@/api/types/sonyflake';
 
 export type MarketProduct = {

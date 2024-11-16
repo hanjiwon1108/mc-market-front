@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { StarIcon, UserRoundIcon } from 'lucide-react';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export function ProductCard() {
