@@ -3,6 +3,14 @@ import './globals.css';
 import React from 'react';
 import { Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
+import { Toaster } from 'sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Navigator } from '@/components/navigator/navigator';
+import { Footer } from '@/components/footer/footer';
+import { ChildrenProps } from '@/util/types-props';
+import { AnimatePresence } from 'framer-motion';
+import { FrozenRouter } from '@/components/router/frozen-router';
+import { ClientProvider } from '@/app/client-provider';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -25,15 +33,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  modal,
+}: Readonly<ChildrenProps & { modal: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
         className={`${poppins.variable} ${pretendard.variable} antialiased`}
       >
-        {children}
+        <ClientProvider modal={modal}>{children}</ClientProvider>
       </body>
     </html>
   );

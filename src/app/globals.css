@@ -94,17 +94,16 @@ body {
   width: 18px;
 }
 
-.scrollbar-override,
 .scrollbar-override-horizontal *::-webkit-scrollbar {
   height: 18px;
 }
 
-.scrollbar-override,
+.scrollbar-override *::-webkit-scrollbar-track,
 .scrollbar-override-horizontal *::-webkit-scrollbar-track {
   background-color: transparent;
 }
 
-.scrollbar-override,
+.scrollbar-override *::-webkit-scrollbar-thumb,
 .scrollbar-override-horizontal *::-webkit-scrollbar-thumb {
   background-color: #d6dee1;
   border-radius: 20px;
@@ -112,7 +111,7 @@ body {
   background-clip: content-box;
 }
 
-.scrollbar-override,
+.scrollbar-override *::-webkit-scrollbar-thumb:hover,
 .scrollbar-override-horizontal *::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
 }
