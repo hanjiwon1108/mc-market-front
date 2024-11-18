@@ -5,6 +5,7 @@ import { Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 import { ChildrenProps } from '@/util/types-props';
 import { ClientProvider } from '@/app/client-provider';
+import { APIProvider } from '@/components/api';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -34,7 +35,9 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${pretendard.variable} antialiased`}
       >
-        <ClientProvider modal={modal}>{children}</ClientProvider>
+        <APIProvider>
+          <ClientProvider modal={modal}>{children}</ClientProvider>
+        </APIProvider>
       </body>
     </html>
   );

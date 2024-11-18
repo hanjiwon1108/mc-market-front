@@ -17,26 +17,24 @@ export default async function Page({
   }
 
   return (
-    <>
+    <div className="bg-accent pt-8">
       <UnknownCategoryHandler />
-      <div className="flex justify-center transition-all lg:px-32">
-        <div className="scrollbar-override-horizontal container">
-          <div className="mt-8 flex items-center gap-2 text-3xl font-semibold">
-            {category?.name} 인기 제품
-          </div>
+      <div className="scrollbar-override-horizontal container mx-auto transition-all duration-300 ease-out lg:px-[5.75rem]">
+        <div className="flex items-center gap-2 text-3xl font-semibold">
+          {category?.name} 인기 제품
+        </div>
 
-          <div className="mt-4 flex gap-4 overflow-y-visible overflow-x-scroll px-2 py-4">
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-          </div>
+        <div className="mt-4 flex gap-4 overflow-y-visible overflow-x-scroll px-2 py-4">
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
         </div>
       </div>
-    </>
+    </div>
   );
 }

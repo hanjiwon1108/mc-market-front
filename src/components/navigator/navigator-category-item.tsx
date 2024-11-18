@@ -15,11 +15,10 @@ import { ChildrenProps } from '@/util/types-props';
 function CategoryLink({ children, href }: ChildrenProps & { href?: string }) {
   if (href) {
     return (
-      <Link
-        className="cursor-pointer select-none text-lg font-bold hover:underline"
-        href={href}
-      >
-        {children}
+      <Link legacyBehavior passHref href={href}>
+        <NavigationMenuLink className="cursor-pointer select-none text-lg font-bold hover:underline">
+          {children}
+        </NavigationMenuLink>
       </Link>
     );
   } else {

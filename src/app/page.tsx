@@ -52,13 +52,13 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
 
   return (
-    <>
-      <div className="mt-8">
+    <div className="h-full pt-8">
+      <div>
         <Banner />
       </div>
-      <div className="flex justify-center">
-        <div className="container mt-8 transition-all duration-300 ease-out">
-          <div className="scrollbar-override-horizontal">
+      <div>
+        <div className="container mx-auto transition-all duration-300 ease-out lg:px-[0rem] xl:px-[9rem]">
+          <div className="scrollbar-override-horizontal h-full border-x-2 bg-background pt-8 transition-all duration-300 ease-out lg:px-14">
             <div className="flex items-center gap-2 text-3xl font-semibold">
               <DropdownMenu
                 open={isCategoryDropdownOpen}
@@ -95,7 +95,7 @@ export default function Home() {
               </DropdownMenu>
               인기 상품
             </div>
-            <div className="mt-4 flex gap-4 overflow-y-visible overflow-x-scroll pb-4">
+            <div className="mt-4 flex gap-4 overflow-y-visible overflow-x-scroll px-4 pb-4">
               <ProductCard />
               <ProductCard />
               <ProductCard />
@@ -108,6 +108,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

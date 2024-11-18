@@ -11,7 +11,7 @@ export function ProductCard() {
     <Link
       scroll={false}
       href="/products/540606408601633077"
-      className="group min-w-64 cursor-pointer overflow-hidden rounded-2xl p-2 transition duration-300 hover:shadow-lg"
+      className="group min-w-52 cursor-pointer overflow-hidden rounded-2xl p-2 transition duration-300 hover:shadow-lg"
     >
       <div className="mt-2 aspect-[3/2] w-full overflow-hidden rounded-2xl border">
         <Image

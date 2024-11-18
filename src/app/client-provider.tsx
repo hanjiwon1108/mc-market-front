@@ -25,9 +25,9 @@ export function ClientProvider({
             <FrozenRouter>{modal}</FrozenRouter>
           </motion.div>
         </AnimatePresence>
-        <div className="flex min-h-dvh flex-col">
+        <div className="min-h-screen flex flex-col">
           <Navigator />
-          <div className="flex-1">{children}</div>
+          {children}
         </div>
         <Footer />
       </TooltipProvider>
