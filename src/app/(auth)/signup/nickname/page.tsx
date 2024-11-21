@@ -3,11 +3,26 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftIcon, ArrowRightIcon, SkipForwardIcon } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  SkipForwardIcon,
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChildrenProps } from '@/util/types-props';
-import { SIGNUP_NICKNAME_STORAGE_KEY } from '@/app/(auth)/signup/consts';
+import {
+  SIGNUP_NICKNAME_STORAGE_KEY,
+  SIGNUP_USERNAME_STORAGE_KEY,
+} from '@/app/(auth)/signup/consts';
+import useSWRMutation from 'swr/mutation';
+import { User } from '@entropi-co/surge-js';
+import { Key } from 'swr';
+import { surgeEndpoint } from '@/api/surge/endpoint';
+import { isBrowser } from '@/util/browser';
+import { signUpPasswordInputAtom } from '@/app/(auth)/signup/password/atom';
+import { useAtom, useAtomValue } from 'jotai';
 
 function AnimateInOut({
   children,
@@ -36,6 +51,17 @@ function AnimateInOut({
 export default function Page() {
   const router = useRouter();
 
+  const [password, setPassword] = useAtom(signUpPasswordInputAtom);
+
+  useEffect(() => {
+    if (
+      isBrowser() &&
+      (!sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY) || password == '')
+    ) {
+      router.push('/signup');
+    }
+  }, [password, router]);
+
   const [value, setValue] = useState(
     sessionStorage.getItem(SIGNUP_NICKNAME_STORAGE_KEY) ?? '',
   );
@@ -46,17 +72,46 @@ export default function Page() {
     router.back();
   }
 
+  type Payload = { username: string; password: string };
+  const signUpMutation = useSWRMutation<User, never, Key, Payload>(
+    surgeEndpoint(`/v1/sign_up/credentials`),
+    (u: string, { arg }: { arg: Payload }) =>
+      fetch(u, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(arg),
+      })
+        .then((it) => it.json())
+        .then((it) => it as User),
+  );
+
   function handleProceed() {
-    sessionStorage.setItem(SIGNUP_NICKNAME_STORAGE_KEY, value);
-    router.push('/signup/password');
+    const usernameRef = sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY)!;
+    const nicknameRef = sessionStorage.getItem(SIGNUP_NICKNAME_STORAGE_KEY);
+    const passwordRef = password;
+
+    sessionStorage.removeItem(SIGNUP_USERNAME_STORAGE_KEY);
+    sessionStorage.removeItem(SIGNUP_NICKNAME_STORAGE_KEY);
+    setPassword('');
+
+    signUpMutation
+      .trigger({
+        username: usernameRef,
+        password: passwordRef,
+      })
+      .then((it) => {
+        router.push('/signup/completed');
+      });
   }
 
   return (
     <>
       <div className="container flex min-w-96 flex-col gap-4 px-12 md:px-0">
         <div>
-          <p className="md:text-5xl text-4xl font-semibold">이름 설정</p>
-          <p className="text-xl">세부 사항 입력</p>
+          <p className="text-4xl font-semibold md:text-5xl">이름 설정</p>
+          <p className="text-xl">세부 사항 입력 및 완료</p>
         </div>
         <div>
           <Input
@@ -90,12 +145,12 @@ export default function Page() {
             <AnimatePresence initial={false}>
               {isValidate ? (
                 <AnimateInOut from="down" key="continue">
-                  계속
-                  <ArrowRightIcon />
+                  완료
+                  <CheckIcon />
                 </AnimateInOut>
               ) : (
                 <AnimateInOut from="up" key="skip">
-                  건너뛰기
+                  건너뛰고 완료
                   <SkipForwardIcon />
                 </AnimateInOut>
               )}

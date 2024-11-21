@@ -30,7 +30,7 @@ function CategoryDisplay({ category }: { category: Category }) {
   return (
     <div>
       <CategoryLink href={category.link!}>{category.name}</CategoryLink>
-      {category.subcategories.map(([href, name, icon]) => {
+      {Object.values(category.subcategories).map(([href, name, icon]) => {
         const Icon = icon;
 
         return (

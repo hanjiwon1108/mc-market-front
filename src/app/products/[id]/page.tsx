@@ -2,7 +2,7 @@ import { ProductDetail } from '@/components/product/product-detail';
 
 export default async function Page() {
   return (
-    <div className="py-20">
+    <div className="md:py-20 p-8">
       <ProductDetail />
     </div>
   );

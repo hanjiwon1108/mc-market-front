@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { ArrowRightIcon } from 'lucide-react';
+import { ArrowRightIcon, KeyIcon, UserRoundPlusIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import useSWRMutation from 'swr/mutation';
 import { toast } from 'sonner';
@@ -44,7 +44,7 @@ export default function Page() {
         if (exists) {
           setDuplicateModalOpen(true);
         } else {
-          router.push('/signup/nickname');
+          router.push('/signup/password');
         }
       })
       .catch((e) => {
@@ -99,6 +99,21 @@ export default function Page() {
         >
           계속
           <ArrowRightIcon />
+        </Button>
+        <div className="relative flex items-center justify-center">
+          <div className="absolute bg-background px-2 font-semibold text-gray-600">
+            또는
+          </div>
+          <div className="h-0.5 w-full bg-border"></div>
+        </div>
+        <Button
+          className="flex gap-2 text-lg font-semibold"
+          size="lg"
+          variant="ghost"
+          onClick={() => router.push('/signin')}
+        >
+          로그인
+          <KeyIcon />
         </Button>
       </div>
     </>

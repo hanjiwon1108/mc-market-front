@@ -8,6 +8,7 @@ const cachedClient = React.cache(async () => {
   const cookieStore = await cookies();
 
   return createServerClient(process.env['NEXT_PUBLIC_SURGE_URL']!, {
+    storageKey: 'entropi.surge.market.token',
     debug: process.env['NEXT_PUBLIC_SURGE_DEBUG']?.toLowerCase() == 'true',
     cookieOptions: {
       domain: process.env['NEXT_PUBLIC_SURGE_COOKIE_DOMAIN'],

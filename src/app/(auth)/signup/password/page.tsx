@@ -3,17 +3,19 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftIcon, CheckIcon, TriangleAlertIcon } from 'lucide-react';
-import { useMemo } from 'react';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  TriangleAlertIcon,
+} from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { signUpPasswordInputAtom } from '@/app/(auth)/signup/password/atom';
 import { ChildrenProps } from '@/util/types-props';
 import { AnimatePresence, motion } from 'framer-motion';
-import useSWRMutation from 'swr/mutation';
-import { surgeEndpoint } from '@/api/surge/endpoint';
-import { User } from '@entropi-co/surge-js';
-import { Key } from 'swr';
 import { SIGNUP_USERNAME_STORAGE_KEY } from '@/app/(auth)/signup/consts';
+import { isBrowser } from '@/util/browser';
 
 function PasswordRequirement({
   children,
@@ -47,6 +49,12 @@ function PasswordRequirement({
 export default function Page() {
   const router = useRouter();
 
+  useEffect(() => {
+    if (isBrowser() && !sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY)) {
+      router.push('/signup');
+    }
+  }, [router]);
+
   const [value, setValue] = useAtom(signUpPasswordInputAtom);
   const validLength = useMemo(() => value.length >= 10, [value]);
   const validLetters = useMemo(
@@ -58,40 +66,16 @@ export default function Page() {
     [validLength, validLetters, value],
   );
 
-  type Payload = { username: string; password: string };
-  const signUpMutation = useSWRMutation<User, never, Key, Payload>(
-    surgeEndpoint(`/v1/sign_up/credentials`),
-    (u: string, { arg }: { arg: Payload }) =>
-      fetch(u, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(arg),
-      })
-        .then((it) => it.json())
-        .then((it) => it as User),
-  );
-
   function handleProceed() {
-    signUpMutation
-      .trigger({
-        username: sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY)!,
-        password: value,
-      })
-      .then((it) => {
-        router.push('/signup/completed');
-      });
+    router.push('/signup/nickname');
   }
 
   return (
     <>
       <div className="container flex min-w-96 flex-col gap-4 px-12 md:px-0">
         <div>
-          <p className="text-4xl font-semibold md:text-5xl">
-            마지막 단계입니다
-          </p>
-          <p className="text-xl">MC-Market 계정 생성하기</p>
+          <p className="text-4xl font-semibold md:text-5xl">암호 설정</p>
+          <p className="text-xl">보안을 강화하기</p>
         </div>
         <div>
           <Input
@@ -125,11 +109,11 @@ export default function Page() {
           <Button
             className="flex flex-1 gap-2 text-lg font-semibold"
             size="lg"
-            disabled={!isValidate || signUpMutation.isMutating}
+            disabled={!isValidate}
             onClick={handleProceed}
           >
-            완료
-            <CheckIcon />
+            계속
+            <ArrowRightIcon />
           </Button>
         </div>
       </div>

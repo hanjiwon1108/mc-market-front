@@ -6,25 +6,126 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigatorHomeItem } from '@/components/navigator/navigator-home-item';
 import { NavigatorCategoryItem } from '@/components/navigator/navigator-category-item';
 import { NavigatorEventItem } from '@/components/navigator/navigator-event-item';
 import { Input } from '@/components/ui/input';
-import { SearchIcon } from 'lucide-react';
+import {
+  HomeIcon,
+  MenuIcon,
+  MessageCircleQuestionIcon,
+  Rows4Icon,
+  SearchIcon,
+  TablePropertiesIcon,
+  TicketIcon,
+  UserRoundIcon,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/brand/logo';
+import { usePathname } from 'next/navigation';
+import { createBrowserSurgeClient, useSession } from '@/api/surge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
+import {
+  NavigatorSidebar,
+  NavigatorSidebarMenu,
+} from '@/components/navigator/navigator-sidebar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { CATEGORIES } from '@/features/category';
 
 export function Navigator() {
+  const session = useSession();
+  const pathname = usePathname();
+
+  const isMobile = useIsMobile();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <>
-      <div className="fixed z-50 h-[3.375rem] w-full border-b-2 bg-background/80 p-2 backdrop-blur-2xl">
-        <div className="container mx-auto px-8">
-          <NavigationMenu className="max-w-full">
+      <NavigatorSidebar
+        isOpen={isSidebarOpen && isMobile}
+        onOpenChange={setSidebarOpen}
+      >
+        <NavigatorSidebarMenu display="홈" icon={HomeIcon} href="/" />
+        <NavigatorSidebarMenu display="카테고리" icon={TablePropertiesIcon}>
+          <NavigatorSidebarMenu
+            display={
+              <>
+                모든 카테고리 보기
+                <Rows4Icon className="ml-auto" />
+              </>
+            }
+            href="/categories/all"
+          />
+          {Object.values(CATEGORIES)
+            .filter((it) => !it.hiddenOnNavigator)
+            .map((category) => {
+              const Icon = category.icon;
+
+              return (
+                <NavigatorSidebarMenu
+                  display={
+                    <>
+                      {category.name} <Icon className="ml-auto" />
+                    </>
+                  }
+                  key={category.path}
+                >
+                  {Object.values(category.subcategories).length > 0 && (
+                    <>
+                      <NavigatorSidebarMenu
+                        display="이 카테고리 보기"
+                        icon={category.icon}
+                        href={category.link}
+                      />
+                      {Object.values(category.subcategories).map(
+                        (subcategory) => (
+                          <NavigatorSidebarMenu
+                            key={subcategory[0]}
+                            display={subcategory[1]}
+                            icon={subcategory[2]}
+                            href={subcategory[0]}
+                          />
+                        ),
+                      )}
+                    </>
+                  )}
+                </NavigatorSidebarMenu>
+              );
+            })}
+        </NavigatorSidebarMenu>
+        <NavigatorSidebarMenu
+          display="이벤트"
+          icon={TicketIcon}
+          href="/events"
+        />
+        <NavigatorSidebarMenu
+          display="고객센터"
+          icon={MessageCircleQuestionIcon}
+          href="supports"
+        />
+      </NavigatorSidebar>
+
+      <div className="fixed z-50 flex h-[3.375rem] w-full items-center border-b-2 bg-background/80 p-2 backdrop-blur-2xl">
+        <div className="container mx-auto flex items-center justify-center sm:justify-normal sm:px-8">
+          <Button
+            className="size-10 rounded-full p-0 sm:hidden"
+            variant="ghost"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <MenuIcon />
+          </Button>
+          <Link href="/" className="absolute sm:static">
+            <Logo className="w-32 sm:mr-12" />
+          </Link>
+          <NavigationMenu className="hidden max-w-full sm:flex">
             <NavigationMenuList>
-              <Link href="/">
-                <Logo className="mr-12 w-32" />
-              </Link>
               <NavigatorHomeItem />
               <NavigatorCategoryItem />
               <NavigatorEventItem />
@@ -36,7 +137,7 @@ export function Navigator() {
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
-            <div className="mx-auto">
+            <div className="mx-auto hidden md:block">
               <div className="flex min-w-0 max-w-96 transition-all lg:min-w-[28rem]">
                 <Input
                   spellCheck={false}
@@ -48,10 +149,45 @@ export function Navigator() {
                 </div>
               </div>
             </div>
-            <div className="mr-2">
-              <Button>로그인</Button>
-            </div>
           </NavigationMenu>
+          <div className="ml-auto mr-2">
+            {!session ? (
+              <Link href="/signin" legacyBehavior>
+                <Button disabled={pathname == '/signin'}>로그인</Button>
+              </Link>
+            ) : (
+              <>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      className="size-10 rounded-full p-0"
+                      variant="ghost"
+                    >
+                      <UserRoundIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        createBrowserSurgeClient()
+                          .signOut()
+                          .then((it) => {
+                            if (it.error) {
+                              toast.error('로그아웃에 실패했습니다');
+                            } else {
+                              toast.info('로그아웃 성공');
+                            }
+                          });
+                      }}
+                    >
+                      로그아웃
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

@@ -112,14 +112,10 @@ function Display({
 }
 
 type ProductDetailProps = {
-  backToCategory?: boolean;
-  onBack?: () => void;
+  onBack?: (() => void) | 'go_to_category' | 'disabled';
 };
 
-export function ProductDetail({
-  backToCategory = true,
-  onBack,
-}: ProductDetailProps) {
+export function ProductDetail({ onBack }: ProductDetailProps) {
   const product = sampleProduct;
 
   const category = CATEGORIES[product.category as CategoryKey] ?? CATEGORY_ALL;
@@ -128,18 +124,26 @@ export function ProductDetail({
     <div className="flex justify-center">
       <div className="container flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <OptionalLink href={backToCategory ? category.link : undefined}>
-            <Button
-              className="size-12 rounded-full p-0"
-              variant="ghost"
-              onClick={onBack}
+          {onBack != 'disabled' && (
+            <OptionalLink
+              href={onBack == 'go_to_category' ? category.link : undefined}
             >
-              <ChevronLeftIcon size={32} />
-            </Button>
-          </OptionalLink>
+              <Button
+                className="size-12 rounded-full p-0"
+                variant="ghost"
+                onClick={() => {
+                  if (typeof onBack === 'function') {
+                    onBack();
+                  }
+                }}
+              >
+                <ChevronLeftIcon size={32} />
+              </Button>
+            </OptionalLink>
+          )}
           <p className="text-3xl font-semibold">{category.name}</p>
         </div>
-        <div className="grid grid-cols-2 grid-rows-2 gap-6 gap-x-8">
+        <div className="grid grid-cols-1 grid-rows-[min-content_auto] gap-6 gap-x-8 md:grid-cols-2">
           <div className="relative aspect-video overflow-hidden rounded-xl border-2">
             <Image
               src="https://static.wikia.nocookie.net/minecrafttrapped/images/8/89/Emerald_Sword.png/revision/latest?cb=20200910073142"
@@ -171,7 +175,7 @@ export function ProductDetail({
                   </SmallCard>
                 )}
               </div>
-              <div className="mt-4 flex gap-2 *:flex-1 *:gap-2 *:p-6 *:text-xl">
+              <div className="mt-4 flex flex-col gap-2 *:flex-1 *:gap-2 *:py-4 *:text-xl md:flex-row md:*:p-6">
                 <Button size="lg">
                   <CreditCardIcon />
                   구매하기

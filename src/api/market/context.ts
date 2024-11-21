@@ -18,10 +18,10 @@ export const MapleContext = createContext<MapleContext>({
   revalidateUser() {},
 });
 
-export function useDrift() {
+export function useMaple() {
   return useContext(MapleContext);
 }
 
-export function useDriftUser() {
-  return useDrift().user;
+export function useMapleUser() {
+  return useMaple().user;
 }

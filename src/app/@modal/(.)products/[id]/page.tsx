@@ -12,12 +12,21 @@ import { useRouter } from 'next/navigation';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import {
+  ResponsiveDialog,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function Page() {
   const router = useRouter();
   const [isPresent, safeToRemove] = usePresence();
   const [isCloseTriggered, setCloseTriggered] = useState(false);
   const removeTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     console.log(isPresent);
@@ -31,28 +40,28 @@ export default function Page() {
   }, [isPresent, safeToRemove]);
 
   return (
-    <Dialog
-      open={isPresent || isCloseTriggered}
+    <ResponsiveDialog
+      isOpen={isPresent || isCloseTriggered}
       onOpenChange={() => {
         setCloseTriggered(true);
         router.back();
       }}
       key="intercept:/products"
     >
-      <DialogContent
+      <ResponsiveDialogContent
         aria-describedby={undefined}
-        className="scrollbar-override flex max-h-[80dvh] max-w-[80dvw] flex-col overflow-hidden p-0 outline-none [&>button]:hidden"
+        className="scrollbar-override flex max-h-[80dvh] flex-col overflow-hidden p-0 outline-none md:max-w-[80dvw] [&>button]:hidden"
       >
-        <DialogClose />
+        <ResponsiveDialogClose />
         <VisuallyHidden>
-          <DialogHeader>
-            <DialogTitle>Product Detail</DialogTitle>
-          </DialogHeader>
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>Product Detail</ResponsiveDialogTitle>
+          </ResponsiveDialogHeader>
         </VisuallyHidden>
         <div className="overflow-y-scroll p-4">
-          <ProductDetail onBack={router.back} />
+          <ProductDetail onBack={isMobile ? 'disabled' : router.back} />
         </div>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

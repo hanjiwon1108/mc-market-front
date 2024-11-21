@@ -9,15 +9,15 @@ type Props = MotionProps &
   };
 
 export const AnimateVisibility = React.forwardRef<HTMLDivElement, Props>(
-  (props, ref) => {
+  ({ state, ...props }, ref) => {
     return (
       <motion.div
         initial="hidden"
         animate="visible"
         exit="hidden"
         variants={{
-          visible: props.state.visible,
-          hidden: props.state.hidden,
+          visible: state.visible,
+          hidden: state.hidden,
         }}
         {...props}
         transition={{

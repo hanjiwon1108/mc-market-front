@@ -16,9 +16,9 @@ type Direction = 'forward' | 'backward';
 
 const STAGE_WEIGHTS: Record<string, number> = {
   '/signup': 0,
-  '/signup/nickname': 1,
-  '/signup/password': 2,
-  '/signup/complete': 3,
+  '/signup/password': 1,
+  '/signup/nickname': 2,
+  '/signup/completed': 3,
   '/signin': 4,
 } as const;
 

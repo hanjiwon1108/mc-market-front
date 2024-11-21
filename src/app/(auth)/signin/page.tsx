@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { KeyIcon } from 'lucide-react';
+import { KeyIcon, UserRoundPlusIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
   ResponsiveDialog,
@@ -94,6 +94,21 @@ export default function Page() {
         >
           로그인
           <KeyIcon />
+        </Button>
+        <div className="relative flex items-center justify-center">
+          <div className="absolute bg-background px-2 font-semibold text-gray-600">
+            또는
+          </div>
+          <div className="h-0.5 w-full bg-border"></div>
+        </div>{' '}
+        <Button
+          className="flex gap-2 text-lg font-semibold"
+          size="lg"
+          variant="ghost"
+          onClick={() => router.push('/signup')}
+        >
+          계정 생성
+          <UserRoundPlusIcon />
         </Button>
       </div>
     </>
