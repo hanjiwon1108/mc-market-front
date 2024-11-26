@@ -1,4 +1,4 @@
 /**
  * A Sonyflake ID
  */
-export type Sonyflake = string;
+export type Sonyflake = bigint;

@@ -6,7 +6,6 @@ export function SettingsNavigatorEntries() {
     <>
       {' '}
       <SettingsNavigatorEntry
-        display="General: Appearance"
         entry="general/appearance"
       />
     </>

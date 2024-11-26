@@ -1,4 +1,4 @@
-import { ChildrenProps } from '@/core/types/props';
+import { ChildrenProps } from '@/util/types-props';
 
 export type SettingsSectionProps = {
   name: string;

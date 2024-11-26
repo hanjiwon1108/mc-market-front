@@ -5,23 +5,31 @@ import { useAtom } from 'jotai';
 import {
   SETTING_DEFAULT_ENTRY,
   SETTING_ENTRY_COMPONENT_MAP,
+  SETTING_ENTRY_DISPLAY_MAP,
   SettingEntry,
 } from '@/features/settings/entry';
 import React, { useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { useDesktopSafe } from '@/hooks/use-desktop';
 import { AnimateWidth } from '@/components/animate/animate-size';
 import { AnimatePresence } from 'framer-motion';
 import { AnimateScaleFade } from '@/components/animate/animate-scale-fade';
 import { SettingsNavigator } from '@/features/settings/components/navigator';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { AnimateFade } from '@/components/animate/animate-fade';
 
 function Header() {
-  const isDesktop = useDesktopSafe();
+  const isDesktop = !useIsMobile();
   const [entry, setEntry] = useAtom(settingOpenAtom);
+
+  const Display = isDesktop
+    ? () => '설정'
+    : typeof entry == 'string'
+      ? SETTING_ENTRY_DISPLAY_MAP[entry]
+      : () => '설정';
 
   return (
     <div className="flex h-8 w-full">
-      <div className="flex items-center text-3xl font-semibold">
+      <div className="flex w-full items-center text-3xl font-semibold">
         <AnimatePresence>
           {!isDesktop && entry != true && (
             <AnimateWidth duration={0.5}>
@@ -38,12 +46,18 @@ function Header() {
             </AnimateWidth>
           )}
         </AnimatePresence>
-        Settings
+        <div className="relative size-full">
+          <AnimatePresence>
+            <AnimateFade key={`${entry}`} className="absolute">
+              <Display />
+            </AnimateFade>
+          </AnimatePresence>
+        </div>
       </div>
       <div className="ml-auto">
         <button
           onClick={() => setEntry(null)}
-          className="flex aspect-square h-full items-center justify-center rounded-full bg-foreground/5 outline-none ring-ring transition-all duration-300 ease-primary focus-visible:ring-2 pointer:hover:scale-125"
+          className="pointer:hover:scale-125 flex aspect-square h-full items-center justify-center rounded-full bg-foreground/5 outline-none ring-ring transition-all duration-300 ease-primary focus-visible:ring-2"
         >
           <XIcon size={20} />
         </button>
@@ -66,7 +80,7 @@ function Main({ entry }: { entry: SettingEntry }) {
 }
 
 export function SettingsDialog() {
-  const isDesktop = useDesktopSafe();
+  const isDesktop = !useIsMobile();
   const [entry, setEntry] = useAtom(settingOpenAtom);
 
   const entryToRender = React.useMemo(
@@ -78,7 +92,7 @@ export function SettingsDialog() {
     if (isDesktop && entry == true) {
       setEntry(SETTING_DEFAULT_ENTRY);
     }
-  }, [isDesktop, entry]);
+  }, [isDesktop, entry, setEntry]);
 
   return (
     <div
@@ -95,7 +109,7 @@ export function SettingsDialog() {
                 duration={0.5}
                 className={cn(
                   'absolute w-full md:static md:w-auto',
-                  entry != true ? 'md:block hidden' : '',
+                  entry != true ? 'hidden md:block' : '',
                 )}
               >
                 <SettingsNavigator />
@@ -105,7 +119,10 @@ export function SettingsDialog() {
           <AnimatePresence>
             {entry != true && entryToRender != true && (
               <div className="relative w-full">
-                <AnimateScaleFade duration={0.5} className={'absolute w-full'}>
+                <AnimateScaleFade
+                  duration={0.5}
+                  className={'absolute h-full w-full overflow-y-scroll'}
+                >
                   <Main entry={entryToRender} />
                 </AnimateScaleFade>
               </div>

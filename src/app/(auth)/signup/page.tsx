@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { ArrowRightIcon, KeyIcon, UserRoundPlusIcon } from 'lucide-react';
+import { ArrowRightIcon, KeyIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import useSWRMutation from 'swr/mutation';
 import { toast } from 'sonner';

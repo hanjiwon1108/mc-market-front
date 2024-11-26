@@ -2,15 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CheckIcon,
-  SkipForwardIcon,
-} from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { ArrowLeftIcon, CheckIcon, SkipForwardIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChildrenProps } from '@/util/types-props';
 import {
   SIGNUP_NICKNAME_STORAGE_KEY,
@@ -19,10 +14,11 @@ import {
 import useSWRMutation from 'swr/mutation';
 import { User } from '@entropi-co/surge-js';
 import { Key } from 'swr';
-import { surgeEndpoint } from '@/api/surge/endpoint';
 import { isBrowser } from '@/util/browser';
 import { signUpPasswordInputAtom } from '@/app/(auth)/signup/password/atom';
 import { useAtom, useAtomValue } from 'jotai';
+import { endpoint } from '@/api/market/endpoint';
+import { useSessionStorage } from '@/hooks/use-session-storage';
 
 function AnimateInOut({
   children,
@@ -50,21 +46,21 @@ function AnimateInOut({
 
 export default function Page() {
   const router = useRouter();
+  const pathname = usePathname();
 
-  const [password, setPassword] = useAtom(signUpPasswordInputAtom);
+  const password = useAtomValue(signUpPasswordInputAtom);
 
   useEffect(() => {
     if (
       isBrowser() &&
+      pathname == '/signup/nickname' &&
       (!sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY) || password == '')
     ) {
       router.push('/signup');
     }
-  }, [password, router]);
+  }, [password, pathname, router]);
 
-  const [value, setValue] = useState(
-    sessionStorage.getItem(SIGNUP_NICKNAME_STORAGE_KEY) ?? '',
-  );
+  const [value, setValue] = useSessionStorage(SIGNUP_NICKNAME_STORAGE_KEY, '');
   const isValidate = useMemo(() => value.trim() != '', [value]);
 
   function handleBack() {
@@ -72,9 +68,9 @@ export default function Page() {
     router.back();
   }
 
-  type Payload = { username: string; password: string };
+  type Payload = { nickname?: string; username: string; password: string };
   const signUpMutation = useSWRMutation<User, never, Key, Payload>(
-    surgeEndpoint(`/v1/sign_up/credentials`),
+    endpoint(`/v1/user`),
     (u: string, { arg }: { arg: Payload }) =>
       fetch(u, {
         method: 'POST',
@@ -89,16 +85,13 @@ export default function Page() {
 
   function handleProceed() {
     const usernameRef = sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY)!;
-    const nicknameRef = sessionStorage.getItem(SIGNUP_NICKNAME_STORAGE_KEY);
+    const nicknameRef = value;
     const passwordRef = password;
-
-    sessionStorage.removeItem(SIGNUP_USERNAME_STORAGE_KEY);
-    sessionStorage.removeItem(SIGNUP_NICKNAME_STORAGE_KEY);
-    setPassword('');
 
     signUpMutation
       .trigger({
         username: usernameRef,
+        nickname: nicknameRef ?? undefined,
         password: passwordRef,
       })
       .then((it) => {

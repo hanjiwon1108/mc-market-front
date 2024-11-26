@@ -1,5 +1,5 @@
-import { ChildrenProps } from '@/core/types/props';
+import { ChildrenProps } from '@/util/types-props';
 
 export function SettingsPage({ children }: ChildrenProps) {
-  return <div className="size-full p-4 flex flex-col gap-4">{children}</div>;
+  return <div className="flex size-full flex-col gap-4 p-4">{children}</div>;
 }

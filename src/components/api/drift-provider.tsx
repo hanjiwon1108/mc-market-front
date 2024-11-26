@@ -12,7 +12,7 @@ export function MapleProvider({
   data,
 }: { data?: { user: MarketUser | null } } & ChildrenProps) {
   const session = useSession();
-  const user = useSWR(session, (s) => (s ? fetchMapleUser(s) : null), {
+  const user = useSWR(session, (s) => fetchMapleUser(s), {
     fallbackData: data?.user,
   });
 

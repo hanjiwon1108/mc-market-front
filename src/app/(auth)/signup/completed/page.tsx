@@ -2,9 +2,25 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import {
+  SIGNUP_NICKNAME_STORAGE_KEY,
+  SIGNUP_USERNAME_STORAGE_KEY,
+} from '@/app/(auth)/signup/consts';
+import { useAtom, useSetAtom } from 'jotai';
+import { signUpPasswordInputAtom } from '@/app/(auth)/signup/password/atom';
+import { useEffect } from 'react';
 
 export default function Page() {
   const router = useRouter();
+
+  const setPassword = useSetAtom(signUpPasswordInputAtom);
+
+  useEffect(() => {
+    // Clean up storage
+    sessionStorage.removeItem(SIGNUP_USERNAME_STORAGE_KEY);
+    sessionStorage.removeItem(SIGNUP_NICKNAME_STORAGE_KEY);
+    setPassword('');
+  }, [setPassword]);
 
   return (
     <>

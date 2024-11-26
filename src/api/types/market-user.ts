@@ -5,6 +5,9 @@ export type MarketUser = {
   nickname: string;
 
   permissions: number;
+
+  created_at: number;
+  updated_at: number;
 };
 
 export type MarketUserShort = Pick<MarketUser, 'id' | 'nickname'>;

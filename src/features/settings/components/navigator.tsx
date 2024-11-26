@@ -1,18 +1,19 @@
-import React, { Suspense } from 'react';
-import { SettingEntry } from '@/features/settings/entry';
+import React from 'react';
+import {
+  SETTING_ENTRY_DISPLAY_MAP,
+  SettingEntry,
+} from '@/features/settings/entry';
 import { useAtom } from 'jotai/index';
 import { settingOpenAtom } from '@/features/settings';
 import { cn } from '@/lib/utils';
 import { SettingsNavigatorEntries } from '@/features/settings/components/navigator-entries';
-import { LoadFallback } from '@/components/providers';
-import dynamic from 'next/dynamic';
-import { Spinner } from '@/components/ui/spinner';
+import SettingsNavigatorClientEntries from '@/features/settings/components/navigator-client-entries';
 
 export function SettingsNavigatorEntry({
-  display,
   entry,
+  display = <>{SETTING_ENTRY_DISPLAY_MAP[entry]()}</>,
 }: {
-  display: string;
+  display?: React.ReactNode;
   entry: SettingEntry;
 }) {
   const [currentEntry, setEntry] = useAtom(settingOpenAtom);
@@ -20,7 +21,7 @@ export function SettingsNavigatorEntry({
   return (
     <button
       onClick={() => setEntry(entry)}
-      className="relative h-12 w-full overflow-hidden rounded-xl border-ring bg-accent-foreground/5 text-left text-lg outline-none ring-ring ring-offset-2 transition duration-200 ease-primary focus-visible:ring-[3px] active:scale-90 pointer:hover:bg-accent-foreground/10"
+      className="pointer:hover:bg-accent-foreground/10 relative h-12 w-full overflow-hidden rounded-xl border-ring bg-accent-foreground/5 text-left text-lg outline-none ring-ring ring-offset-2 transition duration-200 ease-primary focus-visible:ring-[3px] active:scale-90"
     >
       <div className="pl-2">{display}</div>
       <div className="absolute bottom-1 flex w-full justify-center">
@@ -34,13 +35,6 @@ export function SettingsNavigatorEntry({
     </button>
   );
 }
-
-const SettingsNavigatorClientEntries = dynamic(
-  () => import('@/features/settings/components/navigator-client-entries'),
-  {
-    loading: LoadFallback,
-  },
-);
 
 export function SettingsNavigator() {
   return (

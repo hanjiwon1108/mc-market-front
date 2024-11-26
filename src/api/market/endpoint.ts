@@ -13,7 +13,11 @@ export function endpoint(endpoint: string) {
 }
 
 export async function fetchMapleUser(session: Session) {
-  return await authFetch(session, endpoint('/v1/user'))
+  return await authFetch(session, endpoint('/v1/user/session'))
+    .then((it) => {
+      // console.log(`[#fetchMapleUser] ${it.status}`);
+      return it;
+    })
     .then((it) => it.json() as Promise<MarketUser>)
     .catch(() => null);
 }

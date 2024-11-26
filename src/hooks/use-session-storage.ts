@@ -14,5 +14,9 @@ export function useSessionStorage(
     }
   }, [key]);
 
+  useEffect(() => {
+    sessionStorage.setItem(key, value);
+  }, [key, value]);
+
   return [value, setValue];
 }

@@ -38,6 +38,7 @@ import {
 } from '@/components/navigator/navigator-sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CATEGORIES } from '@/features/category';
+import {useSettingsDialog} from "@/features/settings";
 
 export function Navigator() {
   const session = useSession();
@@ -45,6 +46,8 @@ export function Navigator() {
 
   const isMobile = useIsMobile();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const settings = useSettingsDialog();
 
   return (
     <>
@@ -152,7 +155,7 @@ export function Navigator() {
           </NavigationMenu>
           <div className="ml-auto mr-2">
             {!session ? (
-              <Link href="/signin" legacyBehavior>
+              <Link href="/signin">
                 <Button disabled={pathname == '/signin'}>로그인</Button>
               </Link>
             ) : (
@@ -167,6 +170,13 @@ export function Navigator() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        settings.open()
+                      }}
+                    >
+                      설정
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => {

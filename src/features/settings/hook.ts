@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai';
 import { settingOpenAtom } from '@/features/settings/atom';
 import { SETTING_DEFAULT_ENTRY, SettingEntry } from '@/features/settings/entry';
-import { useDesktopSafe } from '@/hooks/use-desktop';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function useSettingsDialog() {
-  const isDesktop = useDesktopSafe();
+  const isDesktop = !useIsMobile();
   const [open, setOpen] = useAtom(settingOpenAtom);
 
   return {

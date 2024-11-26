@@ -12,7 +12,6 @@ import {
 import React from 'react';
 import {
   checkPermission,
-  MAPLE_USER_PERMISSION_ISSUE_INVITE_CODE,
   MAPLE_USER_PERMISSIONS_AVAILABLE,
 } from '@/api/permissions';
 
@@ -55,7 +54,7 @@ function PermissionsTable() {
       driftUser
         ? Object.entries(MAPLE_USER_PERMISSIONS_AVAILABLE).map(
             ([name, flag]) => [
-              name.substring('DRIFT_USER_'.length),
+              name.substring('MAPLE_USER_'.length),
               checkPermission(driftUser?.permissions, flag) ? 'Yes' : 'No',
             ],
           )
@@ -72,6 +71,7 @@ export function DeveloperUserSettings() {
 
   const surgeInspection: [string, React.ReactNode][] = [
     ['id', surgeUser?.id],
+    ['username', surgeUser?.username],
     [
       'created at',
       surgeUser?.created_at && new Date(surgeUser.created_at).toUTCString(),
@@ -83,13 +83,8 @@ export function DeveloperUserSettings() {
   ];
   const driftInspection: [string, React.ReactNode][] = [
     ['id', driftUser?.id],
-      ['username', `@${surgeUser?.identities}`],
     ['nickname', `${driftUser?.nickname}`],
-    ['name', driftUser?.name],
-    ['about', driftUser?.about],
     ['permissions', driftUser?.permissions],
-    ['followers', driftUser?.following],
-    ['following', driftUser?.followers],
   ];
 
   return (
@@ -97,7 +92,7 @@ export function DeveloperUserSettings() {
       <SettingsSection name="Inspection: Surge">
         <InspectionTable data={surgeInspection} />
       </SettingsSection>
-      <SettingsSection name="Inspection: Drift">
+      <SettingsSection name="Inspection: Market">
         <InspectionTable data={driftInspection} />
       </SettingsSection>
       <SettingsSection name="Permissions">

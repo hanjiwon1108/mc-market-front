@@ -9,6 +9,7 @@ import { FrozenRouter } from '@/components/router/frozen-router';
 import { Navigator } from '@/components/navigator/navigator';
 import { Footer } from '@/components/footer/footer';
 import { usePathname } from 'next/navigation';
+import { SettingsDialog } from '@/features/settings/dialog';
 
 export function ClientProvider({
   children,
@@ -20,12 +21,13 @@ export function ClientProvider({
     <>
       <Toaster richColors />
       <TooltipProvider>
+        <SettingsDialog />
         <AnimatePresence>
           <motion.div key={pathname}>
             <FrozenRouter>{modal}</FrozenRouter>
           </motion.div>
         </AnimatePresence>
-        <div className="min-h-screen flex flex-col">
+        <div className="flex min-h-screen flex-col">
           <Navigator />
           {children}
         </div>

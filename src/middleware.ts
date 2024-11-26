@@ -7,7 +7,7 @@ export default async function middleware(req: NextRequest) {
   });
 
   const client = createServerClient(process.env['NEXT_PUBLIC_SURGE_URL']!, {
-    storageKey: "entropi.surge.market.token",
+    // storageKey: 'entropi.surge.market.token',
     cookies: {
       getAll() {
         return req.cookies.getAll();
@@ -19,8 +19,11 @@ export default async function middleware(req: NextRequest) {
       },
     },
   });
+
   const session = (await client.getSession()).data.session;
   const path = req.nextUrl.pathname;
+
+  // console.log(`[#middleware.ts]: cookies: ${req.cookies}`);
 
   if (session) {
     if (path.startsWith('/signin')) {

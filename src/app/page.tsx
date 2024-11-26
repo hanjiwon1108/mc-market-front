@@ -63,6 +63,7 @@ export default function Home() {
               <DropdownMenu
                 open={isCategoryDropdownOpen}
                 onOpenChange={setCategoryDropdownOpen}
+                modal={false}
               >
                 <DropdownMenuTrigger className="visible flex h-12 w-48 select-none items-center gap-2 rounded-xl border-0 px-4 py-2 outline-0 ring-ring ring-offset-2 transition-all hover:bg-accent focus-visible:ring-2">
                   <AnimatePresence>

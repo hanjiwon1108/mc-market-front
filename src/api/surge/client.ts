@@ -6,7 +6,7 @@ import { createBrowserClient } from '@entropi-co/surge-ssr';
  */
 export function createBrowserSurgeClient() {
   return createBrowserClient(process.env['NEXT_PUBLIC_SURGE_URL']!, {
-    storageKey: 'entropi.surge.market.token',
+    // storageKey: 'entropi.surge.market.token',
     debug: process.env['NEXT_PUBLIC_SURGE_DEBUG']?.toLowerCase() == 'true',
     cookieOptions: {
       domain: process.env['NEXT_PUBLIC_SURGE_COOKIE_DOMAIN'],
