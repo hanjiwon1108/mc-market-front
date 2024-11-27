@@ -3,6 +3,8 @@ import { Sonyflake } from '@/api/types/sonyflake';
 export type MarketProduct = {
   id: Sonyflake;
 
+  creator: Sonyflake;
+
   category: string;
 
   name: string;
@@ -17,6 +19,13 @@ export type MarketProduct = {
   likes: number;
   downloads: number;
 
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 };
+
+export type MarketProductWithShortUser = Omit<MarketProduct, "creator"> & {
+  creator: {
+    id: Sonyflake;
+    nickname?: string;
+  }
+}

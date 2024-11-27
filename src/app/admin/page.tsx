@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { ChildrenProps } from '@/util/types-props';
 import Link from 'next/link';
 import React from 'react';
-import { UserRoundIcon } from 'lucide-react';
+import {Rows4Icon, UserRoundIcon} from 'lucide-react';
 
 function AdministratorOption({
   children,
@@ -25,6 +25,9 @@ export default function Page() {
       <div className="mt-2 flex flex-1 flex-col items-start gap-2 border p-2 rounded-2xl shadow-lg">
         <AdministratorOption href="/admin/users">
           <UserRoundIcon /> 유저 목록
+        </AdministratorOption>
+        <AdministratorOption href="/admin/products">
+          <Rows4Icon /> 제품 관리자
         </AdministratorOption>
       </div>
     </div>

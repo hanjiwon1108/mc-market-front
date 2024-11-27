@@ -29,7 +29,7 @@ function getKey(index: number, previousPageData: MarketUser[]) {
 }
 
 const fetcher = async ([session, u]) => {
-  console.log(u);
+  console.log(`Fetching: ${u}`);
   if (!session) return [];
   const it = await authFetch(session, u);
   return (await it.json()) as Promise<MarketUser[]>;
@@ -40,6 +40,9 @@ export default function Page() {
   const infinite = useSWRInfinite(
     (index, previousPageData: MarketUser[]) => {
       if (previousPageData && !previousPageData.length) return;
+      if(index == 0) {
+        return [session, endpoint('/v1/user/')]
+      }
       const lastUser = previousPageData.reduce((p, c) => (p.id > c.id ? p : c));
 
       return [
@@ -47,10 +50,9 @@ export default function Page() {
         `${endpoint(`/v1/user/`)}?offset=${index == 0 ? 0 : lastUser.id}`,
       ];
     },
-    {
-      revalidateFirstPage: false,
-      fetcher: fetcher,
-    },
+      {
+        fetcher: fetcher,
+      }
   );
   const [page, setPage] = useState(0);
 
@@ -74,32 +76,38 @@ export default function Page() {
         </TableHeader>
         <TableBody>
           {infinite.data &&
-            (infinite.size >= page ? infinite.data[page] : []).map((it) => (
-              <>User</>
+            (infinite.size >= page ? (infinite.data[page] ? infinite.data[page] : []) : []).map((it) => (
+                <TableRow key={it.id}>
+                  <TableHead>{it.id}</TableHead>
+                  <TableHead>{it.nickname}</TableHead>
+                  <TableHead>{it.created_at.toLocaleString()}</TableHead>
+                  <TableHead>{it.updated_at.toLocaleString()}</TableHead>
+                  <TableHead>{it.permissions}</TableHead>
+                </TableRow>
             ))}
         </TableBody>
       </Table>
       <Pagination className="mt-auto border-t pt-2">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" text="이전" />
+            <PaginationPrevious onClick={() => setPage(p => p-1)} text="이전" isActive={page != 0} />
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
+          {page != 0 && <PaginationItem>
+            <PaginationLink href="#">{page}</PaginationLink>
+          </PaginationItem>}
           <PaginationItem>
             <PaginationLink href="#" isActive>
-              2
+              {page+1}
             </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
+            <PaginationLink onClick={() => setPage(p => p+1)}>{page+2}</PaginationLink>
           </PaginationItem>
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href="#" text="다음" />
+            <PaginationNext onClick={() => setPage(p => p+1)} text="다음" isActive={infinite.data && infinite.data[page]?.length > 0}/>
           </PaginationItem>
         </PaginationContent>
       </Pagination>
