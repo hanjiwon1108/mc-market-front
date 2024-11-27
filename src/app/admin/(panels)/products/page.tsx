@@ -27,8 +27,9 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {CreateProductButton} from "@/app/admin/(panels)/products/create-product-button";
+import {Session} from "@entropi-co/surge-js";
 
-const fetcher = async ([session, u]) => {
+const fetcher = async ([session, u]: [Session, string]) => {
     if (!session) return [];
     const it = await authFetch(session, u);
     return (await it.json()) as Promise<MarketProductWithShortUser[]>;

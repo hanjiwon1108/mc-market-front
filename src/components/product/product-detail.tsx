@@ -21,7 +21,8 @@ import {
 import { cn } from '@/lib/utils';
 
 const sampleProduct: MarketProduct = {
-  id: '540606408601633077',
+  creator: BigInt('0'),
+  id: BigInt('540606408601633077'),
 
   category: 'modeling',
 
@@ -37,8 +38,8 @@ const sampleProduct: MarketProduct = {
   likes: 25,
   downloads: 79,
 
-  createdAt: new Date(1204416000000),
-  updatedAt: new Date(1204418000000),
+  created_at: new Date(1204416000000),
+  updated_at: new Date(1204418000000)
 };
 
 const SmallCard = React.forwardRef<
@@ -164,14 +165,14 @@ export function ProductDetail({ onBack }: ProductDetailProps) {
                 <TagCard tag="최신">인증됨</TagCard>
               </div>
               <div className="mt-2 flex gap-2">
-                <SmallCard tooltip={product.createdAt.toLocaleString()}>
+                <SmallCard tooltip={product.created_at.toLocaleString()}>
                   <PlusIcon />
-                  {dayjs(product.createdAt).format('YYYY/MM/DD')}
+                  {dayjs(product.created_at).format('YYYY/MM/DD')}
                 </SmallCard>
-                {product.createdAt.getTime() != product.updatedAt.getTime() && (
-                  <SmallCard tooltip={product.updatedAt.toLocaleString()}>
+                {product.created_at.getTime() != product.updated_at.getTime() && (
+                  <SmallCard tooltip={product.updated_at.toLocaleString()}>
                     <UploadIcon />
-                    {dayjs(product.updatedAt).format('YYYY/MM/DD')}
+                    {dayjs(product.updated_at).format('YYYY/MM/DD')}
                   </SmallCard>
                 )}
               </div>

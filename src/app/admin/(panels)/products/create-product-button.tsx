@@ -17,7 +17,7 @@ export function CreateProductButton() {
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [usage, setUsage] = useState("");
-    const [uploader, setUploader] = useState(`${user?.id}` ?? '');
+    const [uploader, setUploader] = useState(`${user?.id ?? ''}`);
 
     const [isMutating, setMutating] = useState(false)
 

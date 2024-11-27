@@ -22,14 +22,14 @@ import { MarketUser } from '@/api/types';
 import { endpoint } from '@/api/market/endpoint';
 import { authFetch } from '@/api/surge/fetch';
 import { useSession } from '@/api/surge';
+import {Session} from "@entropi-co/surge-js";
 
 function getKey(index: number, previousPageData: MarketUser[]) {
   // if (index == 0) return endpoint('/v1/user');
   // return endpoint(`/v1/user`) + `?offset=${lastUser.id}`;
 }
 
-const fetcher = async ([session, u]) => {
-  console.log(`Fetching: ${u}`);
+const fetcher = async ([session, u]: [Session, string]) => {
   if (!session) return [];
   const it = await authFetch(session, u);
   return (await it.json()) as Promise<MarketUser[]>;

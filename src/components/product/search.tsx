@@ -17,7 +17,7 @@ export function ProductSearch() {
                     <p className="text-2xl font-semibold ">
                         필터
                     </p>
-                    <Select modal={false}>
+                    <Select >
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder="정렬" />
                         </SelectTrigger>
