@@ -12,20 +12,24 @@ export type MarketProduct = {
   usage: string;
   tags: string[];
 
-  price: string;
-  discountPrice?: string;
-  discountRate?: number;
+  price: number;
+  price_discount?: number;
 
   likes: number;
   downloads: number;
 
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 };
 
-export type MarketProductWithShortUser = Omit<MarketProduct, "creator"> & {
+export type MarketProductId = {
+  id: Sonyflake;
+};
+
+export type MarketProductWithShortUser = Omit<MarketProduct, 'creator'> & {
   creator: {
     id: Sonyflake;
     nickname?: string;
-  }
-}
+    username?: string;
+  };
+};

@@ -4,7 +4,10 @@ import { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: '**', port: '' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: '**', port: '' },
+      { protocol: 'http', hostname: 'api.dev.entropi.kr' },
+    ],
     dangerouslyAllowSVG: true,
   },
   eslint: {

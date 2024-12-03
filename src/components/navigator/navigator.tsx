@@ -17,28 +17,23 @@ import {
   MessageCircleQuestionIcon,
   Rows4Icon,
   SearchIcon,
+  ShoppingCartIcon,
   TablePropertiesIcon,
   TicketIcon,
-  UserRoundIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/brand/logo';
 import { usePathname } from 'next/navigation';
-import { createBrowserSurgeClient, useSession } from '@/api/surge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { toast } from 'sonner';
+import { useSession } from '@/api/surge';
 import {
   NavigatorSidebar,
   NavigatorSidebarMenu,
 } from '@/components/navigator/navigator-sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CATEGORIES } from '@/features/category';
-import {useSettingsDialog} from "@/features/settings";
+import { NavigatorProfileMenu } from '@/components/navigator/navigator-profile-menu';
+import { Badge } from '@/components/ui/badge';
+import { useCart } from '@/core/cart/atom';
 
 export function Navigator() {
   const session = useSession();
@@ -46,8 +41,7 @@ export function Navigator() {
 
   const isMobile = useIsMobile();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-  const settings = useSettingsDialog();
+  const cart = useCart();
 
   return (
     <>
@@ -153,6 +147,19 @@ export function Navigator() {
               </div>
             </div>
           </NavigationMenu>
+
+          <div>
+            <Link href="/cart" className="mr-2">
+              <Button className="size-10 rounded-full p-0" variant="ghost">
+                <ShoppingCartIcon />
+                {cart.value.length > 0 && (
+                  <div className="absolute flex aspect-square size-4 translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full bg-foreground text-xs text-background">
+                    {cart.value.length}
+                  </div>
+                )}
+              </Button>
+            </Link>
+          </div>
           <div className="ml-auto mr-2">
             {!session ? (
               <Link href="/signin">
@@ -160,41 +167,7 @@ export function Navigator() {
               </Link>
             ) : (
               <>
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      className="size-10 rounded-full p-0"
-                      variant="ghost"
-                    >
-                      <UserRoundIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        settings.open()
-                      }}
-                    >
-                      설정
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="text-destructive"
-                      onClick={() => {
-                        createBrowserSurgeClient()
-                          .signOut()
-                          .then((it) => {
-                            if (it.error) {
-                              toast.error('로그아웃에 실패했습니다');
-                            } else {
-                              toast.info('로그아웃 성공');
-                            }
-                          });
-                      }}
-                    >
-                      로그아웃
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <NavigatorProfileMenu />
               </>
             )}
           </div>

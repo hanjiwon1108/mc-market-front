@@ -1,17 +1,10 @@
 'use client';
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { ProductDetail } from '@/components/product/product-detail';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePresence } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {
   ResponsiveDialog,
   ResponsiveDialogClose,
@@ -20,6 +13,9 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import useSWR from 'swr';
+import { endpoint } from '@/api/market/endpoint';
+import { MarketProductWithShortUser } from '@/api/types';
 
 export default function Page() {
   const router = useRouter();
@@ -27,9 +23,9 @@ export default function Page() {
   const [isCloseTriggered, setCloseTriggered] = useState(false);
   const removeTimeout = useRef<ReturnType<typeof setTimeout>>();
   const isMobile = useIsMobile();
+  const id = useParams<{ id: string }>().id;
 
   useEffect(() => {
-    console.log(isPresent);
     if (!isPresent) {
       setCloseTriggered(false);
       clearTimeout(removeTimeout.current);
@@ -38,6 +34,19 @@ export default function Page() {
       clearTimeout(removeTimeout.current);
     }
   }, [isPresent, safeToRemove]);
+
+  const product = useSWR(id ? endpoint(`/v1/products/${id}`) : undefined, (url) =>
+    fetch(url).then(
+      (res) => res.json() as Promise<MarketProductWithShortUser | undefined>,
+    ),
+  );
+
+  const [productAvailable, setProductAvailable] = useState(product.data);
+  useEffect(() => {
+    if(product.data) {
+      setProductAvailable(product.data);
+    }
+  }, [product.data]);
 
   return (
     <ResponsiveDialog
@@ -59,7 +68,13 @@ export default function Page() {
           </ResponsiveDialogHeader>
         </VisuallyHidden>
         <div className="overflow-y-scroll p-4">
-          <ProductDetail onBack={isMobile ? 'disabled' : router.back} />
+          {!productAvailable && !product.error && <>불러오는 중</>}
+          {productAvailable && (
+            <ProductDetail
+              onBack={isMobile ? 'disabled' : router.back}
+              product={productAvailable}
+            />
+          )}
         </div>
       </ResponsiveDialogContent>
     </ResponsiveDialog>

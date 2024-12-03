@@ -13,6 +13,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ProductCard } from '@/components/product/product-card';
+import { endpoint } from '@/api/market/endpoint';
+import { MarketProductWithShortUser } from '@/api/types';
+import useSWR from 'swr';
 
 const CategoryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
@@ -50,6 +53,15 @@ const categoryNames: { [K in Category]: string } = {
 export default function Home() {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+
+  const products = useSWR(
+    endpoint(`/v1/products`) +
+      `?category=categories.${selectedCategory}&order_by=downloads&limit=8`,
+    (url) =>
+      fetch(url).then((res) =>
+        res.ok ? (res.json() as Promise<MarketProductWithShortUser[]>) : null,
+      ),
+  );
 
   return (
     <div className="h-full pt-8">
@@ -97,14 +109,24 @@ export default function Home() {
               인기 상품
             </div>
             <div className="mt-4 flex gap-4 overflow-y-visible overflow-x-scroll px-4 pb-4">
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
+              {products.data && products.data?.length > 0 ? (
+                products.data?.map((it) => (
+                  <ProductCard
+                    key={it.id}
+                    id={it.id}
+                    name={it.name}
+                    price={it.price}
+                    discountPrice={it.price_discount}
+                    creatorDisplayName={
+                      it.creator.nickname ?? it.creator.username ?? 'Unknown'
+                    }
+                  />
+                ))
+              ) : (
+                <div className="flex size-full items-center justify-center text-2xl font-semibold">
+                  해당하는 상품 없음
+                </div>
+              )}
             </div>
           </div>
         </div>

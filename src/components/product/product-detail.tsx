@@ -1,7 +1,10 @@
+'use client';
+
 import { CATEGORIES, CATEGORY_ALL, CategoryKey } from '@/features/category';
 import { OptionalLink } from '@/components/util/optional-link';
 import { Button, ButtonProps } from '@/components/ui/button';
 import {
+  CheckIcon,
   ChevronLeftIcon,
   CreditCardIcon,
   PlusIcon,
@@ -10,8 +13,8 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
-import React from 'react';
-import { MarketProduct } from '@/api/types';
+import React, { useEffect } from 'react';
+import { MarketProduct, MarketProductWithShortUser } from '@/api/types';
 import { ChildrenProps } from '@/util/types-props';
 import {
   Tooltip,
@@ -19,28 +22,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-
-const sampleProduct: MarketProduct = {
-  creator: BigInt('0'),
-  id: BigInt('540606408601633077'),
-
-  category: 'modeling',
-
-  name: '에메랄드 검',
-  description: '에메랄드 검 3d 모델링입니다',
-  usage: '리소스팩에 포함해서 사용',
-  tags: ['weapon'],
-
-  price: '2500원',
-  discountPrice: '2250원',
-  discountRate: 0.1,
-
-  likes: 25,
-  downloads: 79,
-
-  created_at: new Date(1204416000000),
-  updated_at: new Date(1204418000000)
-};
+import { endpoint } from '@/api/market/endpoint';
+import { useCart, useIsInCart } from '@/core/cart/atom';
 
 const SmallCard = React.forwardRef<
   HTMLButtonElement,
@@ -84,11 +67,11 @@ const TagCard = React.forwardRef<
 });
 TagCard.displayName = 'TagCard';
 
-function ViewSelect() {
+function ViewSelect({ url }: { url: string }) {
   return (
     <div className="relative size-32 overflow-hidden rounded-2xl border-2 transition-all hover:border-accent-foreground">
       <Image
-        src="https://static.wikia.nocookie.net/minecrafttrapped/images/8/89/Emerald_Sword.png/revision/latest?cb=20200910073142"
+        src={url}
         fill={true}
         className="scale-75 object-contain"
         style={{
@@ -114,12 +97,15 @@ function Display({
 
 type ProductDetailProps = {
   onBack?: (() => void) | 'go_to_category' | 'disabled';
+  product: MarketProductWithShortUser;
 };
 
-export function ProductDetail({ onBack }: ProductDetailProps) {
-  const product = sampleProduct;
+export function ProductDetail({ onBack, product }: ProductDetailProps) {
+  const category =
+    (product && CATEGORIES[product.category as CategoryKey]) ?? CATEGORY_ALL;
 
-  const category = CATEGORIES[product.category as CategoryKey] ?? CATEGORY_ALL;
+  const isInCart = useIsInCart(product.id);
+  const { addElement: addToCart, removeElement: removeFromCart } = useCart();
 
   return (
     <div className="flex justify-center">
@@ -147,32 +133,34 @@ export function ProductDetail({ onBack }: ProductDetailProps) {
         <div className="grid grid-cols-1 grid-rows-[min-content_auto] gap-6 gap-x-8 md:grid-cols-2">
           <div className="relative aspect-video overflow-hidden rounded-xl border-2">
             <Image
-              src="https://static.wikia.nocookie.net/minecrafttrapped/images/8/89/Emerald_Sword.png/revision/latest?cb=20200910073142"
+              src={product && endpoint(`/v1/products/${product.id}/image`)}
               fill={true}
               className="object-contain"
-              style={{
-                imageRendering: 'pixelated',
-              }}
               alt="Product Image"
             />
           </div>
           <div className="flex flex-col">
-            <div className="text-4xl font-semibold">{product.name}</div>
-            <div className="mt-2 text-2xl">{product.description}</div>
+            <div className="text-4xl font-semibold">{product?.name}</div>
+            <div className="mt-2 text-2xl">{product?.description}</div>
             <div className="mt-auto">
               <div className="flex flex-wrap gap-2">
                 <TagCard tag="최신">최신</TagCard>
                 <TagCard tag="최신">인증됨</TagCard>
               </div>
               <div className="mt-2 flex gap-2">
-                <SmallCard tooltip={product.created_at.toLocaleString()}>
+                <SmallCard
+                  tooltip={new Date(product?.created_at).toLocaleString()}
+                >
                   <PlusIcon />
-                  {dayjs(product.created_at).format('YYYY/MM/DD')}
+                  {dayjs(product?.created_at).format('YYYY/MM/DD')}
                 </SmallCard>
-                {product.created_at.getTime() != product.updated_at.getTime() && (
-                  <SmallCard tooltip={product.updated_at.toLocaleString()}>
+                {new Date(product?.created_at).getTime() !=
+                  new Date(product?.updated_at).getTime() && (
+                  <SmallCard
+                    tooltip={new Date(product?.updated_at).toLocaleString()}
+                  >
                     <UploadIcon />
-                    {dayjs(product.updated_at).format('YYYY/MM/DD')}
+                    {dayjs(product?.updated_at).format('YYYY/MM/DD')}
                   </SmallCard>
                 )}
               </div>
@@ -181,20 +169,40 @@ export function ProductDetail({ onBack }: ProductDetailProps) {
                   <CreditCardIcon />
                   구매하기
                 </Button>
-                <Button size="lg" variant="outline">
-                  <ShoppingCartIcon />
-                  카트에 추가
+                <Button
+                  size="lg"
+                  variant={isInCart ? "secondary" : 'outline'}
+                  className="border"
+                  onClick={() => {
+                    if (isInCart) removeFromCart(product.id);
+                    else addToCart(product.id);
+                  }}
+                >
+                  {isInCart ? (
+                    <>
+                      <ShoppingCartIcon />
+                      카트에 추가됨
+                      <CheckIcon />
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCartIcon />
+                      카트에 추가
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
           </div>
           <div>
             <div className="flex gap-2">
-              <ViewSelect />
-              <ViewSelect />
+              <ViewSelect
+                url={product && endpoint(`/v1/products/${product.id}/image`)}
+              />
+              {/*<ViewSelect />*/}
             </div>
             <div className="mt-4">
-              <Display name="상품 ID">{product.id}</Display>
+              <Display name="상품 ID">{product?.id}</Display>
             </div>
           </div>
           <div></div>
