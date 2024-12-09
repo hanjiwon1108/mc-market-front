@@ -16,12 +16,14 @@ import { DeleteProductDialog } from '@/app/admin/(panels)/products/delete-produc
 import { EditProductDialog } from '@/app/admin/(panels)/products/edit-product-dialog';
 import { ProductImageDialog } from '@/app/admin/(panels)/products/product-image-dialog';
 import { endpoint } from '@/api/market/endpoint';
+import { useRouter } from 'next/navigation';
 
 export function ProductRow({
   product,
 }: {
   product: MarketProductWithShortUser;
 }) {
+  const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
@@ -68,7 +70,11 @@ export function ProductRow({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>작업</DropdownMenuLabel>
-              {/*<DropdownMenuItem disabled>상품 비공개</DropdownMenuItem>*/}
+              <DropdownMenuItem
+                onClick={() => router.push(`/products/${product.id}`)}
+              >
+                Open product details
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
                 내용 수정
               </DropdownMenuItem>

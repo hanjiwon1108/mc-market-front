@@ -1,4 +1,4 @@
-export function InsufficientPermission() {
+export function InsufficientPermissionScreen() {
   return (
     <div className="flex flex-1 items-center justify-center">
       <div>

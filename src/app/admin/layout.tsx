@@ -3,7 +3,7 @@ import {
   getMapleUserPermission,
   MAPLE_USER_PERMISSION_ADMINISTRATOR,
 } from '@/api/permissions';
-import { InsufficientPermission } from '@/app/admin/insufficient-permission';
+import { InsufficientPermissionScreen } from '@/app/admin/insufficient-permission-screen';
 import { getMapleUser } from '@/api/market/cache';
 
 export default async function Layout({ children }: ChildrenProps) {
@@ -15,7 +15,7 @@ export default async function Layout({ children }: ChildrenProps) {
 
   return (
     <div className="flex flex-1 flex-col md:p-16">
-      {permission ? children : <InsufficientPermission />}
+      {permission ? children : <InsufficientPermissionScreen />}
     </div>
   );
 }
