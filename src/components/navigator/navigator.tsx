@@ -12,6 +12,7 @@ import { NavigatorCategoryItem } from '@/components/navigator/navigator-category
 import { NavigatorEventItem } from '@/components/navigator/navigator-event-item';
 import { Input } from '@/components/ui/input';
 import {
+  CreditCardIcon,
   HomeIcon,
   MenuIcon,
   MessageCircleQuestionIcon,
@@ -34,6 +35,7 @@ import { CATEGORIES } from '@/features/category';
 import { NavigatorProfileMenu } from '@/components/navigator/navigator-profile-menu';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/core/cart/atom';
+import { useMapleUser } from '@/api/market/context';
 
 export function Navigator() {
   const session = useSession();
@@ -42,6 +44,7 @@ export function Navigator() {
   const isMobile = useIsMobile();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const cart = useCart();
+  const user = useMapleUser();
 
   return (
     <>
@@ -97,16 +100,16 @@ export function Navigator() {
               );
             })}
         </NavigatorSidebarMenu>
-        <NavigatorSidebarMenu
-          display="이벤트"
-          icon={TicketIcon}
-          href="/events"
-        />
-        <NavigatorSidebarMenu
-          display="고객센터"
-          icon={MessageCircleQuestionIcon}
-          href="supports"
-        />
+        {/*<NavigatorSidebarMenu*/}
+        {/*  display="이벤트"*/}
+        {/*  icon={TicketIcon}*/}
+        {/*  href="/events"*/}
+        {/*/>*/}
+        {/*<NavigatorSidebarMenu*/}
+        {/*  display="고객센터"*/}
+        {/*  icon={MessageCircleQuestionIcon}*/}
+        {/*  href="supports"*/}
+        {/*/>*/}
       </NavigatorSidebar>
 
       <div className="fixed z-50 flex h-[3.375rem] w-full items-center border-b-2 bg-background/80 p-2 backdrop-blur-2xl">
@@ -125,14 +128,14 @@ export function Navigator() {
             <NavigationMenuList>
               <NavigatorHomeItem />
               <NavigatorCategoryItem />
-              <NavigatorEventItem />
-              <NavigationMenuItem>
-                <Link href="/supports" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    고객센터
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
+              {/*<NavigatorEventItem />*/}
+              {/*<NavigationMenuItem>*/}
+              {/*  <Link href="/supports" legacyBehavior passHref>*/}
+              {/*    <NavigationMenuLink className={navigationMenuTriggerStyle()}>*/}
+              {/*      고객센터*/}
+              {/*    </NavigationMenuLink>*/}
+              {/*  </Link>*/}
+              {/*</NavigationMenuItem>*/}
             </NavigationMenuList>
             <div className="mx-auto hidden md:block">
               <div className="flex min-w-0 max-w-96 transition-all lg:min-w-[28rem]">
@@ -148,6 +151,14 @@ export function Navigator() {
             </div>
           </NavigationMenu>
 
+          <div className="mr-2">
+            {session && (
+              <div className="flex select-none items-center font-semibold gap-2">
+                {user?.cash}원
+                <CreditCardIcon />
+              </div>
+            )}
+          </div>
           <div>
             <Link href="/cart" className="mr-2">
               <Button className="size-10 rounded-full p-0" variant="ghost">

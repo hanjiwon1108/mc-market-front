@@ -4,7 +4,7 @@ import { ProductDetail } from '@/components/product/product-detail';
 import { useParams, useRouter } from 'next/navigation';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePresence } from 'framer-motion';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ResponsiveDialog,
   ResponsiveDialogClose,
@@ -16,9 +16,12 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import useSWR from 'swr';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
+import { authFetch } from '@/api/surge/fetch';
+import { useSession } from '@/api/surge';
 
 export default function Page() {
   const router = useRouter();
+  const session = useSession();
   const [isPresent, safeToRemove] = usePresence();
   const [isCloseTriggered, setCloseTriggered] = useState(false);
   const removeTimeout = useRef<ReturnType<typeof setTimeout>>();
@@ -35,15 +38,26 @@ export default function Page() {
     }
   }, [isPresent, safeToRemove]);
 
-  const product = useSWR(id ? endpoint(`/v1/products/${id}`) : undefined, (url) =>
-    fetch(url).then(
-      (res) => res.json() as Promise<MarketProductWithShortUser | undefined>,
-    ),
+  const product = useSWR(
+    id ? endpoint(`/v1/products/${id}`) : undefined,
+    (url) =>
+      fetch(url).then(
+        (res) => res.json() as Promise<MarketProductWithShortUser | undefined>,
+      ),
+  );
+  const purchased = useSWR(
+    id ? endpoint(`/v1/products/${id}/purchased`) : undefined,
+    (url) => {
+      if (!session) return false;
+      return authFetch(session, url)
+        .then((it) => it.text())
+        .then((it) => it == 'true');
+    },
   );
 
   const [productAvailable, setProductAvailable] = useState(product.data);
   useEffect(() => {
-    if(product.data) {
+    if (product.data) {
       setProductAvailable(product.data);
     }
   }, [product.data]);
@@ -73,6 +87,7 @@ export default function Page() {
             <ProductDetail
               onBack={isMobile ? 'disabled' : router.back}
               product={productAvailable}
+              purchased={purchased.data}
             />
           )}
         </div>

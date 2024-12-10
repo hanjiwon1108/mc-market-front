@@ -16,8 +16,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import useSWRInfinite from 'swr/infinite';
+import { useDebouncedState } from '@/util/debounce';
 
-type OrderByOptions = 'time' | 'price' | 'downloads';
+type OrderByOptions = 'time' | 'price' | 'purchases';
 type SortOptions = `asc` | 'desc';
 
 type FilterOptions = {
@@ -28,10 +29,16 @@ type FilterOptions = {
 };
 
 export function ProductSearch() {
-  const [orderBy, setOrderBy] = useState<OrderByOptions>('time');
-  const [sort, setSort] = useState<SortOptions>('desc');
-  const [filterPriceRange, setFilterPriceRange] = useState([0, 200000]);
-  const [keywords, setKeywords] = useState('');
+  const [orderByDebounced, setOrderBy, orderBy] =
+    useDebouncedState<OrderByOptions>('time', 500);
+  const [sortDebounced, setSort, sort] = useDebouncedState<SortOptions>(
+    'desc',
+    500,
+  );
+  const [filterPriceRangeDebounced, setFilterPriceRange, filterPriceRange] =
+    useDebouncedState([0, 200000], 500);
+  const [keywordsDebounced, setKeywords, keywords] = useDebouncedState('', 500);
+  const [filterFree, setFilterFree] = useState(false);
 
   const products = useSWRInfinite(
     (index, prev: MarketProductWithShortUser[]) => {
@@ -43,10 +50,10 @@ export function ProductSearch() {
       return [
         endpoint(`/v1/products`) + `?offset=${offset}&`,
         {
-          orderBy,
-          sort,
-          priceRange: filterPriceRange,
-          keywords,
+          orderBy: orderByDebounced,
+          sort: sortDebounced,
+          priceRange: filterFree ? [0, 0] : filterPriceRangeDebounced,
+          keywords: keywordsDebounced,
         } as FilterOptions,
       ];
     },
@@ -85,18 +92,19 @@ export function ProductSearch() {
           <div className="flex h-96 w-full flex-col gap-2 rounded-lg bg-accent p-4">
             <p className="text-2xl font-semibold">필터</p>
             <Label htmlFor="search/select:sort">정렬 옵션</Label>
-            <Select>
+            <Select onValueChange={(v) => setOrderBy(v as OrderByOptions)}>
               <SelectTrigger className="w-full" id="search/select:sort">
                 <SelectValue placeholder="정렬" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="latest">최신 순</SelectItem>
-                <SelectItem value="stars">구매 순</SelectItem>
-                <SelectItem value="prices">가격 순</SelectItem>
+                <SelectItem value="time">최신 순</SelectItem>
+                <SelectItem value="purchases">구매 순</SelectItem>
+                <SelectItem value="price">가격 순</SelectItem>
               </SelectContent>
             </Select>
             <Label htmlFor="search/range:price">가격 범위</Label>
             <RangeSlider
+              disabled={filterFree}
               className="mb-8"
               id="search/range:price"
               label={(v) => <div className="whitespace-nowrap">{v}원</div>}
@@ -105,11 +113,15 @@ export function ProductSearch() {
               onValueChange={setFilterPriceRange}
               min={0}
               max={200000}
-              step={100}
+              step={2000}
             />
 
             <div className="flex items-center space-x-2">
-              <Checkbox id="search/checkbox:free" disabled={true} />
+              <Checkbox
+                id="search/checkbox:free"
+                onCheckedChange={(v) => setFilterFree(!!v)}
+                checked={filterFree}
+              />
               <label
                 htmlFor="search/checkbox:free"
                 className="select-none text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

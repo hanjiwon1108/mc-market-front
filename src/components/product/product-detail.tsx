@@ -6,15 +6,17 @@ import { Button, ButtonProps } from '@/components/ui/button';
 import {
   CheckIcon,
   ChevronLeftIcon,
+  CircleDashed,
   CreditCardIcon,
+  DownloadIcon,
   PlusIcon,
   ShoppingCartIcon,
   UploadIcon,
 } from 'lucide-react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
-import { MarketProduct, MarketProductWithShortUser } from '@/api/types';
+import React, { useRef, useState } from 'react';
+import { MarketProductWithShortUser } from '@/api/types';
 import { ChildrenProps } from '@/util/types-props';
 import {
   Tooltip,
@@ -24,6 +26,9 @@ import {
 import { cn } from '@/lib/utils';
 import { endpoint } from '@/api/market/endpoint';
 import { useCart, useIsInCart } from '@/core/cart/atom';
+import { authFetch } from '@/api/surge/fetch';
+import { useSession } from '@/api/surge';
+import { toast } from 'sonner';
 
 const SmallCard = React.forwardRef<
   HTMLButtonElement,
@@ -95,17 +100,143 @@ function Display({
   );
 }
 
+function useDownload(id: string) {
+  const session = useSession();
+  const [downloading, setDownloading] = useState(false);
+  const response = useRef<Response>();
+  const [progress, setProgress] = useState(0);
+  const blob = useRef<Blob>();
+  const filename = useRef<string>();
+
+  function getFilenameFromContentDisposition(disposition: string): string {
+    const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/i;
+    const asciiFilenameRegex = /^filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
+
+    let fileName: string | null = null;
+    if (utf8FilenameRegex.test(disposition)) {
+      fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)![1]);
+    } else {
+      // prevent ReDos attacks by anchoring the ascii regex to string start and
+      //  slicing off everything before 'filename='
+      const filenameStart = disposition.toLowerCase().indexOf('filename=');
+      if (filenameStart >= 0) {
+        const partialDisposition = disposition.slice(filenameStart);
+        const matches = asciiFilenameRegex.exec(partialDisposition);
+        if (matches != null && matches[2]) {
+          fileName = matches[2];
+        }
+      }
+    }
+    return fileName!;
+  }
+
+  function downloadFromCache() {
+    if (!blob.current) return;
+    const url = URL.createObjectURL(blob.current);
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = filename.current ?? `${id}.market`;
+    a.click();
+  }
+
+  function startDownload() {
+    if (!session || response.current || downloading || blob.current) return;
+    setDownloading(true);
+    authFetch(session, endpoint(`/v1/products/${id}/file`)).then(async (r) => {
+      if (!r.body) {
+        setDownloading(false);
+        return;
+      }
+
+      if (!r.ok) {
+        setDownloading(false);
+        if (r.status == 404) {
+          toast.error(
+            <>
+              404: 이 상품에 대한 컨텐츠가 없습니다
+              <br />
+              관리자에게 문의하십시오
+            </>,
+          );
+        } else {
+          toast.error(
+            `다운로드를 시작할 수 없습니다: ${r.status} ${r.statusText}`,
+          );
+        }
+        return;
+      }
+
+      response.current = r;
+
+      filename.current = getFilenameFromContentDisposition(
+        r.headers.get('Content-Disposition') ?? '',
+      );
+      toast.info(`다운로드 큐: ${filename.current}`);
+
+      const contentLength = +(r.headers.get('Content-Length') ?? '0');
+      let receivedLength = 0;
+
+      const reader = r.body.getReader();
+      const chunks: Uint8Array[] = [];
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) break;
+
+        chunks.push(value);
+        receivedLength += value.length;
+        setProgress(receivedLength / contentLength);
+      }
+
+      const concatenated = new Uint8Array(receivedLength);
+      let position = 0;
+      for (const chunk of chunks) {
+        concatenated.set(chunk, position);
+        position += chunk.length;
+      }
+
+      setDownloading(false);
+      blob.current = new Blob([concatenated]);
+      downloadFromCache();
+    });
+  }
+
+  function download() {
+    if (blob.current) {
+      downloadFromCache();
+    } else {
+      startDownload();
+    }
+  }
+
+  return {
+    isCacheAvailable: !!blob.current,
+    isDownloading: downloading,
+    progress,
+    download,
+  };
+}
+
 type ProductDetailProps = {
   onBack?: (() => void) | 'go_to_category' | 'disabled';
   product: MarketProductWithShortUser;
+  purchased?: boolean;
 };
 
-export function ProductDetail({ onBack, product }: ProductDetailProps) {
+export function ProductDetail({
+  onBack,
+  product,
+  purchased,
+}: ProductDetailProps) {
   const category =
     (product && CATEGORIES[product.category as CategoryKey]) ?? CATEGORY_ALL;
 
   const isInCart = useIsInCart(product.id);
   const { addElement: addToCart, removeElement: removeFromCart } = useCart();
+
+  const download = useDownload(product.id);
 
   return (
     <div className="flex justify-center">
@@ -165,32 +296,53 @@ export function ProductDetail({ onBack, product }: ProductDetailProps) {
                 )}
               </div>
               <div className="mt-4 flex flex-col gap-2 *:flex-1 *:gap-2 *:py-4 *:text-xl md:flex-row md:*:p-6">
-                <Button size="lg">
-                  <CreditCardIcon />
-                  구매하기
-                </Button>
-                <Button
-                  size="lg"
-                  variant={isInCart ? "secondary" : 'outline'}
-                  className="border"
-                  onClick={() => {
-                    if (isInCart) removeFromCart(product.id);
-                    else addToCart(product.id);
-                  }}
-                >
-                  {isInCart ? (
-                    <>
-                      <ShoppingCartIcon />
-                      카트에 추가됨
+                {purchased ? (
+                  download.isDownloading ? (
+                    <Button disabled>
+                      <CircleDashed />
+                      다운로드 중 {download.progress * 100}%
+                    </Button>
+                  ) : download.isCacheAvailable ? (
+                    <Button onClick={download.download}>
                       <CheckIcon />
-                    </>
+                      다운로드 완료
+                    </Button>
                   ) : (
-                    <>
-                      <ShoppingCartIcon />
-                      카트에 추가
-                    </>
-                  )}
-                </Button>
+                    <Button onClick={download.download}>
+                      <DownloadIcon />
+                      다운로드
+                    </Button>
+                  )
+                ) : (
+                  <Button size="lg">
+                    <CreditCardIcon />
+                    구매하기
+                  </Button>
+                )}
+                {!purchased && (
+                  <Button
+                    size="lg"
+                    variant={isInCart ? 'secondary' : 'outline'}
+                    className="border"
+                    onClick={() => {
+                      if (isInCart) removeFromCart(product.id);
+                      else addToCart(product.id);
+                    }}
+                  >
+                    {isInCart ? (
+                      <>
+                        <ShoppingCartIcon />
+                        카트에 추가됨
+                        <CheckIcon />
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCartIcon />
+                        카트에 추가
+                      </>
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           </div>

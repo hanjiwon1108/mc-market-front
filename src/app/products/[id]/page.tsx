@@ -1,16 +1,24 @@
 import { ProductDetail } from '@/components/product/product-detail';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
+import { getSession } from '@/api/surge';
+import { authFetch } from '@/api/surge/fetch';
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const session = await getSession();
   const id = (await params).id;
   const product = await fetch(endpoint(`/v1/products/${id}`)).then(
     (res) => res.json() as Promise<MarketProductWithShortUser | undefined>,
   );
+  const purchased =
+    session &&
+    (await authFetch(session, endpoint(`/v1/products/${id}/purchased`))
+      .then((it) => it.text())
+      .then((it) => it == 'true'));
 
   if (!product) {
     return (
@@ -25,7 +33,7 @@ export default async function Page({
 
   return (
     <div className="p-8 md:py-20">
-      <ProductDetail product={product} />
+      <ProductDetail product={product} purchased={!!purchased} />
     </div>
   );
 }

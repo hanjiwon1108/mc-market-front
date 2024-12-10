@@ -65,7 +65,9 @@ export default function Page() {
       if (index == 0) {
         return [session, endpoint('/v1/products/')];
       }
-      const lastUser = previousPageData.reduce((p, c) => (BigInt(p.id) > BigInt(c.id) ? p : c));
+      const lastUser = previousPageData.reduce((p, c) =>
+        BigInt(p.id) > BigInt(c.id) ? p : c,
+      );
 
       return [
         session,
@@ -97,6 +99,8 @@ export default function Page() {
             <TableHead>설명</TableHead>
             <TableHead>상품 생성</TableHead>
             <TableHead>상품 업데이트</TableHead>
+            <TableHead>정가 (할인가)</TableHead>
+            <TableHead>미정산 수익</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

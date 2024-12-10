@@ -22,7 +22,7 @@ export default async function Page({
 
   const products = await fetch(
     endpoint(`/v1/products`) +
-      `?category=categories.${category}&order_by=downloads&limit=8`,
+      `?category=${category.path}&order_by=purchases&limit=8`,
   ).then((res) =>
     res.ok ? (res.json() as Promise<MarketProductWithShortUser[]>) : null,
   );
@@ -51,7 +51,9 @@ export default async function Page({
                 />
               ))
             ) : (
-              <div className="size-full flex justify-center items-center text-2xl font-semibold">해당하는 상품 없음</div>
+              <div className="flex size-full items-center justify-center text-2xl font-semibold">
+                해당하는 상품 없음
+              </div>
             )}
           </div>
         </div>

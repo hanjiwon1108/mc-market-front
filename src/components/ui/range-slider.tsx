@@ -24,6 +24,7 @@ const RangeSlider = React.forwardRef<
       ref={ref}
       className={cn(
         'relative flex w-full touch-none select-none items-center',
+        props.disabled && 'opacity-50 cursor-not-allowed',
         className,
       )}
       {...props}

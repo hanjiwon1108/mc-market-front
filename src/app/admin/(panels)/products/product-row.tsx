@@ -17,16 +17,38 @@ import { EditProductDialog } from '@/app/admin/(panels)/products/edit-product-di
 import { ProductImageDialog } from '@/app/admin/(panels)/products/product-image-dialog';
 import { endpoint } from '@/api/market/endpoint';
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
+import { authFetch } from '@/api/surge/fetch';
+import { useSession } from '@/api/surge';
+import { toast } from 'sonner';
+import { ProductFileDialog } from '@/app/admin/(panels)/products/product-file-dialog';
 
 export function ProductRow({
   product,
 }: {
   product: MarketProductWithShortUser;
 }) {
+  const session = useSession();
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
+  const [fileDialogOpen, setFileDialogOpen] = React.useState(false);
+
+  const revenues = useSWR(
+    endpoint(`/v1/products/${product.id}/revenues`),
+    async (u) => {
+      if (!session) return;
+      const response = await authFetch(session, u);
+      const json = await response.json();
+      if (!response.ok) {
+        toast.error(JSON.stringify(json));
+        throw await json;
+      }
+
+      return json as number;
+    },
+  );
 
   return (
     <>
@@ -45,6 +67,11 @@ export function ProductRow({
         isOpen={imageDialogOpen}
         onOpenChange={setImageDialogOpen}
       />
+      <ProductFileDialog
+        product={product}
+        isOpen={fileDialogOpen}
+        onOpenChange={setFileDialogOpen}
+      />
       <TableRow>
         <TableCell className="mx-auto my-2 mr-4 flex h-16 w-full min-w-24 max-w-40 items-center justify-center rounded-2xl bg-accent">
           <Image
@@ -60,6 +87,11 @@ export function ProductRow({
         <TableCell>{product.description}</TableCell>
         <TableCell>{product.created_at.toLocaleString()}</TableCell>
         <TableCell>{product.updated_at.toLocaleString()}</TableCell>
+        <TableCell>
+          {product.price}{' '}
+          {product.price_discount && `(${product.price_discount})`}
+        </TableCell>
+        <TableCell>{revenues.data ?? '불러오는 중'}</TableCell>
         <TableCell>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -80,6 +112,9 @@ export function ProductRow({
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setImageDialogOpen(true)}>
                 이미지 업로드/수정
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFileDialogOpen(true)}>
+                컨텐츠 업로드
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem

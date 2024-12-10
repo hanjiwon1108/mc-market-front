@@ -22,7 +22,7 @@ import useSWRInfinite from 'swr/infinite';
 import { MarketProductWithShortUser } from '@/api/types';
 import { endpoint } from '@/api/market/endpoint';
 import { authFetch } from '@/api/surge/fetch';
-import { useSession } from '@/api/surge';
+import { useSession, useUser } from '@/api/surge';
 import { Session } from '@entropi-co/surge-js';
 import { CreateProductButton } from '@/app/dashboard/(panels)/products/create-product-button';
 
@@ -34,17 +34,20 @@ const fetcher = async ([session, u]: [Session, string]) => {
 
 export default function Page() {
   const session = useSession();
+  const user = useUser();
   const infinite = useSWRInfinite(
     (index, previousPageData: MarketProductWithShortUser[]) => {
       if (previousPageData && !previousPageData.length) return;
       if (index == 0) {
         return [session, endpoint('/v1/products/')];
       }
-      const lastUser = previousPageData.reduce((p, c) => (p.id > c.id ? p : c));
+      const lastProduct = previousPageData.reduce((p, c) =>
+        p.id > c.id ? p : c,
+      );
 
       return [
         session,
-        `${endpoint(`/v1/products/`)}?offset=${index == 0 ? 0 : lastUser.id}`,
+        `${endpoint(`/v1/products/`)}?creator=${user?.id}&offset=${index == 0 ? 0 : lastProduct.id}`,
       ];
     },
     {
