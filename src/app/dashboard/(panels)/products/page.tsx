@@ -25,6 +25,7 @@ import { authFetch } from '@/api/surge/fetch';
 import { useSession, useUser } from '@/api/surge';
 import { Session } from '@entropi-co/surge-js';
 import { CreateProductButton } from '@/app/dashboard/(panels)/products/create-product-button';
+import { ProductRow } from '@/app/dashboard/(panels)/products/product-row';
 
 const fetcher = async ([session, u]: [Session, string]) => {
   if (!session) return [];
@@ -39,7 +40,7 @@ export default function Page() {
     (index, previousPageData: MarketProductWithShortUser[]) => {
       if (previousPageData && !previousPageData.length) return;
       if (index == 0) {
-        return [session, endpoint('/v1/products/')];
+        return [session, `${endpoint('/v1/products/')}?creator=${user?.id}`];
       }
       const lastProduct = previousPageData.reduce((p, c) =>
         p.id > c.id ? p : c,
@@ -63,18 +64,19 @@ export default function Page() {
   }, [page]);
 
   return (
-    <>
+    <div className="">
       <CreateProductButton />
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>이미지</TableHead>
             <TableHead>ID</TableHead>
-            <TableHead>업로더</TableHead>
             <TableHead>이름</TableHead>
             <TableHead>설명</TableHead>
             <TableHead>상품 생성</TableHead>
             <TableHead>상품 업데이트</TableHead>
-            <TableHead>이미지</TableHead>
+            <TableHead>정가 (할인가)</TableHead>
+            <TableHead>미정산 수익</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -84,16 +86,7 @@ export default function Page() {
                 ? infinite.data[page]
                 : []
               : []
-            ).map((it) => (
-              <TableRow key={it.id}>
-                <TableCell>{it.id}</TableCell>
-                <TableCell>{it.creator.nickname ?? it.creator.id}</TableCell>
-                <TableCell>{it.name}</TableCell>
-                <TableCell>{it.description}</TableCell>
-                <TableCell>{it.created_at.toLocaleString()}</TableCell>
-                <TableCell>{it.updated_at.toLocaleString()}</TableCell>
-              </TableRow>
-            ))}
+            ).map((it) => <ProductRow key={it.id} product={it} />)}
         </TableBody>
       </Table>
       <Pagination className="mt-auto border-t pt-2">
@@ -132,6 +125,6 @@ export default function Page() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </>
+    </div>
   );
 }

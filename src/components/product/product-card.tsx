@@ -5,7 +5,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { StarIcon, UserRoundIcon } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
-import {endpoint} from "@/api/market/endpoint";
+import { endpoint } from '@/api/market/endpoint';
+import { FallbackImage } from '@/components/util/fallback-image';
 
 export type ProductCardProps = {
   id: string;
@@ -20,15 +21,16 @@ export function ProductCard(props: ProductCardProps) {
     <Link
       scroll={false}
       href={`/products/${props.id}`}
-      className="group min-w-52 cursor-pointer overflow-hidden rounded-2xl p-2 transition duration-300 hover:shadow-lg"
+      className="group min-w-52 max-w-52 cursor-pointer overflow-hidden rounded-2xl p-2 transition duration-300 hover:shadow-lg"
     >
-      <div className="mt-2 aspect-[3/2] w-full overflow-hidden rounded-2xl border">
-        <Image
+      <div className="relative mt-2 aspect-video w-full overflow-hidden rounded-2xl border">
+        <FallbackImage
           width={640}
           height={480}
           src={endpoint(`/v1/products/${props.id}/image`)}
           alt="Product Image"
         />
+        <Avatar />
       </div>
       <div className="mt-2">
         <div className="flex gap-2">

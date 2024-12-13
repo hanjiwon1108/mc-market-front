@@ -3,6 +3,7 @@ import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import { getSession } from '@/api/surge';
 import { authFetch } from '@/api/surge/fetch';
+import { PageUpdater } from '@/app/products/[id]/updater';
 
 export default async function Page({
   params,
@@ -16,7 +17,7 @@ export default async function Page({
   );
   const purchased =
     session &&
-    (await authFetch(session, endpoint(`/v1/products/${id}/purchased`))
+    (await authFetch(session, endpoint(`/v1/products/${id}/purchase`))
       .then((it) => it.text())
       .then((it) => it == 'true'));
 
@@ -33,7 +34,7 @@ export default async function Page({
 
   return (
     <div className="p-8 md:py-20">
-      <ProductDetail product={product} purchased={!!purchased} />
+      <PageUpdater initialProduct={product} initialPurchased={!!purchased} />
     </div>
   );
 }

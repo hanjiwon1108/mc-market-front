@@ -16,17 +16,12 @@ type EditProductFormState = Partial<{
 }>;
 
 export function useEditProductFormState(initial: EditProductFormState = {}) {
-  const user = useUser();
-
   const [name, setName] = useState(initial.name ?? '');
   const [description, setDescription] = useState(initial.description ?? '');
   const [category, setCategory] = useState(initial.category ?? '');
   const [usage, setUsage] = useState(initial.usage ?? '');
   const [price, setPrice] = useState(initial.price ?? 0);
   const [discount, setDiscount] = useState(initial.discount ?? 0);
-  const [creator, setCreator] = useState(
-    `${initial.creator ?? user?.id ?? ''}`,
-  );
 
   return {
     name,
@@ -37,8 +32,6 @@ export function useEditProductFormState(initial: EditProductFormState = {}) {
     setCategory,
     usage,
     setUsage,
-    creator,
-    setCreator,
     price,
     setPrice,
     discount,
@@ -59,14 +52,6 @@ export function EditProductForm({
           id="create_product/id"
           value={state.name}
           onValueChange={state.setName}
-        />
-      </div>
-      <div>
-        <Label htmlFor="create_product/uploader">상품 업로더 (유저 ID)</Label>
-        <Input
-          id="create_product/uploader"
-          value={state.creator}
-          onValueChange={(v) => state.setCreator(v.replace(/\D/g, ''))}
         />
       </div>
       <div>

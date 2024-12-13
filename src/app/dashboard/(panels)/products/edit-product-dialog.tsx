@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import {
   EditProductForm,
   useEditProductFormState,
-} from '@/app/admin/(panels)/products/edit-product-form';
+} from '@/app/dashboard/(panels)/products/edit-product-form';
 import React, { useState } from 'react';
 import { useSession, useUser } from '@/api/surge';
 import { authFetch } from '@/api/surge/fetch';
@@ -26,7 +26,6 @@ export function EditProductDialog({
   product: MarketProductWithShortUser;
 }) {
   const session = useSession();
-  const user = useUser();
 
   const formState = useEditProductFormState({
     name: product.name,
@@ -50,7 +49,6 @@ export function EditProductDialog({
       method: 'POST',
       body: JSON.stringify({
         ...formState,
-        creator: Number(BigInt(formState.creator)),
       }),
     }).then((it) => {
       setMutating(false);

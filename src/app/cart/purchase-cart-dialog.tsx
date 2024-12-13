@@ -13,6 +13,8 @@ import { useMapleUser } from '@/api/market/context';
 import {
   Table,
   TableBody,
+  TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -110,8 +112,7 @@ export function PurchaseCartDialog({
                 <TableHead>이미지</TableHead>
                 <TableHead>크리에이터</TableHead>
                 <TableHead>이름</TableHead>
-                <TableHead>설명</TableHead>
-                <TableHead>마지막 업데이트</TableHead>
+                <TableHead>가격</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -119,6 +120,20 @@ export function PurchaseCartDialog({
                 <ProductRow key={it.id} product={it} />
               ))}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell />
+                <TableCell />
+                <TableCell />
+                <TableCell>
+                  총{  ' '}
+                  {content
+                    .map((it) => it.price_discount ?? it.price)
+                    .reduce((p, c) => p + c)}
+                  원
+                </TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         )}
         <ResponsiveDialogFooter>

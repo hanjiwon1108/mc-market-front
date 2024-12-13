@@ -128,6 +128,13 @@ export function Navigator() {
             <NavigationMenuList>
               <NavigatorHomeItem />
               <NavigatorCategoryItem />
+              <NavigationMenuItem>
+                <Link href="/dashboard" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    크리에이터 대시보드
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
               {/*<NavigatorEventItem />*/}
               {/*<NavigationMenuItem>*/}
               {/*  <Link href="/supports" legacyBehavior passHref>*/}
@@ -151,9 +158,9 @@ export function Navigator() {
             </div>
           </NavigationMenu>
 
-          <div className="mr-2">
+          <div className="mr-2 hidden md:block">
             {session && (
-              <div className="flex select-none items-center font-semibold gap-2">
+              <div className="flex select-none items-center gap-2 font-semibold">
                 {user?.cash}원
                 <CreditCardIcon />
               </div>

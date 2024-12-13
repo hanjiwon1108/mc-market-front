@@ -25,7 +25,8 @@ export function ProductRow({
   product: MarketProductWithShortUser;
 }) {
   const router = useRouter();
-  const [deleteProductFromCart, setDeleteProductFromCart] = React.useState(false);
+  const [deleteProductFromCart, setDeleteProductFromCart] =
+    React.useState(false);
 
   return (
     <>
@@ -45,8 +46,17 @@ export function ProductRow({
         </TableCell>
         <TableCell>{product.creator.nickname ?? product.creator.id}</TableCell>
         <TableCell>{product.name}</TableCell>
-        <TableCell>{product.description}</TableCell>
-        <TableCell>{product.updated_at.toLocaleString()}</TableCell>
+        <TableCell>
+          {product.price_discount ? (
+            <div className="flex gap-1">
+              <s className="text-destructive italic">{product.price}원</s>
+              {`> ${product.price_discount}원 `}
+              <b>(할인)</b>
+            </div>
+          ) : (
+            <>{product.price}원</>
+          )}
+        </TableCell>
         <TableCell>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>

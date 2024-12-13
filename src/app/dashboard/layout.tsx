@@ -16,6 +16,7 @@ import {
 import React from 'react';
 import {
   CalendarIcon,
+  CircleDollarSignIcon,
   HomeIcon,
   InboxIcon,
   PackageIcon,
@@ -32,25 +33,18 @@ const items = [
     icon: HomeIcon,
   },
   {
-    title: '알림',
-    url: '/dashboard/inbox',
-    icon: InboxIcon,
-  },
-  {
     title: '프로덕트',
     url: '/dashboard/products',
     icon: PackageIcon,
   },
   {
-    title: '설정',
-    url: '/dashboard/settings',
-    icon: SettingsIcon,
+    title: '수익',
+    url: '/dashboard/revenue',
+    icon: CircleDollarSignIcon,
   },
 ];
 
 export default async function Layout({ children }: ChildrenProps) {
-
-
   return (
     <div className="flex flex-1 flex-col">
       <SidebarProvider>

@@ -5,14 +5,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { UserRoundIcon } from 'lucide-react';
+import { CreditCardIcon, UserRoundIcon } from 'lucide-react';
 import { createBrowserSurgeClient } from '@/api/surge';
 import { toast } from 'sonner';
 import React from 'react';
 import { useSettingsDialog } from '@/features/settings';
+import { useMapleUser } from '@/api/market/context';
 
 export function NavigatorProfileMenu() {
   const settings = useSettingsDialog();
+  const user = useMapleUser();
 
   return (
     <DropdownMenu modal={false}>
@@ -22,6 +24,12 @@ export function NavigatorProfileMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        <DropdownMenuItem>
+          <div className="flex select-none items-center gap-2 font-semibold">
+            {user?.cash}원
+            <CreditCardIcon />
+          </div>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             settings.open();

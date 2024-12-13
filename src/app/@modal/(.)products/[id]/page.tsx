@@ -46,7 +46,7 @@ export default function Page() {
       ),
   );
   const purchased = useSWR(
-    id ? endpoint(`/v1/products/${id}/purchased`) : undefined,
+    id ? endpoint(`/v1/products/${id}/purchase`) : undefined,
     (url) => {
       if (!session) return false;
       return authFetch(session, url)

@@ -6,7 +6,9 @@ import { Button, ButtonProps } from '@/components/ui/button';
 import {
   CheckIcon,
   ChevronLeftIcon,
+  ChevronRightIcon,
   CircleDashed,
+  CircleDollarSign,
   CreditCardIcon,
   DownloadIcon,
   PlusIcon,
@@ -29,29 +31,37 @@ import { useCart, useIsInCart } from '@/core/cart/atom';
 import { authFetch } from '@/api/surge/fetch';
 import { useSession } from '@/api/surge';
 import { toast } from 'sonner';
+import { ProductPurchaseDialog } from '@/components/product/product-purchase-dialog';
+import { FallbackImage } from '@/components/util/fallback-image';
 
 const SmallCard = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & ChildrenProps & { tooltip?: string }
 >(({ children, tooltip, ...props }, ref) => {
+  if (tooltip) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <SmallCard {...props}>{children}</SmallCard>
+        </TooltipTrigger>
+        <TooltipContent>{tooltip}</TooltipContent>
+      </Tooltip>
+    );
+  }
+
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="outline"
-          size="lg"
-          {...props}
-          className={cn(
-            'flex w-min items-center gap-2 rounded-xl border px-4 py-2 transition duration-300 hover:bg-accent active:scale-95',
-            props.className,
-          )}
-          ref={ref}
-        >
-          {children}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>{tooltip}</TooltipContent>
-    </Tooltip>
+    <Button
+      variant="outline"
+      size="lg"
+      {...props}
+      className={cn(
+        'flex w-min items-center gap-2 rounded-xl border px-4 py-2 transition duration-300 hover:bg-accent active:scale-95',
+        props.className,
+      )}
+      ref={ref}
+    >
+      {children}
+    </Button>
   );
 });
 SmallCard.displayName = 'SmallCard';
@@ -75,13 +85,10 @@ TagCard.displayName = 'TagCard';
 function ViewSelect({ url }: { url: string }) {
   return (
     <div className="relative size-32 overflow-hidden rounded-2xl border-2 transition-all hover:border-accent-foreground">
-      <Image
+      <FallbackImage
         src={url}
         fill={true}
         className="scale-75 object-contain"
-        style={{
-          imageRendering: 'pixelated',
-        }}
         alt="Product Image"
       />
     </div>
@@ -238,128 +245,158 @@ export function ProductDetail({
 
   const download = useDownload(product.id);
 
+  const [isPurchaseOpen, setPurchaseOpen] = React.useState(false);
+
   return (
-    <div className="flex justify-center">
-      <div className="container flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          {onBack != 'disabled' && (
-            <OptionalLink
-              href={onBack == 'go_to_category' ? category.link : undefined}
-            >
-              <Button
-                className="size-12 rounded-full p-0"
-                variant="ghost"
-                onClick={() => {
-                  if (typeof onBack === 'function') {
-                    onBack();
-                  }
-                }}
+    <>
+      <ProductPurchaseDialog
+        isOpen={isPurchaseOpen}
+        onOpenChange={setPurchaseOpen}
+        product={product}
+      />
+      <div className="flex justify-center">
+        <div className="container flex flex-col gap-4">
+          <div className="flex items-center gap-4">
+            {onBack != 'disabled' && (
+              <OptionalLink
+                href={onBack == 'go_to_category' ? category.link : undefined}
               >
-                <ChevronLeftIcon size={32} />
-              </Button>
-            </OptionalLink>
-          )}
-          <p className="text-3xl font-semibold">{category.name}</p>
-        </div>
-        <div className="grid grid-cols-1 grid-rows-[min-content_auto] gap-6 gap-x-8 md:grid-cols-2">
-          <div className="relative aspect-video overflow-hidden rounded-xl border-2">
-            <Image
-              src={product && endpoint(`/v1/products/${product.id}/image`)}
-              fill={true}
-              className="object-contain"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex flex-col">
-            <div className="text-4xl font-semibold">{product?.name}</div>
-            <div className="mt-2 text-2xl">{product?.description}</div>
-            <div className="mt-auto">
-              <div className="flex flex-wrap gap-2">
-                <TagCard tag="최신">최신</TagCard>
-                <TagCard tag="최신">인증됨</TagCard>
-              </div>
-              <div className="mt-2 flex gap-2">
-                <SmallCard
-                  tooltip={new Date(product?.created_at).toLocaleString()}
+                <Button
+                  className="size-12 rounded-full p-0"
+                  variant="ghost"
+                  onClick={() => {
+                    if (typeof onBack === 'function') {
+                      onBack();
+                    }
+                  }}
                 >
-                  <PlusIcon />
-                  {dayjs(product?.created_at).format('YYYY/MM/DD')}
-                </SmallCard>
-                {new Date(product?.created_at).getTime() !=
-                  new Date(product?.updated_at).getTime() && (
+                  <ChevronLeftIcon size={32} />
+                </Button>
+              </OptionalLink>
+            )}
+            <p className="text-3xl font-semibold">{category.name}</p>
+          </div>
+          <div className="grid grid-cols-1 grid-rows-[min-content_auto] gap-6 gap-x-8 md:grid-cols-2">
+            <div className="relative aspect-video overflow-hidden rounded-xl border-2">
+              <FallbackImage
+                src={product && endpoint(`/v1/products/${product.id}/image`)}
+                fill={true}
+                className="object-contain"
+                alt="Product Image"
+              />
+            </div>
+            <div className="flex flex-col">
+              <div className="text-4xl font-semibold">{product?.name}</div>
+              <div className="mt-2 text-2xl">{product?.description}</div>
+              <div className="mt-auto">
+                <div className="flex flex-wrap gap-2">
+                  <TagCard tag="최신">최신</TagCard>
+                  <TagCard tag="최신">인증됨</TagCard>
+                </div>
+                <div className="mt-2 flex gap-2">
                   <SmallCard
-                    tooltip={new Date(product?.updated_at).toLocaleString()}
+                    tooltip={new Date(product?.created_at).toLocaleString()}
                   >
-                    <UploadIcon />
-                    {dayjs(product?.updated_at).format('YYYY/MM/DD')}
+                    <PlusIcon />
+                    {dayjs(product?.created_at).format('YYYY/MM/DD')}
                   </SmallCard>
-                )}
-              </div>
-              <div className="mt-4 flex flex-col gap-2 *:flex-1 *:gap-2 *:py-4 *:text-xl md:flex-row md:*:p-6">
-                {purchased ? (
-                  download.isDownloading ? (
-                    <Button disabled>
-                      <CircleDashed />
-                      다운로드 중 {download.progress * 100}%
-                    </Button>
-                  ) : download.isCacheAvailable ? (
-                    <Button onClick={download.download}>
-                      <CheckIcon />
-                      다운로드 완료
-                    </Button>
-                  ) : (
-                    <Button onClick={download.download}>
-                      <DownloadIcon />
-                      다운로드
-                    </Button>
-                  )
-                ) : (
-                  <Button size="lg">
-                    <CreditCardIcon />
-                    구매하기
-                  </Button>
-                )}
-                {!purchased && (
-                  <Button
-                    size="lg"
-                    variant={isInCart ? 'secondary' : 'outline'}
-                    className="border"
-                    onClick={() => {
-                      if (isInCart) removeFromCart(product.id);
-                      else addToCart(product.id);
-                    }}
-                  >
-                    {isInCart ? (
+                  {new Date(product?.created_at).getTime() !=
+                    new Date(product?.updated_at).getTime() && (
+                    <SmallCard
+                      tooltip={new Date(product?.updated_at).toLocaleString()}
+                    >
+                      <UploadIcon />
+                      {dayjs(product?.updated_at).format('YYYY/MM/DD')}
+                    </SmallCard>
+                  )}
+                  <SmallCard>
+                    {product.price_discount ? (
                       <>
-                        <ShoppingCartIcon />
-                        카트에 추가됨
-                        <CheckIcon />
+                        <CircleDollarSign />
+                        <s className="italic text-destructive">
+                          {product.price}
+                        </s>
+                        <ChevronRightIcon size={20} />
+                        <p className="font-bold">{product.price_discount}</p>
                       </>
                     ) : (
                       <>
-                        <ShoppingCartIcon />
-                        카트에 추가
+                        <CircleDollarSign />
+                        {product.price}원
                       </>
                     )}
-                  </Button>
-                )}
+                  </SmallCard>
+                  <SmallCard>
+                    <p className="font-bold">크리에이터</p>{' '}
+                    {product.creator.nickname ?? `@${product.creator.username}`}
+                  </SmallCard>
+                </div>
+                <div className="mt-4 flex flex-col gap-2 *:flex-1 *:gap-2 *:py-4 *:text-xl md:flex-row md:*:p-6">
+                  {purchased ? (
+                    download.isDownloading ? (
+                      <Button disabled>
+                        <CircleDashed />
+                        다운로드 중 {download.progress * 100}%
+                      </Button>
+                    ) : download.isCacheAvailable ? (
+                      <Button onClick={download.download}>
+                        <CheckIcon />
+                        다운로드 완료
+                      </Button>
+                    ) : (
+                      <Button onClick={download.download}>
+                        <DownloadIcon />
+                        다운로드
+                      </Button>
+                    )
+                  ) : (
+                    <Button size="lg" onClick={() => setPurchaseOpen(true)}>
+                      <CreditCardIcon />
+                      구매하기
+                    </Button>
+                  )}
+                  {!purchased && (
+                    <Button
+                      size="lg"
+                      variant={isInCart ? 'secondary' : 'outline'}
+                      className="border"
+                      onClick={() => {
+                        if (isInCart) removeFromCart(product.id);
+                        else addToCart(product.id);
+                      }}
+                    >
+                      {isInCart ? (
+                        <>
+                          <ShoppingCartIcon />
+                          카트에 추가됨
+                          <CheckIcon />
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCartIcon />
+                          카트에 추가
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <div className="flex gap-2">
-              <ViewSelect
-                url={product && endpoint(`/v1/products/${product.id}/image`)}
-              />
-              {/*<ViewSelect />*/}
+            <div>
+              <div className="flex gap-2">
+                <ViewSelect
+                  url={product && endpoint(`/v1/products/${product.id}/image`)}
+                />
+                {/*<ViewSelect />*/}
+              </div>
+              <div className="mt-4">
+                <Display name="상품 ID">{product?.id}</Display>
+              </div>
             </div>
-            <div className="mt-4">
-              <Display name="상품 ID">{product?.id}</Display>
-            </div>
+            <div></div>
           </div>
-          <div></div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
