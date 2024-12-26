@@ -135,7 +135,7 @@ export function ProductSearch() {
         products.data.length != 0 &&
         products.data[0]?.length != 0 ? (
           <>
-            <div className="grid-rows-auto mb-20 grid w-full grid-cols-4 md:w-4/5">
+            <div className="auto-rows-min mb-20 grid w-full grid-cols-4 md:w-4/5">
               {products.data
                 ?.flatMap((it) => it)
                 .map(

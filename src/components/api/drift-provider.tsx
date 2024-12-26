@@ -13,13 +13,13 @@ export function MapleProvider({
 }: { data?: { user: MarketUser | null } } & ChildrenProps) {
   const session = useSession();
   const user = useSWR(session, (s) => fetchMapleUser(s), {
-    fallbackData: data?.user,
+    fallbackData: data?.user ?? undefined,
   });
 
   return (
     <MapleContext.Provider
       value={{
-        user: user.data ?? null,
+        user: user.data,
         updateUser: user.mutate,
         revalidateUser() {
           void user.mutate();

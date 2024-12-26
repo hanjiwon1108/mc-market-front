@@ -1,9 +1,11 @@
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import React, { useState } from 'react';
-import { useUser } from '@/api/surge';
 import { AutoComplete } from '@/components/ui/autocomplete';
 import { CATEGORIES } from '@/features/category';
+import { EditorContent } from '@tiptap/react';
+import { useEditor } from '@tiptap/react';
+import { StarterKit } from '@tiptap/starter-kit';
 
 type EditProductFormState = Partial<{
   name: string;
@@ -44,6 +46,11 @@ export function EditProductForm({
 }: {
   state: ReturnType<typeof useEditProductFormState>;
 }) {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "<p>Hello World! 🌎️</p>"
+  });
+
   return (
     <>
       <div>
@@ -61,6 +68,7 @@ export function EditProductForm({
           value={state.description}
           onValueChange={state.setDescription}
         />
+        <EditorContent editor={editor}/>
       </div>
       <div>
         <Label htmlFor="create_product/usage">상품 사용법</Label>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import {Button, ButtonProps, buttonVariants} from '@/components/ui/button';
+import { Button, ButtonProps, buttonVariants } from '@/components/ui/button';
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
@@ -62,16 +62,16 @@ PaginationLink.displayName = 'PaginationLink';
 const PaginationPrevious = ({
   className,
   text = 'Previous',
-    isActive,
+  isActive,
   ...props
 }: ButtonProps & {
   isActive?: boolean;
   text?: React.ReactNode;
 }) => (
   <Button
-      disabled={!isActive}
-      variant={isActive ? 'outline' : 'ghost'}
-      onClick={(e) => isActive && props.onClick && props.onClick(e)}
+    disabled={!isActive}
+    variant={isActive ? 'outline' : 'ghost'}
+    onClick={(e) => isActive && props.onClick && props.onClick(e)}
     aria-label="Go to previous page"
     size="default"
     className={cn('gap-1 pl-2.5', className)}
@@ -83,19 +83,19 @@ const PaginationPrevious = ({
 );
 PaginationPrevious.displayName = 'PaginationPrevious';
 
-const PaginationNext =({
-                         className,
-                         text = 'Previous',
-    isActive,
-                         ...props
-                       }: ButtonProps & {
+const PaginationNext = ({
+  className,
+  text = 'Next',
+  isActive,
+  ...props
+}: ButtonProps & {
   isActive?: boolean;
   text?: React.ReactNode;
 }) => (
   <Button
-      disabled={!isActive}
-      variant={isActive ? 'outline' : 'ghost'}
-      onClick={(e) => isActive && props.onClick && props.onClick(e)}
+    disabled={!isActive}
+    variant={isActive ? 'outline' : 'ghost'}
+    onClick={(e) => isActive && props.onClick && props.onClick(e)}
     aria-label="Go to next page"
     size="default"
     className={cn('gap-1 pr-2.5', className)}

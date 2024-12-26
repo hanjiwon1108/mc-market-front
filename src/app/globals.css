@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  interpolate-size: allow-keywords;
+}
+
 body {
   /*noinspection CssUnresolvedCustomProperty*/
   font-family: var(--font-pretendard), var(--font-poppins), Arial, Helvetica,

@@ -36,6 +36,7 @@ import { NavigatorProfileMenu } from '@/components/navigator/navigator-profile-m
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/core/cart/atom';
 import { useMapleUser } from '@/api/market/context';
+import { ChargeCashDialog } from '@/components/charge/charge-cash-dialog';
 
 export function Navigator() {
   const session = useSession();
@@ -43,11 +44,17 @@ export function Navigator() {
 
   const isMobile = useIsMobile();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isChargeCashOpen, setChargeCashOpen] = useState(false);
   const cart = useCart();
   const user = useMapleUser();
 
   return (
     <>
+      <ChargeCashDialog
+        isOpen={isChargeCashOpen}
+        onOpenChange={setChargeCashOpen}
+      />
+
       <NavigatorSidebar
         isOpen={isSidebarOpen && isMobile}
         onOpenChange={setSidebarOpen}
@@ -160,10 +167,13 @@ export function Navigator() {
 
           <div className="mr-2 hidden md:block">
             {session && (
-              <div className="flex select-none items-center gap-2 font-semibold">
+              <button
+                onClick={() => setChargeCashOpen(true)}
+                className="flex select-none items-center gap-2 font-semibold"
+              >
                 {user?.cash}원
                 <CreditCardIcon />
-              </div>
+              </button>
             )}
           </div>
           <div>

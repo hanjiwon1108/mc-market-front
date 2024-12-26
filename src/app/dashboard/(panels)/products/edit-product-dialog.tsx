@@ -4,7 +4,7 @@ import {
   useEditProductFormState,
 } from '@/app/dashboard/(panels)/products/edit-product-form';
 import React, { useState } from 'react';
-import { useSession, useUser } from '@/api/surge';
+import { useSession } from '@/api/surge';
 import { authFetch } from '@/api/surge/fetch';
 import { endpoint } from '@/api/market/endpoint';
 import { toast } from 'sonner';

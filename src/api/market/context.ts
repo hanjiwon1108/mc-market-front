@@ -5,13 +5,13 @@ import { KeyedMutator } from 'swr/_internal';
 import { MarketUser } from '@/api/types';
 
 export type MapleContext = {
-  user: MarketUser | null;
-  updateUser: KeyedMutator<MarketUser | null>;
+  user: MarketUser | undefined;
+  updateUser: KeyedMutator<MarketUser | undefined>;
   revalidateUser: () => void;
 };
 
 export const MapleContext = createContext<MapleContext>({
-  user: null,
+  user: undefined,
   updateUser() {
     return new Promise(() => {});
   },
