@@ -59,17 +59,6 @@ export function NavigatorCategoryItem() {
       <NavigationMenuTrigger>카테고리</NavigationMenuTrigger>
       <NavigationMenuContent>
         <div className="p-4 md:w-[400px] lg:w-[500px] xl:w-[48rem]">
-          <Link href="/categories" legacyBehavior passHref>
-            <NavigationMenuLink
-              className={cn(
-                navigationMenuTriggerStyle(),
-                'w-full gap-2 text-lg font-semibold',
-              )}
-            >
-              <Rows4Icon />
-              모든 카테고리 보기
-            </NavigationMenuLink>
-          </Link>
           <div className="mt-2 grid grid-cols-2 gap-3 lg:grid-cols-[.75fr_1fr] xl:grid-cols-4">
             {Object.values(CATEGORIES)
               .filter((it) => !it.hiddenOnNavigator)

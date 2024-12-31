@@ -44,9 +44,9 @@ export const CATEGORY_MINECRAFT: Category = {
 };
 
 export const CATEGORY_DISCORD: Category = {
-  path: 'categories.free',
-  name: '무료',
-  link: '/categories/free',
+  path: 'categories.discord',
+  name: '디스코드',
+  link: '/categories/discord',
   subcategories: {},
   icon: MessageSquareMoreIcon,
 };
@@ -73,4 +73,4 @@ export const CATEGORIES: Record<CategoryKey, Category> = {
   discord: CATEGORY_DISCORD,
   misc: CATEGORY_MISC,
   free: CATEGORY_FREE,
-};
+} as const;

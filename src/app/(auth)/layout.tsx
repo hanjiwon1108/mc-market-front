@@ -2,12 +2,7 @@
 
 import { FrozenRouter } from '@/components/router/frozen-router';
 import { ChildrenProps } from '@/util/types-props';
-import {
-  AnimatePresence,
-  motion,
-  TargetAndTransition,
-  Variant,
-} from 'framer-motion';
+import { AnimatePresence, motion, TargetAndTransition } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { EASE_PRIMARY } from '@/util/ease';

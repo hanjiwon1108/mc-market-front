@@ -16,6 +16,7 @@ import { ProductCard } from '@/components/product/product-card';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import useSWR from 'swr';
+import { CATEGORIES, CategoryKey } from '@/features/category';
 
 const CategoryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
@@ -25,38 +26,13 @@ const CategoryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 CategoryButton.displayName = 'CategoryButton';
 
-type Category =
-  | 'all'
-  | 'modeling'
-  | 'builds'
-  | 'entities'
-  | 'pixels'
-  | 'free'
-  | 'skins'
-  | 'skill'
-  | 'plugins'
-  | 'scripts';
-
-const categoryNames: { [K in Category]: string } = {
-  all: '전체',
-  modeling: '모델링',
-  builds: '건축',
-  entities: '엔티티',
-  pixels: '픽셀',
-  free: '무료',
-  skins: '스킨',
-  skill: '스킬',
-  plugins: '플러그인',
-  scripts: '스크립트',
-};
-
 export default function Home() {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('all');
 
   const products = useSWR(
     endpoint(`/v1/products`) +
-      `?category=categories.${selectedCategory}&order_by=downloads&limit=8`,
+      `?order_by=downloads&limit=8${selectedCategory != 'all' ? `&category=${selectedCategory}` : ''}`,
     (url) =>
       fetch(url).then((res) =>
         res.ok ? (res.json() as Promise<MarketProductWithShortUser[]>) : null,
@@ -86,7 +62,7 @@ export default function Home() {
                       initial={{ x: '50%', opacity: 0 }}
                       className="absolute"
                     >
-                      {categoryNames[selectedCategory]}
+                      {CATEGORIES[selectedCategory].name}
                     </motion.div>
                   </AnimatePresence>
                   <ChevronDownIcon
@@ -96,11 +72,11 @@ export default function Home() {
                 <DropdownMenuContent>
                   <DropdownMenuRadioGroup
                     value={selectedCategory}
-                    onValueChange={(v) => setSelectedCategory(v as Category)}
+                    onValueChange={(v) => setSelectedCategory(v as CategoryKey)}
                   >
-                    {Object.entries(categoryNames).map(([key, value]) => (
+                    {Object.entries(CATEGORIES).map(([key, value]) => (
                       <DropdownMenuRadioItem key={key} value={key}>
-                        {value}
+                        {value.name}
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuRadioGroup>

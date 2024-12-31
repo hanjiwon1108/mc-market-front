@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { getSession } from '@/api/surge';
+import { ErrorScreen } from '@/components/error/error-screen';
 
 const items = [
   {
@@ -45,6 +47,11 @@ const items = [
 ];
 
 export default async function Layout({ children }: ChildrenProps) {
+  const session = await getSession();
+  if (!session) {
+    return <ErrorScreen>인증 필요</ErrorScreen>;
+  }
+
   return (
     <div className="flex flex-1 flex-col">
       <SidebarProvider>
