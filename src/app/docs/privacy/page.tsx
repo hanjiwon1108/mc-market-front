@@ -1,4 +1,3 @@
-import Content from './content.mdx';
 import { ErrorScreen } from '@/components/error/error-screen';
 
 export default function Page() {

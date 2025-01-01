@@ -61,7 +61,7 @@ export function NavigatorCategoryItem() {
         <div className="p-4 md:w-[400px] lg:w-[500px] xl:w-[48rem]">
           <div className="mt-2 grid grid-cols-2 gap-3 lg:grid-cols-[.75fr_1fr] xl:grid-cols-4">
             {Object.values(CATEGORIES)
-              .filter((it) => !it.hiddenOnNavigator)
+              .filter((it) => !it.hidden)
               .map((category) => (
                 <CategoryDisplay key={category.path} category={category} />
               ))}

@@ -53,7 +53,7 @@ export default async function Layout({ children }: ChildrenProps) {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="w-full overflow-hidden">
       <SidebarProvider>
         <Sidebar className="top-[3.375rem] z-0">
           <SidebarHeader></SidebarHeader>
@@ -78,7 +78,7 @@ export default async function Layout({ children }: ChildrenProps) {
           </SidebarContent>
           <SidebarFooter />
         </Sidebar>
-        <main className="mb-[3.375rem] flex flex-1 flex-col gap-4 transition-all md:p-16">
+        <main className="mb-[3.375rem] w-full gap-4 transition-all md:p-16">
           <div className="flex items-center gap-2 px-4 pt-4 text-2xl font-semibold transition-all md:p-0 md:text-5xl">
             <SidebarTrigger />
             Creator 대쉬보드

@@ -80,7 +80,7 @@ function BannerItem({ index, page }: { index: number; page: number }) {
 
   return (
     <animated.div
-      className={`absolute flex h-[24rem] items-center justify-center overflow-hidden rounded-xl bg-cyan-500 text-5xl font-bold`}
+      className={`absolute flex h-[24rem] items-center justify-center overflow-hidden rounded-xl bg-card border text-5xl font-bold`}
       style={{ x: translate, opacity, width: `${BANNER_WIDTH}rem` }}
     >
       배너 {page + 1}/{BANNER_COUNT}

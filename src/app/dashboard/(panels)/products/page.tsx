@@ -40,15 +40,18 @@ export default function Page() {
     (index, previousPageData: MarketProductWithShortUser[]) => {
       if (previousPageData && !previousPageData.length) return;
       if (index == 0) {
-        return [session, `${endpoint('/v1/products/')}?creator=${user?.id}`];
+        return [
+          session,
+          `${endpoint('/v1/products/')}?creator=${user?.id}&limit=6`,
+        ];
       }
       const lastProduct = previousPageData.reduce((p, c) =>
-        p.id > c.id ? p : c,
+        p.id < c.id ? p : c,
       );
 
       return [
         session,
-        `${endpoint(`/v1/products/`)}?creator=${user?.id}&offset=${index == 0 ? 0 : lastProduct.id}`,
+        `${endpoint(`/v1/products/`)}?creator=${user?.id}&offset=${index == 0 ? 0 : lastProduct.id}&limit=6`,
       ];
     },
     {
@@ -58,15 +61,18 @@ export default function Page() {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    if (page > infinite.size) {
-      void infinite.setSize(page);
+    console.log(infinite.data?.flatMap((v) => v.length));
+    if (page + 1 > infinite.size) {
+      void infinite.setSize(page + 1);
     }
-  }, [page]);
+  }, [infinite, page]);
+
+  console.log(JSON.stringify(infinite.data?.length));
 
   return (
-    <div className="">
+    <div className="overflow-hidden">
       <CreateProductButton />
-      <Table>
+      <Table className="w-full min-w-0 max-w-full overflow-x-scroll">
         <TableHeader>
           <TableRow>
             <TableHead>이미지</TableHead>

@@ -1,11 +1,12 @@
 import React from 'react';
 import { ProductCard } from '@/components/product/product-card';
-import { CATEGORIES, CategoryKey } from '@/features/category';
+import { CATEGORIES, CategoryKey, TopCategoryKey } from '@/features/category';
 import { redirect } from 'next/navigation';
 import { UnknownCategoryHandler } from '@/app/categories/[category]/unknown-category-handler';
 import { ProductSearch } from '@/components/product/search';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
+import { LucideIcon } from 'lucide-react';
 
 export default async function Page({
   params,
@@ -13,8 +14,8 @@ export default async function Page({
   params: Promise<{ category: string; subcategory: string }>;
 }) {
   const awaitedParams = await params;
-  const category = CATEGORIES[awaitedParams.category as CategoryKey];
-  const subcategory = category.subcategories[awaitedParams.subcategory];
+  const category = CATEGORIES[awaitedParams.category as TopCategoryKey];
+  const subcategory = (category.subcategories as Record<string, [string, string, LucideIcon]>)[awaitedParams.subcategory];
 
   if (!category) {
     return redirect('/categories/all?from_unknown=true');

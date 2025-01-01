@@ -71,7 +71,7 @@ export function Navigator() {
             href="/categories/all"
           />
           {Object.values(CATEGORIES)
-            .filter((it) => !it.hiddenOnNavigator)
+            .filter((it) => !it.hidden)
             .map((category) => {
               const Icon = category.icon;
 
@@ -119,7 +119,7 @@ export function Navigator() {
         {/*/>*/}
       </NavigatorSidebar>
 
-      <div className="fixed z-50 flex h-[3.375rem] w-full items-center border-b-2 bg-background/80 p-2 backdrop-blur-2xl">
+      <div className="fixed z-50 flex h-[3.375rem] w-dvw items-center border-b-2 bg-background/80 p-2 backdrop-blur-2xl">
         <div className="container mx-auto flex items-center justify-center sm:justify-normal sm:px-8">
           <Button
             className="size-10 rounded-full p-0 sm:hidden"

@@ -6,6 +6,7 @@ import localFont from 'next/font/local';
 import { ChildrenProps } from '@/util/types-props';
 import { ClientProvider } from '@/app/client-provider';
 import { APIProvider } from '@/components/api';
+import { ThemeProvider } from 'next-themes';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -31,13 +32,15 @@ export default function RootLayout({
   modal,
 }: Readonly<ChildrenProps & { modal: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${poppins.variable} ${pretendard.variable} antialiased`}
       >
-        <APIProvider>
-          <ClientProvider modal={modal}>{children}</ClientProvider>
-        </APIProvider>
+        <ThemeProvider attribute="class">
+          <APIProvider>
+            <ClientProvider modal={modal}>{children}</ClientProvider>
+          </APIProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import Image, { ImageProps } from 'next/image';
+import { cn } from '@/lib/utils';
 
 export const Logo = React.forwardRef<
   HTMLImageElement,
@@ -8,6 +9,7 @@ export const Logo = React.forwardRef<
   return (
     <Image
       {...props}
+      className={cn('dark:invert', props.className)}
       ref={ref}
       src="/logo.png"
       alt="Logo"

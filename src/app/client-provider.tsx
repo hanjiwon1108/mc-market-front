@@ -10,6 +10,7 @@ import { Navigator } from '@/components/navigator/navigator';
 import { Footer } from '@/components/footer/footer';
 import { usePathname } from 'next/navigation';
 import { SettingsDialog } from '@/features/settings/dialog';
+import { useTheme } from 'next-themes';
 
 export function ClientProvider({
   children,
@@ -27,9 +28,9 @@ export function ClientProvider({
             <FrozenRouter>{modal}</FrozenRouter>
           </motion.div>
         </AnimatePresence>
-        <div className="flex min-h-screen flex-col">
+        <div className="min-h-screen w-screen">
           <Navigator />
-          {children}
+          <div className="w-screen">{children}</div>
         </div>
         <Footer />
       </TooltipProvider>

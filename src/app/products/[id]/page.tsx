@@ -1,4 +1,3 @@
-import { ProductDetail } from '@/components/product/product-detail';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import { getSession } from '@/api/surge';

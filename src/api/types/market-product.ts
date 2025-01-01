@@ -9,14 +9,12 @@ export type MarketProduct = {
 
   name: string;
   description: string;
+  details: string;
   usage: string;
   tags: string[];
 
   price: number;
   price_discount?: number;
-
-  likes: number;
-  downloads: number;
 
   created_at: string;
   updated_at: string;

@@ -16,7 +16,7 @@ import { ProductCard } from '@/components/product/product-card';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import useSWR from 'swr';
-import { CATEGORIES, CategoryKey } from '@/features/category';
+import { CATEGORIES, CategoryKey, TopCategoryKey } from '@/features/category';
 
 const CategoryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
@@ -28,7 +28,7 @@ CategoryButton.displayName = 'CategoryButton';
 
 export default function Home() {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('all');
+  const [selectedCategory, setSelectedCategory] = useState<TopCategoryKey>('all');
 
   const products = useSWR(
     endpoint(`/v1/products`) +
@@ -72,7 +72,7 @@ export default function Home() {
                 <DropdownMenuContent>
                   <DropdownMenuRadioGroup
                     value={selectedCategory}
-                    onValueChange={(v) => setSelectedCategory(v as CategoryKey)}
+                    onValueChange={(v) => setSelectedCategory(v as TopCategoryKey)}
                   >
                     {Object.entries(CATEGORIES).map(([key, value]) => (
                       <DropdownMenuRadioItem key={key} value={key}>

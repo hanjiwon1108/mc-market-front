@@ -1,6 +1,6 @@
 'use client';
 
-import { CATEGORIES, CATEGORY_ALL, CategoryKey } from '@/features/category';
+import { CATEGORIES, CATEGORY_ALL, TopCategoryKey } from '@/features/category';
 import { OptionalLink } from '@/components/util/optional-link';
 import { Button, ButtonProps } from '@/components/ui/button';
 import {
@@ -14,8 +14,8 @@ import {
   PlusIcon,
   ShoppingCartIcon,
   UploadIcon,
+  UserIcon,
 } from 'lucide-react';
-import Image from 'next/image';
 import dayjs from 'dayjs';
 import React, { useRef, useState } from 'react';
 import { MarketProductWithShortUser } from '@/api/types';
@@ -33,6 +33,7 @@ import { useSession } from '@/api/surge';
 import { toast } from 'sonner';
 import { ProductPurchaseDialog } from '@/components/product/product-purchase-dialog';
 import { FallbackImage } from '@/components/util/fallback-image';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const SmallCard = React.forwardRef<
   HTMLButtonElement,
@@ -238,7 +239,8 @@ export function ProductDetail({
   purchased,
 }: ProductDetailProps) {
   const category =
-    (product && CATEGORIES[product.category as CategoryKey]) ?? CATEGORY_ALL;
+    (product && CATEGORIES[product.category.split('.')[0] as TopCategoryKey]) ??
+    CATEGORY_ALL;
 
   const isInCart = useIsInCart(product.id);
   const { addElement: addToCart, removeElement: removeFromCart } = useCart();
@@ -288,10 +290,26 @@ export function ProductDetail({
             <div className="flex flex-col">
               <div className="text-4xl font-semibold">{product?.name}</div>
               <div className="mt-2 text-2xl">{product?.description}</div>
-              <div className="mt-auto">
+              <div className="mt-auto flex items-center gap-2 text-2xl">
+                <Avatar>
+                  <AvatarFallback>
+                    <UserIcon />
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-lg">크리에이터</p>
+                  <p className="text-sm font-bold">
+                    {product.creator.nickname ?? `@${product.creator.username}`}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-2">
                 <div className="flex flex-wrap gap-2">
-                  <TagCard tag="최신">최신</TagCard>
-                  <TagCard tag="최신">인증됨</TagCard>
+                  {product.tags?.map((tag, i) => (
+                    <TagCard key={i} tag={tag}>
+                      #{tag}
+                    </TagCard>
+                  ))}
                 </div>
                 <div className="mt-2 flex gap-2">
                   <SmallCard
@@ -325,10 +343,6 @@ export function ProductDetail({
                         {product.price}원
                       </>
                     )}
-                  </SmallCard>
-                  <SmallCard>
-                    <p className="font-bold">크리에이터</p>{' '}
-                    {product.creator.nickname ?? `@${product.creator.username}`}
                   </SmallCard>
                 </div>
                 <div className="mt-4 flex flex-col gap-2 *:flex-1 *:gap-2 *:py-4 *:text-xl md:flex-row md:*:p-6">
@@ -382,18 +396,9 @@ export function ProductDetail({
                 </div>
               </div>
             </div>
-            <div>
-              <div className="flex gap-2">
-                <ViewSelect
-                  url={product && endpoint(`/v1/products/${product.id}/image`)}
-                />
-                {/*<ViewSelect />*/}
-              </div>
-              <div className="mt-4">
-                <Display name="상품 ID">{product?.id}</Display>
-              </div>
+            <div className="prose prose-lg col-span-2 min-h-64 max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300">
+              <div dangerouslySetInnerHTML={{ __html: product.details }}></div>
             </div>
-            <div></div>
           </div>
         </div>
       </div>

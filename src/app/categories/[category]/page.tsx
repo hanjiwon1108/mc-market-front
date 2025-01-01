@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProductCard } from '@/components/product/product-card';
-import { CATEGORIES, CATEGORY_ALL, CategoryKey } from '@/features/category';
+import { CATEGORIES, CATEGORY_ALL, CategoryKey, TopCategoryKey } from '@/features/category';
 import { redirect } from 'next/navigation';
 import { UnknownCategoryHandler } from '@/app/categories/[category]/unknown-category-handler';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,7 @@ export default async function Page({
   params: Promise<{ category: string }>;
 }) {
   const category =
-    CATEGORIES[(await params).category as CategoryKey] ?? CATEGORY_ALL;
+    CATEGORIES[(await params).category as TopCategoryKey] ?? CATEGORY_ALL;
 
   if (!category) {
     return redirect('/categories/all?from_unknown=true');

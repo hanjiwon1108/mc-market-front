@@ -17,7 +17,7 @@ export const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button {...props} ref={ref}>
-            Theme
+            테마
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="z-[5000]">
@@ -25,19 +25,19 @@ export const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
             checked={theme == 'dark'}
             onClick={() => setTheme('dark')}
           >
-            Dark
+            다크
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={theme == 'light'}
             onClick={() => setTheme('light')}
           >
-            Light
+            라이트
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={theme == 'system'}
             onClick={() => setTheme('system')}
           >
-            System
+            환경
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>

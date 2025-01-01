@@ -87,8 +87,8 @@ function ArticleList() {
   const paginationItems = generatePagination();
 
   return (
-    <div>
-      <Table>
+    <div className="overflow-hidden">
+        <Table className="min-w-0 max-w-full w-full overflow-x-scroll">
         <TableHeader>
           <TableRow>
             <TableHead>작성자</TableHead>
