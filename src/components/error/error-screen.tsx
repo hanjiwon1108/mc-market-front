@@ -10,7 +10,7 @@ export const ErrorScreen = React.forwardRef<
 >(({ title = '오류', children = '오류가 발생했습니다', ...props }, ref) => {
   return (
     <div
-      className={cn('flex flex-1 items-center justify-center', props.className)}
+      className={cn('flex size-full items-center justify-center', props.className)}
       ref={ref}
     >
       <div>

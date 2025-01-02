@@ -34,6 +34,7 @@ import { toast } from 'sonner';
 import { ProductPurchaseDialog } from '@/components/product/product-purchase-dialog';
 import { FallbackImage } from '@/components/util/fallback-image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/user/avatar';
 
 const SmallCard = React.forwardRef<
   HTMLButtonElement,
@@ -291,11 +292,7 @@ export function ProductDetail({
               <div className="text-4xl font-semibold">{product?.name}</div>
               <div className="mt-2 text-2xl">{product?.description}</div>
               <div className="mt-auto flex items-center gap-2 text-2xl">
-                <Avatar>
-                  <AvatarFallback>
-                    <UserIcon />
-                  </AvatarFallback>
-                </Avatar>
+                <UserAvatar userId={product.creator.id} />
                 <div>
                   <p className="text-lg">크리에이터</p>
                   <p className="text-sm font-bold">

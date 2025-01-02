@@ -1,13 +1,5 @@
 'use client';
 
-import {
-  MAPLE_USER_PERMISSION_ADMINISTRATOR,
-  useMapleUserPermission,
-} from '@/api/permissions';
-import { ErrorScreen } from '@/components/error/error-screen';
-import { EditorContent, useEditor } from '@tiptap/react';
-import { Markdown, MarkdownStorage } from 'tiptap-markdown';
-import { StarterKit } from '@tiptap/starter-kit';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { authFetch } from '@/api/surge/fetch';
@@ -15,58 +7,51 @@ import { useSession } from '@/api/surge';
 import { endpoint } from '@/api/market/endpoint';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import { BasicEditor } from '@/components/editor/basic-editor';
+import { ErrorScreen } from '@/components/error/error-screen';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
-  const permission = useMapleUserPermission(
-    MAPLE_USER_PERMISSION_ADMINISTRATOR,
-  );
-
   const session = useSession();
   const [title, setTitle] = useState('');
-  const editor = useEditor({ extensions: [StarterKit, Markdown] });
+  const [content, setContent] = useState('');
   const [uploading, setUploading] = useState(false);
+  const router = useRouter();
 
-  if (!permission) {
-    return (
-      <ErrorScreen title="권한 부족">글을 작성할 권한이 없습니다.</ErrorScreen>
-    );
+  if (!session) {
+    return <ErrorScreen>인증 필요</ErrorScreen>;
   }
 
   async function upload() {
-    if (!editor) return;
-
     setUploading(true);
-
-    const markdownStorage = editor.storage.markdown as MarkdownStorage;
-    const markdown = markdownStorage.getMarkdown();
 
     const response = await authFetch(session, endpoint('/v1/articles'), {
       method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
         title: title,
-        content: markdown,
+        content: content,
       }),
     });
 
     if (!response.ok) {
       toast.error('업로드 실패');
+    } else {
+      router.push('/articles/');
     }
 
     setUploading(false);
   }
 
   return (
-    <div className="scrollbar-override flex w-full flex-col gap-2">
+    <div className="scrollbar-override flex h-full w-full flex-col gap-2">
       <div className="text-4xl font-semibold">글 작성</div>
       <Input placeholder="제목" value={title} onValueChange={setTitle} />
-      <EditorContent
-        editor={editor}
-        className="prose w-full max-w-full flex-1 overflow-y-scroll rounded-xl px-3 py-1 ring-2 ring-border *:outline-none prose-headings:my-0 prose-p:my-0"
-        spellCheck={false}
-      />
+      <div className="overflow-y-auto">
+        <BasicEditor content={content} onContentChange={setContent} />
+      </div>
       <Button
         onClick={upload}
         disabled={uploading}

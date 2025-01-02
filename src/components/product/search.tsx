@@ -135,7 +135,7 @@ export function ProductSearch() {
         products.data.length != 0 &&
         products.data[0]?.length != 0 ? (
           <>
-            <div className="auto-rows-min mb-20 grid w-full grid-cols-4 md:w-4/5">
+            <div className="mb-20 grid w-full auto-rows-min grid-cols-4 md:w-4/5">
               {products.data
                 ?.flatMap((it) => it)
                 .map(
@@ -147,11 +147,7 @@ export function ProductSearch() {
                         name={it.name}
                         price={it.price}
                         discountPrice={it.price_discount}
-                        creatorDisplayName={
-                          it.creator.nickname ??
-                          `@${it.creator.username}` ??
-                          '알 수 없음'
-                        }
+                        author={it.creator}
                       />
                     ),
                 )}

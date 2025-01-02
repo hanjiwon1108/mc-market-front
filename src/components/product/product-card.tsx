@@ -1,19 +1,20 @@
 'use client';
 
-import Image from 'next/image';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { StarIcon, UserRoundIcon } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserRoundIcon } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import { endpoint } from '@/api/market/endpoint';
 import { FallbackImage } from '@/components/util/fallback-image';
+import { MarketAuthor } from '@/api/types';
+import { UserAvatar } from '@/components/user/avatar';
 
 export type ProductCardProps = {
   id: string;
   name: string;
   price: number;
   discountPrice?: number;
-  creatorDisplayName: string;
+  author: MarketAuthor;
 };
 
 export function ProductCard(props: ProductCardProps) {
@@ -34,13 +35,9 @@ export function ProductCard(props: ProductCardProps) {
       </div>
       <div className="mt-2">
         <div className="flex gap-2">
-          <Avatar className="size-8">
-            <AvatarFallback>
-              <UserRoundIcon />
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar className="size-8" userId={props.author.id} />
           <div className="flex flex-col justify-center">
-            <p>{props.creatorDisplayName}</p>
+            <p>{props.author.nickname ?? '@' + props.author.username}</p>
           </div>
         </div>
 

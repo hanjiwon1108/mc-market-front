@@ -59,11 +59,7 @@ export default function Page() {
                         name={it.name}
                         price={it.price}
                         discountPrice={it.price_discount}
-                        creatorDisplayName={
-                          it.creator.nickname ??
-                          `@${it.creator.username}` ??
-                          '알 수 없음'
-                        }
+                        author={it.creator}
                       />
                     ),
                 )}

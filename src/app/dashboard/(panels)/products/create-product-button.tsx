@@ -11,7 +11,6 @@ import {
 
 export function CreateProductButton() {
   const session = useSession();
-  const user = useUser();
 
   const [isOpen, setOpen] = useState(false);
   const [state, setState] = useState<ProductEditDialogState>({

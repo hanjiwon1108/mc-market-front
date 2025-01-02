@@ -15,6 +15,11 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog';
 import { MarketProductWithShortUser } from '@/api/types';
+import {
+  ProductEditDialog,
+  ProductEditDialogState,
+} from '@/components/product/product-edit-dialog';
+import { CategoryKey } from '@/features/category';
 
 export function EditProductDialog({
   isOpen,
@@ -27,52 +32,56 @@ export function EditProductDialog({
 }) {
   const session = useSession();
 
-  const formState = useEditProductFormState({
+  const [state, setState] = useState<ProductEditDialogState>({
     name: product.name,
-    creator: product.creator.id.toString(),
+    category: product.category as CategoryKey,
     description: product.description,
     usage: product.usage,
-    discount: product.price_discount,
+    details: product.details,
     price: product.price,
-    category: product.category,
+    price_discount: product.price_discount,
+    tags: product.tags ?? [],
   });
 
   const [isMutating, setMutating] = useState(false);
 
-  function trigger() {
+  async function trigger() {
     if (!session) return;
+
     setMutating(true);
-    authFetch(session, endpoint(`/v1/products/${product.id}`), {
-      headers: {
-        'Content-Type': 'application/json',
+    const toastId = toast.loading('편집 중...');
+
+    const response = await authFetch(
+      session,
+      endpoint(`/v1/products/${product.id}`),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(state),
       },
-      method: 'POST',
-      body: JSON.stringify({
-        ...formState,
-      }),
-    }).then((it) => {
-      setMutating(false);
-      if (it.ok) {
-        toast.info('수정 업로드 완료');
-      } else {
-        toast.error('수정 업로드 실패!');
-      }
-    });
+    );
+    setMutating(false);
+
+    if (response.ok) {
+      onOpenChange(false);
+      toast.info('편집됨', { id: toastId });
+    } else {
+      toast.error('편집 실패', { id: toastId });
+    }
   }
 
   return (
-    <ResponsiveDialog isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ResponsiveDialogContent>
-        <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle>상품 수정</ResponsiveDialogTitle>
-        </ResponsiveDialogHeader>
-
-        <EditProductForm state={formState} />
-
-        <Button onClick={trigger} disabled={isMutating} className="mt-4">
-          수정
-        </Button>
-      </ResponsiveDialogContent>
-    </ResponsiveDialog>
+    <>
+      <ProductEditDialog
+        isLoading={isMutating}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        state={state}
+        onStateChange={setState}
+        onComplete={trigger}
+      />
+    </>
   );
 }

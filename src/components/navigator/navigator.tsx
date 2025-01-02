@@ -16,6 +16,7 @@ import {
   HomeIcon,
   MenuIcon,
   MessageCircleQuestionIcon,
+  NewspaperIcon,
   Rows4Icon,
   SearchIcon,
   ShoppingCartIcon,
@@ -112,11 +113,11 @@ export function Navigator() {
         {/*  icon={TicketIcon}*/}
         {/*  href="/events"*/}
         {/*/>*/}
-        {/*<NavigatorSidebarMenu*/}
-        {/*  display="고객센터"*/}
-        {/*  icon={MessageCircleQuestionIcon}*/}
-        {/*  href="supports"*/}
-        {/*/>*/}
+        <NavigatorSidebarMenu
+          display="게시판"
+          icon={NewspaperIcon}
+          href="articles"
+        />
       </NavigatorSidebar>
 
       <div className="fixed z-50 flex h-[3.375rem] w-dvw items-center border-b-2 bg-background/80 p-2 backdrop-blur-2xl">
@@ -143,13 +144,13 @@ export function Navigator() {
                 </Link>
               </NavigationMenuItem>
               {/*<NavigatorEventItem />*/}
-              {/*<NavigationMenuItem>*/}
-              {/*  <Link href="/supports" legacyBehavior passHref>*/}
-              {/*    <NavigationMenuLink className={navigationMenuTriggerStyle()}>*/}
-              {/*      고객센터*/}
-              {/*    </NavigationMenuLink>*/}
-              {/*  </Link>*/}
-              {/*</NavigationMenuItem>*/}
+              <NavigationMenuItem>
+                <Link href="/articles" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    게시판
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
             <div className="mx-auto hidden md:block">
               <div className="flex min-w-0 max-w-96 transition-all lg:min-w-[28rem]">

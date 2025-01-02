@@ -1,5 +1,6 @@
 import { endpoint } from '@/api/market/endpoint';
 import Markdown from 'react-markdown';
+import React from 'react';
 
 type ArticleAuthor = {
   id: string;
@@ -28,8 +29,8 @@ export default async function Page({
   );
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-8">
-      <header className="mb-8">
+    <article className="mx-auto w-full px-4 py-8">
+      <header className="mb-8 w-full">
         <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
           {article.title}
         </h1>
@@ -49,7 +50,7 @@ export default async function Page({
       </header>
       <hr className="mb-8 border-t border-gray-300 dark:border-gray-700" />
       <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300">
-        <Markdown>{article.content}</Markdown>
+        <div dangerouslySetInnerHTML={{ __html: article.content }}></div>
       </div>
     </article>
   );

@@ -93,9 +93,7 @@ export default function Home() {
                     name={it.name}
                     price={it.price}
                     discountPrice={it.price_discount}
-                    creatorDisplayName={
-                      it.creator.nickname ?? it.creator.username ?? 'Unknown'
-                    }
+                    author={it.creator}
                   />
                 ))
               ) : (

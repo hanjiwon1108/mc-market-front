@@ -124,7 +124,10 @@ export function ProductEditDialog(props: ProductEditDialogProps) {
           onStageChange={setStage}
           state={props.state}
           onStateChange={props.onStateChange}
-          onComplete={props.onComplete}
+          onComplete={() => {
+            setStage(0);
+            props.onComplete();
+          }}
         />
       </ResponsiveDialogContent>
     </ResponsiveDialog>

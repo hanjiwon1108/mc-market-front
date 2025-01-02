@@ -28,9 +28,11 @@ export function ClientProvider({
             <FrozenRouter>{modal}</FrozenRouter>
           </motion.div>
         </AnimatePresence>
-        <div className="min-h-screen w-screen">
+        <div className="min-h-screen">
           <Navigator />
-          <div className="w-screen">{children}</div>
+          <div className="overflow-hidden h-[calc(100vh-var(--navigator-height))]">
+            {children}
+          </div>
         </div>
         <Footer />
       </TooltipProvider>

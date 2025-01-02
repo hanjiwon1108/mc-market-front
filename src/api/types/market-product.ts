@@ -24,10 +24,11 @@ export type MarketProductId = {
   id: Sonyflake;
 };
 
+export type MarketAuthor = {
+  id: Sonyflake;
+  nickname?: string;
+  username?: string;
+};
 export type MarketProductWithShortUser = Omit<MarketProduct, 'creator'> & {
-  creator: {
-    id: Sonyflake;
-    nickname?: string;
-    username?: string;
-  };
+  creator: MarketAuthor;
 };

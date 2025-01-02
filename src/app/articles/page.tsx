@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/pagination';
 import { endpoint } from '@/api/market/endpoint';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 const ITEMS_PER_PAGE = 10;
 const MAX_PAGINATION_ITEMS = 10;
@@ -88,7 +89,7 @@ function ArticleList() {
 
   return (
     <div className="overflow-hidden">
-        <Table className="min-w-0 max-w-full w-full overflow-x-scroll">
+      <Table className="w-full min-w-0 max-w-full overflow-x-scroll">
         <TableHeader>
           <TableRow>
             <TableHead>작성자</TableHead>
@@ -197,9 +198,16 @@ function ArticleList() {
 }
 
 export default function ArticlesPage() {
+  const router = useRouter();
+
   return (
     <div className="container mx-auto py-8">
-      <h1 className="mb-6 text-3xl font-bold">Articles</h1>
+      <div className="flex">
+        <h1 className="mb-6 text-3xl font-bold">게시판</h1>
+        <Button className="ml-auto" onClick={() => router.push(`/articles/write`)}>
+          업로드
+        </Button>
+      </div>
       <ArticleList />
     </div>
   );
