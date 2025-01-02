@@ -9,19 +9,16 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { NavigatorHomeItem } from '@/components/navigator/navigator-home-item';
 import { NavigatorCategoryItem } from '@/components/navigator/navigator-category-item';
-import { NavigatorEventItem } from '@/components/navigator/navigator-event-item';
 import { Input } from '@/components/ui/input';
 import {
   CreditCardIcon,
   HomeIcon,
   MenuIcon,
-  MessageCircleQuestionIcon,
   NewspaperIcon,
   Rows4Icon,
   SearchIcon,
   ShoppingCartIcon,
   TablePropertiesIcon,
-  TicketIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/brand/logo';
@@ -34,7 +31,6 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CATEGORIES } from '@/features/category';
 import { NavigatorProfileMenu } from '@/components/navigator/navigator-profile-menu';
-import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/core/cart/atom';
 import { useMapleUser } from '@/api/market/context';
 import { ChargeCashDialog } from '@/components/charge/charge-cash-dialog';
@@ -108,11 +104,6 @@ export function Navigator() {
               );
             })}
         </NavigatorSidebarMenu>
-        {/*<NavigatorSidebarMenu*/}
-        {/*  display="이벤트"*/}
-        {/*  icon={TicketIcon}*/}
-        {/*  href="/events"*/}
-        {/*/>*/}
         <NavigatorSidebarMenu
           display="게시판"
           icon={NewspaperIcon}
@@ -130,7 +121,7 @@ export function Navigator() {
             <MenuIcon />
           </Button>
           <Link href="/" className="absolute sm:static">
-            <Logo className="w-32 sm:mr-12" />
+            <Logo className="max-w-32 min-w-32 sm:mr-12" />
           </Link>
           <NavigationMenu className="hidden max-w-full sm:flex">
             <NavigationMenuList>
@@ -170,7 +161,7 @@ export function Navigator() {
             {session && (
               <button
                 onClick={() => setChargeCashOpen(true)}
-                className="flex select-none items-center gap-2 font-semibold"
+                className="flex select-none items-center gap-2 font-semibold whitespace-nowrap"
               >
                 {user?.cash}원
                 <CreditCardIcon />

@@ -47,13 +47,13 @@ export default function Home() {
       <div>
         <div className="container mx-auto transition-all duration-300 ease-out lg:px-[0rem] xl:px-[9rem]">
           <div className="scrollbar-override-horizontal h-full border-x-2 bg-background pt-8 transition-all duration-300 ease-out lg:px-14">
-            <div className="flex items-center gap-2 text-3xl font-semibold">
+            <div className="flex items-center gap-2 md:text-3xl text-lg font-semibold">
               <DropdownMenu
                 open={isCategoryDropdownOpen}
                 onOpenChange={setCategoryDropdownOpen}
                 modal={false}
               >
-                <DropdownMenuTrigger className="visible flex h-12 w-48 select-none items-center gap-2 rounded-xl border-0 px-4 py-2 outline-0 ring-ring ring-offset-2 transition-all hover:bg-accent focus-visible:ring-2">
+                <DropdownMenuTrigger className="visible flex h-12 md:w-48 w-24 select-none items-center gap-2 rounded-xl border-0 px-4 py-2 outline-0 ring-ring ring-offset-2 transition-all hover:bg-accent focus-visible:ring-2">
                   <AnimatePresence>
                     <motion.div
                       key={selectedCategory}
