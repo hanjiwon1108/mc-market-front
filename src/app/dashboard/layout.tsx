@@ -79,9 +79,9 @@ export default async function Layout({ children }: ChildrenProps) {
           <SidebarFooter />
         </Sidebar>
         <main className="mb-[3.375rem] w-full gap-4 transition-all md:p-16">
-          <div className="flex items-center gap-2 px-4 pt-4 text-2xl font-semibold transition-all md:p-0 md:text-5xl">
+          <div className="flex items-center gap-2 px-4 pt-4 text-2xl font-semibold transition-all md:p-0 md:text-5xl mb-4">
             <SidebarTrigger />
-            Creator 대쉬보드
+            판매자 대쉬보드
           </div>
           {children}
         </main>

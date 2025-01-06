@@ -11,8 +11,11 @@ import { SettingsSection } from '@/features/settings/components';
 import { toast } from 'sonner';
 import { authFetch } from '@/api/surge/fetch';
 import { endpoint } from '@/api/market/endpoint';
-import { useSession } from '@/api/surge';
-import { useMapleUser } from '@/api/market/context';
+import { useSession, useUser } from '@/api/surge';
+import { useMaple, useMapleUser } from '@/api/market/context';
+import { Label } from '@/components/ui/label';
+import useSWRMutation from 'swr/mutation';
+import { MarketUser } from '@/api/types';
 
 function AvatarUpload() {
   const user = useMapleUser();
@@ -107,11 +110,75 @@ function AvatarUpload() {
   );
 }
 
+export function Username() {
+  const user = useUser();
+  const [value, setValue] = useState<string>(user?.username ?? '');
+  return (
+    <div className="flex items-center gap-2">
+      <Label htmlFor="username">아이디</Label>
+      <Input
+        id="username"
+        className="w-min"
+        placeholder="아이디"
+        value={value}
+        onValueChange={setValue}
+        disabled={true}
+      />
+      {/*<Button disabled={value == user?.username}>저장</Button>*/}
+    </div>
+  );
+}
+
+export function Nickname() {
+  const session = useSession();
+  const { user, updateUser } = useMaple();
+  const [value, setValue] = useState<string>(user?.nickname ?? '');
+  const mutation = useSWRMutation(
+    [endpoint(`/v1/user/${user?.id}`), session, value],
+    ([u, s]) =>
+      authFetch(s, u, {
+        method: 'POST',
+        body: JSON.stringify({ nickname: value }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((r) => {
+        void updateUser({ ...(user as MarketUser), nickname: value });
+        return r.ok;
+      }),
+  );
+
+  return (
+    <div className="mt-2 flex items-center gap-2">
+      <Label htmlFor="nickname" className="">
+        닉네임
+      </Label>
+      <Input
+        id="nickname"
+        className="w-min"
+        placeholder="닉네임"
+        value={value}
+        onValueChange={setValue}
+      />
+      <Button
+        disabled={value == user?.nickname}
+        onClick={() => mutation.trigger()}
+      >
+        저장
+      </Button>
+    </div>
+  );
+}
+
 export function UserProfileSettings() {
   return (
     <SettingsPage>
-      <SettingsSection name="프로필">
+      <SettingsSection name="아바타">
         <AvatarUpload />
+      </SettingsSection>
+      <SettingsSection name="이름">
+        <Username />
+        <Nickname />
       </SettingsSection>
     </SettingsPage>
   );

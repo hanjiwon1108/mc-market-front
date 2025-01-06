@@ -49,7 +49,7 @@ export const CATEGORY_MINECRAFT: Category<
 } as const;
 
 export const CATEGORY_DISCORD: Category = {
-  path: 'categories.discord',
+  path: 'discord',
   name: '디스코드',
   link: '/categories/discord',
   subcategories: {},

@@ -1,9 +1,8 @@
 import React from 'react';
 import { ProductCard } from '@/components/product/product-card';
-import { CATEGORIES, CATEGORY_ALL, CategoryKey, TopCategoryKey } from '@/features/category';
+import { CATEGORIES, CATEGORY_ALL, TopCategoryKey } from '@/features/category';
 import { redirect } from 'next/navigation';
 import { UnknownCategoryHandler } from '@/app/categories/[category]/unknown-category-handler';
-import { Input } from '@/components/ui/input';
 import { ProductSearch } from '@/components/product/search';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';

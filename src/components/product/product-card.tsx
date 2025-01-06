@@ -1,7 +1,6 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { UserRoundIcon } from 'lucide-react';
+import { Avatar } from '@/components/ui/avatar';
 import React from 'react';
 import Link from 'next/link';
 import { endpoint } from '@/api/market/endpoint';

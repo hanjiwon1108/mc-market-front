@@ -14,7 +14,7 @@ export default function Page() {
           </CardContent>
         </Card>
       </Link>
-      <Link href="/dashboard/revenues">
+      <Link href="/dashboard/revenue">
         <Card>
           <CardContent className="flex flex-col gap-2 p-10 text-3xl">
             <CircleDollarSignIcon size={40} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProductCard } from '@/components/product/product-card';
-import { CATEGORIES, CategoryKey, TopCategoryKey } from '@/features/category';
+import { CATEGORIES, TopCategoryKey } from '@/features/category';
 import { redirect } from 'next/navigation';
 import { UnknownCategoryHandler } from '@/app/categories/[category]/unknown-category-handler';
 import { ProductSearch } from '@/components/product/search';
@@ -15,7 +15,9 @@ export default async function Page({
 }) {
   const awaitedParams = await params;
   const category = CATEGORIES[awaitedParams.category as TopCategoryKey];
-  const subcategory = (category.subcategories as Record<string, [string, string, LucideIcon]>)[awaitedParams.subcategory];
+  const subcategory = (
+    category.subcategories as Record<string, [string, string, LucideIcon]>
+  )[awaitedParams.subcategory];
 
   if (!category) {
     return redirect('/categories/all?from_unknown=true');
@@ -27,7 +29,7 @@ export default async function Page({
 
   const products = await fetch(
     endpoint(`/v1/products`) +
-      `?category=categories.${category}&order_by=downloads&limit=8`,
+      `?category=${awaitedParams.subcategory}&order_by=time&limit=8`,
   ).then((res) =>
     res.ok ? (res.json() as Promise<MarketProductWithShortUser[]>) : null,
   );

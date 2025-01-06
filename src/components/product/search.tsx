@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProductCard } from '@/components/product/product-card';
 import {
   Select,
@@ -28,7 +28,7 @@ type FilterOptions = {
   keywords: string;
 };
 
-export function ProductSearch() {
+export function ProductSearch(props: { initialKeywords?: string }) {
   const [orderByDebounced, setOrderBy, orderBy] =
     useDebouncedState<OrderByOptions>('time', 500);
   const [sortDebounced, setSort, sort] = useDebouncedState<SortOptions>(
@@ -37,8 +37,17 @@ export function ProductSearch() {
   );
   const [filterPriceRangeDebounced, setFilterPriceRange, filterPriceRange] =
     useDebouncedState([0, 200000], 500);
-  const [keywordsDebounced, setKeywords, keywords] = useDebouncedState('', 500);
+  const [keywordsDebounced, setKeywords, keywords] = useDebouncedState(
+    props.initialKeywords ?? '',
+    500,
+  );
   const [filterFree, setFilterFree] = useState(false);
+
+  useEffect(() => {
+    if(keywords != props.initialKeywords) {
+      setKeywords(props.initialKeywords ?? '');
+    }
+  }, [props.initialKeywords]);
 
   const products = useSWRInfinite(
     (index, prev: MarketProductWithShortUser[]) => {

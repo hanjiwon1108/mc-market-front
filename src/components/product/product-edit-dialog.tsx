@@ -76,65 +76,84 @@ export function ProductEditDialog(props: ProductEditDialogProps) {
   const [progress, setProgress] = useState(
     props.isCreate ? stage : stages.length,
   );
+  const stageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     if (stage > progress) setProgress(stage);
   }, [progress, stage]);
 
-  const Component = stages[stage][1];
+  useEffect(() => {
+    stageRefs.current[stage]?.scrollIntoView({ behavior: 'smooth' });
+  }, [stage]);
 
   return (
     <ResponsiveDialog isOpen={props.isOpen} onOpenChange={props.onOpenChange}>
       <ResponsiveDialogContent>
-        <div
-          className={cn(
-            'absolute z-10 flex size-full items-center justify-center rounded-lg bg-muted/50 outline-none backdrop-blur transition-all duration-500 ease-primary',
-            props.isLoading ? '' : 'pointer-events-none select-none opacity-0',
-          )}
-        >
-          <LoaderCircleIcon className="animate-ping" />
+        <div className="max-h-[50vh] overflow-y-auto">
+          <div
+            className={cn(
+              'absolute z-10 flex size-full items-center justify-center rounded-lg bg-muted/50 outline-none backdrop-blur transition-all duration-500 ease-primary',
+              props.isLoading
+                ? ''
+                : 'pointer-events-none select-none opacity-0',
+            )}
+          >
+            <LoaderCircleIcon className="animate-ping" />
+          </div>
+
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {props.isCreate ? '상품 추가' : '상품 편집'}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2 outline-none">
+                  단계 {stage + 1}/{stages.length} - {stages[stage][0]}
+                  <ChevronDownIcon size={18} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {stages.map(([item], index) => (
+                    <DropdownMenuItem key={index} disabled={progress < index}>
+                      {index + 1}. {item}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+
+          {stages.map(([name, Component], index) => {
+            return (
+              <div
+                key={name}
+                className={cn(
+                  progress < index ? 'pointer-events-none opacity-30' : '',
+                )}
+                ref={(e) => {
+                  stageRefs.current[index] = e;
+                }}
+              >
+                <Component
+                  progress={progress}
+                  onStageChange={setStage}
+                  state={props.state}
+                  onStateChange={props.onStateChange}
+                  onComplete={() => {
+                    setStage(0);
+                    props.onComplete();
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
-
-        <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle>
-            {props.isCreate ? '상품 추가' : '상품 편집'}
-          </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 outline-none">
-                단계 {stage + 1}/{stages.length} - {stages[stage][0]}
-                <ChevronDownIcon size={18} />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {stages.map(([item], index) => (
-                  <DropdownMenuItem
-                    key={index}
-                    disabled={progress < index}
-                    onSelect={() => setStage(index)}
-                  >
-                    {index + 1}. {item}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </ResponsiveDialogDescription>
-        </ResponsiveDialogHeader>
-
-        <Component
-          onStageChange={setStage}
-          state={props.state}
-          onStateChange={props.onStateChange}
-          onComplete={() => {
-            setStage(0);
-            props.onComplete();
-          }}
-        />
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );
 }
 
 type StageProps = {
+  progress: number;
   state: ProductEditDialogState;
   onStageChange: React.Dispatch<React.SetStateAction<number>>;
   onStateChange: React.Dispatch<React.SetStateAction<ProductEditDialogState>>;
@@ -201,9 +220,13 @@ function BasicInfoStage(props: StageProps) {
       </Select>
 
       <div className="flex gap-2 *:flex-1">
-        <Button onClick={() => validate() && props.onStageChange((p) => p + 1)}>
-          다음
-        </Button>
+        {props.progress == 0 && (
+          <Button
+            onClick={() => validate() && props.onStageChange((p) => p + 1)}
+          >
+            다음
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -270,15 +293,13 @@ function DescriptionsStage(props: StageProps) {
       />
 
       <div className="flex gap-2 *:flex-1">
-        <Button
-          onClick={() => props.onStageChange((p) => p - 1)}
-          variant="outline"
-        >
-          이전
-        </Button>
-        <Button onClick={() => validate() && props.onStageChange((p) => p + 1)}>
-          다음
-        </Button>
+        {props.progress == 1 && (
+          <Button
+            onClick={() => validate() && props.onStageChange((p) => p + 1)}
+          >
+            다음
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -307,15 +328,13 @@ function DetailsStage(props: StageProps) {
       />
 
       <div className="flex gap-2 *:flex-1">
-        <Button
-          onClick={() => props.onStageChange((p) => p - 1)}
-          variant="outline"
-        >
-          이전
-        </Button>
-        <Button onClick={() => validate() && props.onStageChange((p) => p + 1)}>
-          다음
-        </Button>
+        {props.progress == 2 && (
+          <Button
+            onClick={() => validate() && props.onStageChange((p) => p + 1)}
+          >
+            다음
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -379,15 +398,13 @@ function PricingStage(props: StageProps) {
       />
 
       <div className="flex gap-2 *:flex-1">
-        <Button
-          onClick={() => props.onStageChange((p) => p - 1)}
-          variant="outline"
-        >
-          이전
-        </Button>
-        <Button onClick={() => validate() && props.onStageChange((p) => p + 1)}>
-          다음
-        </Button>
+        {props.progress == 3 && (
+          <Button
+            onClick={() => validate() && props.onStageChange((p) => p + 1)}
+          >
+            다음
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -438,12 +455,6 @@ function CompleteStage(props: StageProps) {
       </Table>
 
       <div className="mt-2 flex gap-2 *:flex-1">
-        <Button
-          onClick={() => props.onStageChange((p) => p - 1)}
-          variant="outline"
-        >
-          이전
-        </Button>
         <Button onClick={props.onComplete}>완료</Button>
       </div>
     </div>

@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/brand/logo';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from '@/api/surge';
 import {
   NavigatorSidebar,
@@ -38,7 +38,10 @@ import { ChargeCashDialog } from '@/components/charge/charge-cash-dialog';
 export function Navigator() {
   const session = useSession();
   const pathname = usePathname();
+const searchParams = useSearchParams();
 
+  const router = useRouter();
+  const [searchKeywords, setSearchKeywords] = useState(searchParams.get('keywords') ?? '');
   const isMobile = useIsMobile();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isChargeCashOpen, setChargeCashOpen] = useState(false);
@@ -121,7 +124,7 @@ export function Navigator() {
             <MenuIcon />
           </Button>
           <Link href="/" className="absolute sm:static">
-            <Logo className="max-w-32 min-w-32 sm:mr-12" />
+            <Logo className="min-w-32 max-w-32 sm:mr-12" />
           </Link>
           <NavigationMenu className="hidden max-w-full sm:flex">
             <NavigationMenuList>
@@ -130,7 +133,7 @@ export function Navigator() {
               <NavigationMenuItem>
                 <Link href="/dashboard" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    크리에이터 대시보드
+                    판매자 대시보드
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -148,11 +151,21 @@ export function Navigator() {
                 <Input
                   spellCheck={false}
                   placeholder="제품 검색"
-                  className="rounded-r-none border-r-0"
+                  className="peer rounded-r-none border-r-0"
+                  value={searchKeywords}
+                  onValueChange={setSearchKeywords}
+                  onKeyDown={(event) => {
+                    if (event.key == 'Enter') {
+                      router.push(`/search?keywords=${encodeURIComponent(searchKeywords)}`)
+                    }
+                  }}
                 />
-                <div className="flex size-9 items-center justify-center rounded-lg rounded-l-none border border-l-0">
+                <Button
+                  variant="outline"
+                  className="flex size-9 items-center justify-center rounded-lg rounded-l-none border-l-0 p-0 ring-ring ring-offset-foreground transition-all peer-focus-visible:ring-1"
+                >
                   <SearchIcon size={16} />
-                </div>
+                </Button>
               </div>
             </div>
           </NavigationMenu>
@@ -161,7 +174,7 @@ export function Navigator() {
             {session && (
               <button
                 onClick={() => setChargeCashOpen(true)}
-                className="flex select-none items-center gap-2 font-semibold whitespace-nowrap"
+                className="flex select-none items-center gap-2 whitespace-nowrap font-semibold"
               >
                 {user?.cash}원
                 <CreditCardIcon />

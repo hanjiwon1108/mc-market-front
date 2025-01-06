@@ -293,9 +293,8 @@ export function ProductDetail({
               <div className="mt-2 text-2xl">{product?.description}</div>
               <div className="mt-auto flex items-center gap-2 text-2xl">
                 <UserAvatar userId={product.creator.id} />
-                <div>
-                  <p className="text-lg">크리에이터</p>
-                  <p className="text-sm font-bold">
+                <div className="h-full">
+                  <p className="text-xl font-bold">
                     {product.creator.nickname ?? `@${product.creator.username}`}
                   </p>
                 </div>
@@ -393,7 +392,7 @@ export function ProductDetail({
                 </div>
               </div>
             </div>
-            <div className="prose prose-lg md:col-span-2 min-h-64 max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300">
+            <div className="prose prose-lg min-h-64 max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300 md:col-span-2">
               <div dangerouslySetInnerHTML={{ __html: product.details }}></div>
             </div>
           </div>
