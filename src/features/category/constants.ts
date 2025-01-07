@@ -9,18 +9,29 @@ import {
   ScrollTextIcon,
   ViewIcon,
 } from 'lucide-react';
-import { SelectGroup, SelectItem, SelectLabel } from '@/components/ui/select';
-import React from 'react';
+
+const category = (
+  path: string,
+  link: string,
+  displayName: string,
+  icon: LucideIcon,
+) => {
+  return {
+    path: path,
+    link: link,
+    name: displayName,
+    subcategories: {},
+    icon: icon,
+  } as Category;
+};
 
 export type Category<T extends string | undefined = undefined> = {
   path: string;
   name: string;
   link?: string;
-  subcategories: Record<
-    T extends string ? T : string,
-    [string, string, LucideIcon]
-  >;
+  subcategories: Record<T extends string ? T : string, Category>;
   hidden?: boolean;
+  selectForbidden?: boolean;
   icon: LucideIcon;
 };
 
@@ -40,10 +51,30 @@ export const CATEGORY_MINECRAFT: Category<
   name: 'Minecraft',
   link: '/categories/minecraft',
   subcategories: {
-    plugins: ['/categories/minecraft/plugins', '플러그인', BlocksIcon],
-    scripts: ['/categories/minecraft/scripts', '스크립트', ScrollTextIcon],
-    modeling: ['/categories/minecraft/blocks', '모델링', ViewIcon],
-    builds: ['/categories/minecraft/builds', '건축', BoltIcon],
+    plugins: category(
+      'minecraft.plugins',
+      '/categories/minecraft/plugins',
+      '플러그인',
+      BlocksIcon,
+    ),
+    scripts: category(
+      'minecraft.scripts',
+      '/categories/minecraft/scripts',
+      '스크립트',
+      ScrollTextIcon,
+    ),
+    modeling: category(
+      'minecraft.modeling',
+      '/categories/minecraft/blocks',
+      '모델링',
+      ViewIcon,
+    ),
+    builds: category(
+      'minecraft.builds',
+      '/categories/minecraft/builds',
+      '건축',
+      BoltIcon,
+    ),
   } as const,
   icon: BoxesIcon,
 } as const;
@@ -90,11 +121,9 @@ type SubcategoryPaths<K extends keyof typeof CATEGORIES> =
       : never
     : never;
 
-export type TopCategoryKey = keyof typeof CATEGORIES
+export type TopCategoryKey = keyof typeof CATEGORIES;
 
-export type CategoryKey =
-  | TopCategoryKey
-  | SubcategoryPaths<TopCategoryKey>;
+export type CategoryKey = TopCategoryKey | SubcategoryPaths<TopCategoryKey>;
 
 export function categoryPaths(): [string, ...string[]] {
   return Object.entries(CATEGORIES)
@@ -108,19 +137,26 @@ export function subcategories() {
     Object.entries(it.subcategories),
   );
 }
+export function resolveCategory(path: string) {
+  for (const category of Object.values(CATEGORIES)) {
+    if (category.path == path) {
+      return category;
+    }
 
-export function resolveCategoryName(path: string) {
-  if (path in CATEGORIES)
-    return CATEGORIES[path as keyof typeof CATEGORIES].name;
-
-  const categoryName = path.split('.')[0];
-  if (categoryName in CATEGORIES) {
-    const subcategoryName = path.split('.')[1];
-    const subcategory = Object.entries(
-      CATEGORIES[categoryName as keyof typeof CATEGORIES].subcategories,
-    ).find(([k]) => k == subcategoryName);
-    return subcategory ? subcategory[1][1] : null;
+    for (const subcategory of Object.values(category.subcategories)) {
+      if (subcategory.path == path) {
+        return subcategory;
+      }
+    }
   }
+}
 
-  return null;
+export function parentCategory(c: Category) {
+  for (const category of Object.values(CATEGORIES)) {
+    for (const subcategory of Object.values(category.subcategories)) {
+      if (subcategory.path == c.path) {
+        return category;
+      }
+    }
+  }
 }

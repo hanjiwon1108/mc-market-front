@@ -38,10 +38,12 @@ import { ChargeCashDialog } from '@/components/charge/charge-cash-dialog';
 export function Navigator() {
   const session = useSession();
   const pathname = usePathname();
-const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
   const router = useRouter();
-  const [searchKeywords, setSearchKeywords] = useState(searchParams.get('keywords') ?? '');
+  const [searchKeywords, setSearchKeywords] = useState(
+    searchParams.get('keywords') ?? '',
+  );
   const isMobile = useIsMobile();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isChargeCashOpen, setChargeCashOpen] = useState(false);
@@ -94,10 +96,10 @@ const searchParams = useSearchParams();
                       {Object.values(category.subcategories).map(
                         (subcategory) => (
                           <NavigatorSidebarMenu
-                            key={subcategory[0]}
-                            display={subcategory[1]}
-                            icon={subcategory[2]}
-                            href={subcategory[0]}
+                            key={subcategory.path}
+                            display={subcategory.name}
+                            icon={subcategory.icon}
+                            href={subcategory.link}
                           />
                         ),
                       )}
@@ -156,13 +158,20 @@ const searchParams = useSearchParams();
                   onValueChange={setSearchKeywords}
                   onKeyDown={(event) => {
                     if (event.key == 'Enter') {
-                      router.push(`/search?keywords=${encodeURIComponent(searchKeywords)}`)
+                      router.push(
+                        `/search?keywords=${encodeURIComponent(searchKeywords)}`,
+                      );
                     }
                   }}
                 />
                 <Button
                   variant="outline"
                   className="flex size-9 items-center justify-center rounded-lg rounded-l-none border-l-0 p-0 ring-ring ring-offset-foreground transition-all peer-focus-visible:ring-1"
+                  onClick={() => {
+                    router.push(
+                      `/search?keywords=${encodeURIComponent(searchKeywords)}`,
+                    );
+                  }}
                 >
                   <SearchIcon size={16} />
                 </Button>

@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import React from 'react';
 import { useSettingsDialog } from '@/features/settings';
 import { useMapleUser } from '@/api/market/context';
+import { UserAvatar } from '@/components/user/avatar';
 
 export function NavigatorProfileMenu() {
   const settings = useSettingsDialog();
@@ -19,8 +20,8 @@ export function NavigatorProfileMenu() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button className="size-10 rounded-full p-0" variant="ghost">
-          <UserRoundIcon />
+        <Button className="size-10 rounded-full p-0 border" variant="ghost">
+          {user && <UserAvatar userId={user?.id} />}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

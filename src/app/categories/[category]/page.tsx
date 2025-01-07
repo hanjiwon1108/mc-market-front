@@ -55,7 +55,7 @@ export default async function Page({
           </div>
         </div>
       </div>
-      <ProductSearch />
+      <ProductSearch category={category.path}/>
     </div>
   );
 }

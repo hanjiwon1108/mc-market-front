@@ -31,6 +31,7 @@ interface ArticleElement {
   title: string;
   created_at: string;
   updated_at: string;
+  head?: string;
   author: {
     id: string;
     username: string;
@@ -92,10 +93,11 @@ function ArticleList() {
       <Table className="w-full min-w-0 max-w-full overflow-x-scroll">
         <TableHeader>
           <TableRow>
-            <TableHead>작성자</TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>말머리</TableHead>
             <TableHead>제목</TableHead>
-            <TableHead>업로드</TableHead>
-            <TableHead>업데이트</TableHead>
+            <TableHead>작성자</TableHead>
+            <TableHead>작성일</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -105,15 +107,16 @@ function ArticleList() {
               className="cursor-pointer"
               key={article.id}
             >
-              <TableCell>
-                {article.author.nickname ?? `@${article.author.username}`}
-              </TableCell>
+              <TableCell>{article.id}</TableCell>
+              <TableCell>{article.head ?? '일반'}</TableCell>
               <TableCell className="w-full">{article.title}</TableCell>
               <TableCell className="whitespace-nowrap">
-                {new Date(article.created_at).toLocaleString()}
+                {article.author.nickname ?? `@${article.author.username}`}
               </TableCell>
-              <TableCell className="whitespace-nowrap">
-                {new Date(article.updated_at).toLocaleString()}
+              <TableCell>
+                <div className="ml-auto w-min whitespace-nowrap">
+                  {new Date(article.created_at).toLocaleDateString()}
+                </div>
               </TableCell>
             </TableRow>
           ))}
@@ -204,7 +207,10 @@ export default function ArticlesPage() {
     <div className="container mx-auto py-8">
       <div className="flex">
         <h1 className="mb-6 text-3xl font-bold">게시판</h1>
-        <Button className="ml-auto" onClick={() => router.push(`/articles/write`)}>
+        <Button
+          className="ml-auto"
+          onClick={() => router.push(`/articles/write`)}
+        >
           업로드
         </Button>
       </div>

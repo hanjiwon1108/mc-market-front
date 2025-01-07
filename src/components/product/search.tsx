@@ -28,7 +28,10 @@ type FilterOptions = {
   keywords: string;
 };
 
-export function ProductSearch(props: { initialKeywords?: string }) {
+export function ProductSearch(props: {
+  initialKeywords?: string;
+  category?: string;
+}) {
   const [orderByDebounced, setOrderBy, orderBy] =
     useDebouncedState<OrderByOptions>('time', 500);
   const [sortDebounced, setSort, sort] = useDebouncedState<SortOptions>(
@@ -44,7 +47,7 @@ export function ProductSearch(props: { initialKeywords?: string }) {
   const [filterFree, setFilterFree] = useState(false);
 
   useEffect(() => {
-    if(keywords != props.initialKeywords) {
+    if (keywords != props.initialKeywords) {
       setKeywords(props.initialKeywords ?? '');
     }
   }, [props.initialKeywords]);
@@ -57,7 +60,8 @@ export function ProductSearch(props: { initialKeywords?: string }) {
           : prev.reduce((p, c) => (BigInt(p.id) < BigInt(c.id) ? c : p));
 
       return [
-        endpoint(`/v1/products`) + `?offset=${offset}&`,
+        endpoint(`/v1/products`) +
+          `?offset=${offset}&${props.category ? `category=${props.category}&` : ''}}`,
         {
           orderBy: orderByDebounced,
           sort: sortDebounced,

@@ -30,12 +30,12 @@ function CategoryDisplay({ category }: { category: Category }) {
   return (
     <div>
       <CategoryLink href={category.link!}>{category.name}</CategoryLink>
-      {Object.values(category.subcategories).map(([href, name, icon]) => {
-        const Icon = icon;
+      {Object.values(category.subcategories).map((subcategory) => {
+        const Icon = subcategory.icon;
 
         return (
-          <div key={href}>
-            <Link href={href} legacyBehavior passHref>
+          <div key={subcategory.path}>
+            <Link href={subcategory.link ?? '/'} legacyBehavior passHref>
               <NavigationMenuLink
                 className={cn(
                   navigationMenuTriggerStyle(),
@@ -43,7 +43,7 @@ function CategoryDisplay({ category }: { category: Category }) {
                 )}
               >
                 <Icon size={20} />
-                <p>{name}</p>
+                <p>{subcategory.name}</p>
               </NavigationMenuLink>
             </Link>
           </div>

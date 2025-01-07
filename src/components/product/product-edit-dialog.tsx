@@ -26,11 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  CATEGORIES,
-  CategoryKey,
-  resolveCategoryName,
-} from '@/features/category';
+import { CATEGORIES, CategoryKey, resolveCategory } from '@/features/category';
 import { Textarea } from '@/components/ui/textarea';
 import { BasicEditor } from '@/components/editor/basic-editor';
 import {
@@ -88,8 +84,16 @@ export function ProductEditDialog(props: ProductEditDialogProps) {
 
   return (
     <ResponsiveDialog isOpen={props.isOpen} onOpenChange={props.onOpenChange}>
-      <ResponsiveDialogContent>
-        <div className="max-h-[50vh] overflow-y-auto">
+      <ResponsiveDialogContent
+        className={cn(
+          'max-h-[50dvh] max-w-[100dvw] md:h-screen md:max-h-screen',
+        )}
+      >
+        <div
+          className={cn(
+            'flex max-h-[50dvh] flex-col gap-2 overflow-y-auto md:max-h-screen',
+          )}
+        >
           <div
             className={cn(
               'absolute z-10 flex size-full items-center justify-center rounded-lg bg-muted/50 outline-none backdrop-blur transition-all duration-500 ease-primary',
@@ -206,11 +210,10 @@ function BasicInfoStage(props: StageProps) {
             .map(([key, category]) => (
               <SelectGroup key={key}>
                 <SelectLabel>{category.name}</SelectLabel>
-                <SelectItem value={key}>{category.name}</SelectItem>
                 {Object.entries(category.subcategories).map(
-                  ([key, [, value]]) => (
-                    <SelectItem key={key} value={key}>
-                      {value}
+                  ([key, subcategory]) => (
+                    <SelectItem key={key} value={subcategory.path}>
+                      {subcategory.name}
                     </SelectItem>
                   ),
                 )}
@@ -413,7 +416,10 @@ function PricingStage(props: StageProps) {
 function CompleteStage(props: StageProps) {
   const rows: [string, React.ReactNode][] = [
     ['이름', props.state.name],
-    ['카테고리', resolveCategoryName(props.state.category)],
+    [
+      '카테고리',
+      resolveCategory(props.state.category)?.name ?? props.state.category,
+    ],
     ['설명', props.state.description],
     ['용도', props.state.usage],
     [
