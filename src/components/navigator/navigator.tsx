@@ -149,7 +149,7 @@ export function Navigator() {
               </NavigationMenuItem>
             </NavigationMenuList>
             <div className="mx-auto hidden md:block">
-              <div className="flex min-w-0 max-w-96 transition-all lg:min-w-[28rem]">
+              <div className="hidden min-w-0 max-w-96 transition-all lg:flex lg:min-w-[14rem] mx-2">
                 <Input
                   spellCheck={false}
                   placeholder="제품 검색"

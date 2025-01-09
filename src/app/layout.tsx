@@ -36,7 +36,7 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${pretendard.variable} antialiased`}
       >
-        <ThemeProvider attribute="class">
+        <ThemeProvider attribute="class" defaultTheme="light">
           <APIProvider>
             <ClientProvider modal={modal}>{children}</ClientProvider>
           </APIProvider>

@@ -148,7 +148,7 @@ export function ProductSearch(props: {
         products.data.length != 0 &&
         products.data[0]?.length != 0 ? (
           <>
-            <div className="mb-20 grid w-full auto-rows-min grid-cols-4 md:w-4/5">
+            <div className="mb-20 grid w-full auto-rows-min grid-cols-3 xl:grid-cols-4 md:w-4/5">
               {products.data
                 ?.flatMap((it) => it)
                 .map(

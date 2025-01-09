@@ -34,11 +34,7 @@ export default function Page() {
       })
       .then((r) => {
         if (r.error) {
-          if (r.error.code == 'invalid_credentials') {
-            toast.error(`사용자 이름 또는 비밀번호가 일치하지 않음`);
-          } else {
-            toast.error(`로그인 실패: ${r.error}`);
-          }
+          toast.error(`로그인 실패: 아이디와 비밀번호를 다시 확인하세요`);
         } else {
           toast.info('로그인 완료, 홈으로 이동합니다...');
           router.push('/');
