@@ -3,6 +3,7 @@ import Markdown from 'react-markdown';
 import React from 'react';
 import { ResponseCommentType } from '@/api/types/comment';
 import CommentsContainer from '@/components/comments/container';
+import LikeComponent from '@/components/article_likes/likecomponent';
 
 type ArticleAuthor = {
   id: string;
@@ -19,6 +20,8 @@ type GetArticleResponse = {
   updated_at: string; // ISO 8601 formatted date string
   views: number;
   comments: ResponseCommentType;
+  likes: number;
+  dislikes: number;
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -71,6 +74,11 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div dangerouslySetInnerHTML={{ __html: article.content }}></div>
         </div>
       </article>
+      <LikeComponent
+        dislikesOrigin={article.dislikes}
+        likesOrigin={article.likes}
+        articleId={id}
+      />
       <CommentsContainer
         comments={article.comments as ResponseCommentType}
         articleId={id}

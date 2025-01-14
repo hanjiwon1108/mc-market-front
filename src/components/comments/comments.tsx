@@ -21,10 +21,18 @@ export default function Comments({
     // yyyy. mm. dd. hh:mm:ss 형식으로 변환
     const pad = (n: number) => n.toString().padStart(2, '0');
     const d = new Date(date);
-    return (
-      `${d.getFullYear()}. ${pad(d.getMonth() + 1)}. ${pad(d.getDate())}. ` +
-      `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-    );
+    const today = new Date();
+    const year = new Date().getFullYear();
+    const isToday =
+      d.getFullYear() === today.getFullYear() &&
+      d.getMonth() === today.getMonth() &&
+      d.getDate() === today.getDate();
+
+    const isThisYear = d.getFullYear() === year;
+
+    return !isToday
+      ? `${!isThisYear ? d.getFullYear().toString().slice(-2) + '.' : ''}${pad(d.getMonth() + 1)}.${pad(d.getDate())}`
+      : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
   };
 
   return (
@@ -63,7 +71,12 @@ export default function Comments({
               {comment.user.nickname || comment.user.nickname}
             </span>
           </div>
-          <p className={isMobile ? 'w-full' : 'w-7/12'}>
+          <p
+            className={
+              'flex items-center justify-start ' +
+              (isMobile ? 'w-full' : 'w-10/12')
+            }
+          >
             {child ? '└ ' : ''}
             {comment.content}
           </p>

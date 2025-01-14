@@ -40,6 +40,8 @@ interface ArticleElement {
     username: string;
     nickname?: string;
   };
+  comment_count: number;
+  likes: number;
 }
 
 // Comment out dummy data generator
@@ -122,6 +124,8 @@ function ArticleList() {
               <TableHead>작성자</TableHead>
               <TableHead>작성일</TableHead>
               <TableHead>조회</TableHead>
+              <TableHead>댓글수</TableHead>
+              <TableHead>추천</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -131,7 +135,9 @@ function ArticleList() {
                 className="cursor-pointer"
                 key={article.id}
               >
-                <TableCell>{article.head ?? '일반'}</TableCell>
+                <TableCell className="text-center">
+                  {article.head ?? '일반'}
+                </TableCell>
                 <TableCell className="w-full">
                   <em
                     style={{
@@ -154,10 +160,14 @@ function ArticleList() {
                 </TableCell>
                 <TableCell>
                   <div className="ml-auto w-min whitespace-nowrap">
-                    {new Date(article.created_at).toLocaleDateString()}
+                    {getTime(article.created_at)}
                   </div>
                 </TableCell>
-                <TableCell>{article.views}</TableCell>
+                <TableCell className="text-center">{article.views}</TableCell>
+                <TableCell className="text-center">
+                  {article.comment_count}
+                </TableCell>
+                <TableCell className="text-center">{article.likes}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -194,11 +204,12 @@ function ArticleList() {
                   <span>{article.head ?? '일반'}</span>|
                   <span>{article.author.nickname}</span>|
                   <span>{getTime(article.created_at)}</span>|
-                  <span>조회 {article.views}</span>|<span>추천{}</span>
+                  <span>조회 {article.views}</span>|
+                  <span>추천 {article.likes}</span>
                 </div>
               </div>
-              <div className="flex items-center border-l-2 pl-2 text-red-600">
-                <span>댓</span>
+              <div className="flex w-5 items-center justify-center border-l-2 pl-2 text-red-600">
+                <span>{article.comment_count}</span>
               </div>
             </div>
           ))}
