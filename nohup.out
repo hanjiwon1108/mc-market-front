@@ -1,0 +1,515 @@
+ Service market-web  Building
+#0 building with "default" instance using docker driver
+
+#1 [market-web internal] load build definition from Dockerfile
+#1 transferring dockerfile: 710B done
+#1 DONE 0.0s
+
+#2 [market-web internal] load metadata for docker.io/library/node:18-alpine
+#2 DONE 0.7s
+
+#3 [market-web internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [market-web base 1/5] FROM docker.io/library/node:18-alpine@sha256:6eb9c3d9bd191bd2cc6ce7ec3d5ec4c2127616140c8586af96a6bec8f28689d1
+#4 DONE 0.0s
+
+#5 [market-web internal] load build context
+#5 transferring context: 31.22kB 0.2s done
+#5 DONE 0.2s
+
+#6 [market-web base 2/5] RUN corepack enable
+#6 CACHED
+
+#7 [market-web base 3/5] RUN apk add git make
+#7 CACHED
+
+#8 [market-web base 4/5] COPY . /app
+#8 DONE 0.7s
+
+#9 [market-web base 5/5] WORKDIR /app
+#9 DONE 0.1s
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 1.089 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.2.tgz
+#10 2.562 ! The local project doesn't define a 'packageManager' field. Corepack will now add one referencing pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321.
+#10 2.562 ! For more details about this field, consult the documentation at https://nodejs.org/api/packages.html#packagemanager
+#10 2.562 
+#10 4.104 Lockfile is up to date, resolution step is skipped
+#10 4.408 Progress: resolved 1, reused 0, downloaded 0, added 0
+#10 4.883 Packages: +637
+#10 4.883 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#10 5.419 Progress: resolved 637, reused 8, downloaded 0, added 0
+#10 6.420 Progress: resolved 637, reused 67, downloaded 0, added 0
+#10 7.428 Progress: resolved 637, reused 151, downloaded 0, added 0
+#10 8.429 Progress: resolved 637, reused 372, downloaded 0, added 0
+#10 9.432 Progress: resolved 637, reused 438, downloaded 0, added 0
+#10 ...
+
+#11 [market-web build 1/2] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+#11 0.983 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.2.tgz
+#11 2.413 ! The local project doesn't define a 'packageManager' field. Corepack will now add one referencing pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321.
+#11 2.413 ! For more details about this field, consult the documentation at https://nodejs.org/api/packages.html#packagemanager
+#11 2.413 
+#11 3.717 Lockfile is up to date, resolution step is skipped
+#11 4.133 Progress: resolved 1, reused 0, downloaded 0, added 0
+#11 4.904 Packages: +1174
+#11 4.904 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#11 5.140 Progress: resolved 1174, reused 5, downloaded 0, added 0
+#11 6.142 Progress: resolved 1174, reused 38, downloaded 0, added 0
+#11 7.144 Progress: resolved 1174, reused 145, downloaded 0, added 0
+#11 8.144 Progress: resolved 1174, reused 309, downloaded 0, added 0
+#11 9.145 Progress: resolved 1174, reused 429, downloaded 0, added 0
+#11 10.14 Progress: resolved 1174, reused 513, downloaded 0, added 0
+#11 ...
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 10.44 Progress: resolved 637, reused 585, downloaded 0, added 0
+#10 11.44 Progress: resolved 637, reused 636, downloaded 0, added 8
+#10 12.44 Progress: resolved 637, reused 636, downloaded 0, added 59
+#10 13.44 Progress: resolved 637, reused 636, downloaded 0, added 126
+#10 14.45 Progress: resolved 637, reused 636, downloaded 0, added 148
+#10 15.45 Progress: resolved 637, reused 636, downloaded 0, added 172
+#10 16.45 Progress: resolved 637, reused 636, downloaded 0, added 244
+#10 17.45 Progress: resolved 637, reused 636, downloaded 0, added 305
+#10 18.45 Progress: resolved 637, reused 636, downloaded 0, added 352
+#10 19.45 Progress: resolved 637, reused 636, downloaded 0, added 402
+#10 ...
+
+#11 [market-web build 1/2] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+#11 11.14 Progress: resolved 1174, reused 779, downloaded 0, added 0
+#11 12.14 Progress: resolved 1174, reused 994, downloaded 0, added 0
+#11 13.15 Progress: resolved 1174, reused 1170, downloaded 0, added 0
+#11 14.15 Progress: resolved 1174, reused 1170, downloaded 0, added 59
+#11 15.15 Progress: resolved 1174, reused 1170, downloaded 0, added 159
+#11 16.15 Progress: resolved 1174, reused 1170, downloaded 0, added 217
+#11 17.15 Progress: resolved 1174, reused 1170, downloaded 0, added 299
+#11 18.15 Progress: resolved 1174, reused 1170, downloaded 0, added 355
+#11 19.15 Progress: resolved 1174, reused 1170, downloaded 0, added 397
+#11 20.15 Progress: resolved 1174, reused 1170, downloaded 0, added 425
+#11 ...
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 20.45 Progress: resolved 637, reused 636, downloaded 0, added 422
+#10 23.27 Progress: resolved 637, reused 636, downloaded 0, added 423
+#10 24.28 Progress: resolved 637, reused 636, downloaded 0, added 427
+#10 25.27 Progress: resolved 637, reused 636, downloaded 0, added 430
+#10 ...
+
+#11 [market-web build 1/2] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+#11 23.28 Progress: resolved 1174, reused 1170, downloaded 0, added 426
+#11 24.28 Progress: resolved 1174, reused 1170, downloaded 0, added 430
+#11 25.29 Progress: resolved 1174, reused 1170, downloaded 0, added 433
+#11 29.01 Progress: resolved 1174, reused 1170, downloaded 0, added 434
+#11 ...
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 29.01 Progress: resolved 637, reused 636, downloaded 0, added 431
+#10 30.01 Progress: resolved 637, reused 636, downloaded 0, added 439
+#10 37.67 Progress: resolved 637, reused 636, downloaded 0, added 440
+#10 ...
+
+#11 [market-web build 1/2] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+#11 30.01 Progress: resolved 1174, reused 1170, downloaded 0, added 442
+#11 37.68 Progress: resolved 1174, reused 1170, downloaded 0, added 443
+#11 38.67 Progress: resolved 1174, reused 1170, downloaded 0, added 469
+#11 ...
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 38.68 Progress: resolved 637, reused 636, downloaded 0, added 466
+#10 39.68 Progress: resolved 637, reused 636, downloaded 0, added 474
+#10 41.26 Progress: resolved 637, reused 636, downloaded 0, added 475
+#10 45.33 Progress: resolved 637, reused 636, downloaded 0, added 476
+#10 46.33 Progress: resolved 637, reused 636, downloaded 0, added 489
+#10 47.33 Progress: resolved 637, reused 636, downloaded 0, added 495
+#10 48.33 Progress: resolved 637, reused 636, downloaded 0, added 517
+#10 49.34 Progress: resolved 637, reused 636, downloaded 0, added 567
+#10 ...
+
+#11 [market-web build 1/2] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+#11 39.68 Progress: resolved 1174, reused 1170, downloaded 0, added 477
+#11 41.29 Progress: resolved 1174, reused 1170, downloaded 0, added 478
+#11 45.42 Progress: resolved 1174, reused 1170, downloaded 0, added 479
+#11 46.42 Progress: resolved 1174, reused 1170, downloaded 0, added 495
+#11 47.42 Progress: resolved 1174, reused 1170, downloaded 0, added 500
+#11 48.42 Progress: resolved 1174, reused 1170, downloaded 0, added 524
+#11 49.42 Progress: resolved 1174, reused 1170, downloaded 0, added 575
+#11 ...
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 50.35 Progress: resolved 637, reused 636, downloaded 0, added 624
+#10 50.61 Progress: resolved 637, reused 636, downloaded 0, added 637, done
+#10 52.61 
+#10 52.61 dependencies:
+#10 52.61 + @entropi-co/surge-js 0.5.1
+#10 52.61 + @entropi-co/surge-ssr 0.4.0
+#10 52.61 + @hookform/resolvers 3.9.1
+#10 52.61 + @mdx-js/loader 3.1.0
+#10 52.61 + @mdx-js/react 3.1.0
+#10 52.61 + @next/mdx 15.0.3
+#10 52.61 + @radix-ui/react-accordion 1.2.1
+#10 52.61 + @radix-ui/react-alert-dialog 1.1.2
+#10 52.61 + @radix-ui/react-aspect-ratio 1.1.0
+#10 52.61 + @radix-ui/react-avatar 1.1.1
+#10 52.61 + @radix-ui/react-checkbox 1.1.2
+#10 52.61 + @radix-ui/react-collapsible 1.1.1
+#10 52.61 + @radix-ui/react-context-menu 2.2.2
+#10 52.61 + @radix-ui/react-dialog 1.1.2
+#10 52.61 + @radix-ui/react-dropdown-menu 2.1.2
+#10 52.61 + @radix-ui/react-hover-card 1.1.2
+#10 52.61 + @radix-ui/react-label 2.1.0
+#10 52.61 + @radix-ui/react-menubar 1.1.2
+#10 52.61 + @radix-ui/react-navigation-menu 1.2.1
+#10 52.61 + @radix-ui/react-popover 1.1.2
+#10 52.61 + @radix-ui/react-progress 1.1.0
+#10 52.61 + @radix-ui/react-radio-group 1.2.1
+#10 52.61 + @radix-ui/react-scroll-area 1.2.1
+#10 52.61 + @radix-ui/react-select 2.1.2
+#10 52.61 + @radix-ui/react-separator 1.1.0
+#10 52.61 + @radix-ui/react-slider 1.2.1
+#10 52.61 + @radix-ui/react-slot 1.1.0
+#10 52.61 + @radix-ui/react-switch 1.1.1
+#10 52.61 + @radix-ui/react-tabs 1.1.1
+#10 52.61 + @radix-ui/react-toast 1.2.2
+#10 52.61 + @radix-ui/react-toggle 1.1.0
+#10 52.61 + @radix-ui/react-toggle-group 1.1.0
+#10 52.61 + @radix-ui/react-tooltip 1.1.4
+#10 52.61 + @radix-ui/react-visually-hidden 1.1.0
+#10 52.61 + @react-spring/web 9.7.5
+#10 52.61 + @storybook/addon-docs 8.4.7
+#10 52.61 + @tiptap/extension-color 2.11.0
+#10 52.61 + @tiptap/extension-document 2.11.0
+#10 52.61 + @tiptap/extension-dropcursor 2.11.0
+#10 52.61 + @tiptap/extension-image 2.11.0
+#10 52.61 + @tiptap/extension-text-style 2.11.0
+#10 52.61 + @tiptap/pm 2.10.3
+#10 52.61 + @tiptap/react 2.10.3
+#10 52.61 + @tiptap/starter-kit 2.10.3
+#10 52.61 + @tosspayments/tosspayments-sdk 2.3.4
+#10 52.61 + @types/mdx 2.0.13
+#10 52.61 + @uidotdev/usehooks 2.4.1
+#10 52.61 + class-variance-authority 0.7.0
+#10 52.61 + clsx 2.1.1
+#10 52.61 + cmdk 1.0.4
+#10 52.61 + date-fns 3.6.0
+#10 52.61 + dayjs 1.11.13
+#10 52.61 + embla-carousel-react 8.3.1
+#10 52.61 + framer-motion 11.11.17
+#10 52.61 + input-otp 1.4.1
+#10 52.61 + jotai 2.10.2
+#10 52.61 + lucide-react 0.456.0
+#10 52.61 + mini-css-extract-plugin 2.9.2
+#10 52.61 + next 15.0.3
+#10 52.61 + next-themes 0.4.3
+#10 52.61 + react 19.0.0-rc-66855b96-20241106
+#10 52.61 + react-day-picker 8.10.1
+#10 52.61 + react-dom 19.0.0-rc-66855b96-20241106
+#10 52.61 + react-hook-form 7.53.2
+#10 52.61 + react-markdown 9.0.1
+#10 52.61 + react-resizable-panels 2.1.6
+#10 52.61 + recharts 2.13.3
+#10 52.61 + sonner 1.7.0
+#10 52.61 + swr 2.2.5
+#10 52.61 + tailwind-merge 2.5.4
+#10 52.61 + tailwindcss-animate 1.0.7
+#10 52.61 + tiptap-markdown 0.8.10
+#10 52.61 + usehooks-ts 3.1.0
+#10 52.61 + uuid 11.0.3
+#10 52.61 + vaul 1.1.1
+#10 52.61 + zod 3.23.8
+#10 52.61 
+#10 52.61 devDependencies: skipped
+#10 52.61 
+#10 52.66 Done in 50s
+#10 DONE 53.0s
+
+#11 [market-web build 1/2] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+#11 50.43 Progress: resolved 1174, reused 1170, downloaded 0, added 633
+#11 51.43 Progress: resolved 1174, reused 1170, downloaded 0, added 667
+#11 52.43 Progress: resolved 1174, reused 1170, downloaded 0, added 695
+#11 53.43 Progress: resolved 1174, reused 1170, downloaded 0, added 736
+#11 54.43 Progress: resolved 1174, reused 1170, downloaded 0, added 804
+#11 57.26 Progress: resolved 1174, reused 1170, downloaded 0, added 805
+#11 58.26 Progress: resolved 1174, reused 1170, downloaded 0, added 849
+#11 59.26 Progress: resolved 1174, reused 1170, downloaded 0, added 879
+#11 60.26 Progress: resolved 1174, reused 1170, downloaded 0, added 963
+#11 61.26 Progress: resolved 1174, reused 1170, downloaded 0, added 1039
+#11 62.26 Progress: resolved 1174, reused 1170, downloaded 0, added 1073
+#11 63.26 Progress: resolved 1174, reused 1170, downloaded 0, added 1078
+#11 64.27 Progress: resolved 1174, reused 1170, downloaded 0, added 1093
+#11 65.27 Progress: resolved 1174, reused 1170, downloaded 0, added 1141
+#11 66.27 Progress: resolved 1174, reused 1170, downloaded 0, added 1153
+#11 66.81 Progress: resolved 1174, reused 1170, downloaded 0, added 1174, done
+#11 70.18 
+#11 70.18 dependencies:
+#11 70.18 + @entropi-co/surge-js 0.5.1
+#11 70.18 + @entropi-co/surge-ssr 0.4.0
+#11 70.18 + @hookform/resolvers 3.9.1
+#11 70.18 + @mdx-js/loader 3.1.0
+#11 70.18 + @mdx-js/react 3.1.0
+#11 70.18 + @next/mdx 15.0.3
+#11 70.18 + @radix-ui/react-accordion 1.2.1
+#11 70.18 + @radix-ui/react-alert-dialog 1.1.2
+#11 70.18 + @radix-ui/react-aspect-ratio 1.1.0
+#11 70.18 + @radix-ui/react-avatar 1.1.1
+#11 70.18 + @radix-ui/react-checkbox 1.1.2
+#11 70.18 + @radix-ui/react-collapsible 1.1.1
+#11 70.18 + @radix-ui/react-context-menu 2.2.2
+#11 70.18 + @radix-ui/react-dialog 1.1.2
+#11 70.18 + @radix-ui/react-dropdown-menu 2.1.2
+#11 70.18 + @radix-ui/react-hover-card 1.1.2
+#11 70.18 + @radix-ui/react-label 2.1.0
+#11 70.18 + @radix-ui/react-menubar 1.1.2
+#11 70.18 + @radix-ui/react-navigation-menu 1.2.1
+#11 70.18 + @radix-ui/react-popover 1.1.2
+#11 70.18 + @radix-ui/react-progress 1.1.0
+#11 70.18 + @radix-ui/react-radio-group 1.2.1
+#11 70.18 + @radix-ui/react-scroll-area 1.2.1
+#11 70.18 + @radix-ui/react-select 2.1.2
+#11 70.18 + @radix-ui/react-separator 1.1.0
+#11 70.18 + @radix-ui/react-slider 1.2.1
+#11 70.18 + @radix-ui/react-slot 1.1.0
+#11 70.18 + @radix-ui/react-switch 1.1.1
+#11 70.18 + @radix-ui/react-tabs 1.1.1
+#11 70.18 + @radix-ui/react-toast 1.2.2
+#11 70.18 + @radix-ui/react-toggle 1.1.0
+#11 70.18 + @radix-ui/react-toggle-group 1.1.0
+#11 70.18 + @radix-ui/react-tooltip 1.1.4
+#11 70.18 + @radix-ui/react-visually-hidden 1.1.0
+#11 70.18 + @react-spring/web 9.7.5
+#11 70.18 + @storybook/addon-docs 8.4.7
+#11 70.18 + @tiptap/extension-color 2.11.0
+#11 70.18 + @tiptap/extension-document 2.11.0
+#11 70.18 + @tiptap/extension-dropcursor 2.11.0
+#11 70.18 + @tiptap/extension-image 2.11.0
+#11 70.18 + @tiptap/extension-text-style 2.11.0
+#11 70.18 + @tiptap/pm 2.10.3
+#11 70.18 + @tiptap/react 2.10.3
+#11 70.18 + @tiptap/starter-kit 2.10.3
+#11 70.18 + @tosspayments/tosspayments-sdk 2.3.4
+#11 70.18 + @types/mdx 2.0.13
+#11 70.18 + @uidotdev/usehooks 2.4.1
+#11 70.18 + class-variance-authority 0.7.0
+#11 70.18 + clsx 2.1.1
+#11 70.18 + cmdk 1.0.4
+#11 70.18 + date-fns 3.6.0
+#11 70.18 + dayjs 1.11.13
+#11 70.18 + embla-carousel-react 8.3.1
+#11 70.18 + framer-motion 11.11.17
+#11 70.18 + input-otp 1.4.1
+#11 70.18 + jotai 2.10.2
+#11 70.18 + lucide-react 0.456.0
+#11 70.18 + mini-css-extract-plugin 2.9.2
+#11 70.18 + next 15.0.3
+#11 70.18 + next-themes 0.4.3
+#11 70.18 + react 19.0.0-rc-66855b96-20241106
+#11 70.18 + react-day-picker 8.10.1
+#11 70.18 + react-dom 19.0.0-rc-66855b96-20241106
+#11 70.18 + react-hook-form 7.53.2
+#11 70.18 + react-markdown 9.0.1
+#11 70.18 + react-resizable-panels 2.1.6
+#11 70.18 + recharts 2.13.3
+#11 70.18 + sonner 1.7.0
+#11 70.18 + swr 2.2.5
+#11 70.18 + tailwind-merge 2.5.4
+#11 70.18 + tailwindcss-animate 1.0.7
+#11 70.18 + tiptap-markdown 0.8.10
+#11 70.18 + usehooks-ts 3.1.0
+#11 70.18 + uuid 11.0.3
+#11 70.18 + vaul 1.1.1
+#11 70.18 + zod 3.23.8
+#11 70.18 
+#11 70.18 devDependencies:
+#11 70.18 + @chromatic-com/storybook 3.2.3
+#11 70.18 + @storybook/addon-essentials 8.4.7
+#11 70.18 + @storybook/addon-interactions 8.4.7
+#11 70.18 + @storybook/addon-onboarding 8.4.7
+#11 70.18 + @storybook/blocks 8.4.7
+#11 70.18 + @storybook/nextjs 8.4.7
+#11 70.18 + @storybook/react 8.4.7
+#11 70.18 + @storybook/test 8.4.7
+#11 70.18 + @tailwindcss/typography 0.5.15
+#11 70.18 + @types/cookie 1.0.0
+#11 70.18 + @types/node 20.17.6
+#11 70.18 + @types/react 18.3.12
+#11 70.18 + @types/react-dom 18.3.1
+#11 70.18 + cookie 1.0.2
+#11 70.18 + eslint 8.57.1
+#11 70.18 + eslint-config-next 15.0.3
+#11 70.18 + eslint-plugin-storybook 0.11.1
+#11 70.18 + postcss 8.4.49
+#11 70.18 + prettier 3.3.3
+#11 70.18 + prettier-plugin-tailwindcss 0.6.8
+#11 70.18 + storybook 8.4.7
+#11 70.18 + tailwindcss 3.4.15
+#11 70.18 + typescript 5.6.3
+#11 70.18 
+#11 70.25 Done in 1m 7.8s
+#11 DONE 70.6s
+
+#12 [market-web build 2/2] RUN pnpm run build
+#12 1.522 
+#12 1.522 > web-market@0.1.0 build /app
+#12 1.522 > next build
+#12 1.522 
+#12 3.996 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#12 3.997 This information is used to shape Next.js' roadmap and prioritize features.
+#12 3.997 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#12 3.997 https://nextjs.org/telemetry
+#12 3.997 
+#12 4.155    ▲ Next.js 15.0.3
+#12 4.155    - Environments: .env
+#12 4.155    - Experiments (use with caution):
+#12 4.155      · turbo
+#12 4.155 
+#12 4.330    Creating an optimized production build ...
+#12 ...
+
+#13 [market-web stage-3 1/2] COPY --from=prod-deps /app/node_modules /app/node_modules
+#13 DONE 43.3s
+
+#12 [market-web build 2/2] RUN pnpm run build
+#12 73.25  ✓ Compiled successfully
+#12 73.26    Skipping linting
+#12 73.26    Checking validity of types ...
+#12 92.09    Collecting page data ...
+#12 96.12    Generating static pages (0/25) ...
+#12 98.62    Generating static pages (6/25) 
+#12 98.62    Generating static pages (12/25) 
+#12 98.62    Generating static pages (18/25) 
+#12 98.62  ✓ Generating static pages (25/25)
+#12 99.59    Finalizing page optimization ...
+#12 99.59    Collecting build traces ...
+#12 114.2 
+#12 114.3 Route (app)                               Size     First Load JS
+#12 114.3 ┌ ƒ /                                     23.3 kB         220 kB
+#12 114.3 ├ ƒ /_not-found                           175 B           100 kB
+#12 114.3 ├ ƒ /(.)products/[id]                     1.05 kB         215 kB
+#12 114.3 ├ ƒ /admin                                2.25 kB         110 kB
+#12 114.3 ├ ƒ /admin/[...fallback]                  394 B           109 kB
+#12 114.3 ├ ƒ /admin/products                       4.37 kB         254 kB
+#12 114.3 ├ ƒ /admin/users                          6.11 kB         195 kB
+#12 114.3 ├ ƒ /articles                             4.68 kB         125 kB
+#12 114.3 ├ ƒ /articles/[id]                        174 B           109 kB
+#12 114.3 ├ ƒ /articles/write                       57.5 kB         292 kB
+#12 114.3 ├ ƒ /cart                                 7.86 kB         212 kB
+#12 114.3 ├ ƒ /categories                           175 B           100 kB
+#12 114.3 ├ ƒ /categories/[category]                168 B           175 kB
+#12 114.3 ├ ƒ /categories/[category]/[subcategory]  168 B           175 kB
+#12 114.3 ├ ƒ /charge/approve                       3.96 kB         169 kB
+#12 114.3 ├ ƒ /charge/failed                        790 B           108 kB
+#12 114.3 ├ ƒ /dashboard                            2.25 kB         110 kB
+#12 114.3 ├ ƒ /dashboard/[...fallback]              394 B           109 kB
+#12 114.3 ├ ƒ /dashboard/products                   11.7 kB         359 kB
+#12 114.3 ├ ƒ /dashboard/revenue                    1.23 kB         144 kB
+#12 114.3 ├ ƒ /docs/privacy                         175 B           100 kB
+#12 114.3 ├ ƒ /docs/tos                             175 B           100 kB
+#12 114.3 ├ ƒ /products/[id]                        541 B           215 kB
+#12 114.3 ├ ƒ /signin                               4.46 kB         170 kB
+#12 114.3 ├ ƒ /signup                               3.99 kB         146 kB
+#12 114.3 ├ ƒ /signup/completed                     2.46 kB         112 kB
+#12 114.3 ├ ƒ /signup/nickname                      4.38 kB         165 kB
+#12 114.3 ├ ƒ /signup/password                      3.96 kB         150 kB
+#12 114.3 └ ƒ /test                                 440 B           191 kB
+#12 114.3 + First Load JS shared by all             100 kB
+#12 114.3   ├ chunks/7077-432603017dfe03d6.js       45.7 kB
+#12 114.3   ├ chunks/8eb6f11a-1483dad64db3ac0c.js   52.5 kB
+#12 114.3   └ other shared chunks (total)           1.97 kB
+#12 114.3 
+#12 114.3 
+#12 114.3 ƒ Middleware                              44 kB
+#12 114.3 
+#12 114.3 ƒ  (Dynamic)  server-rendered on demand
+#12 114.3 
+#12 DONE 114.4s
+
+#14 [market-web stage-3 2/2] COPY --from=build /app/.next /app/.next
+#14 DONE 1.6s
+
+#15 [market-web] exporting to image
+#15 exporting layers
+#15 exporting layers 40.8s done
+#15 writing image sha256:98d8565cc92effaecc85a72e777fa2f03716c80f1b6017133f443c2905334aec done
+#15 naming to docker.io/library/market-web-market-web done
+#15 DONE 40.8s
+
+#16 [market-web] resolving provenance for metadata file
+ Service market-web  Built
+#16 DONE 0.1s
+ Container market-web-market-web-1  Recreate
+ Container market-web-market-web-1  Recreated
+ Container market-web-market-web-1  Starting
+ Container market-web-market-web-1  Started
+ Service market-web  Building
+#0 building with "default" instance using docker driver
+
+#1 [market-web internal] load build definition from Dockerfile
+#1 transferring dockerfile: 710B done
+#1 DONE 0.0s
+
+#2 [market-web internal] load metadata for docker.io/library/node:18-alpine
+#2 DONE 1.5s
+
+#3 [market-web internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [market-web base 1/5] FROM docker.io/library/node:18-alpine@sha256:6eb9c3d9bd191bd2cc6ce7ec3d5ec4c2127616140c8586af96a6bec8f28689d1
+#4 DONE 0.0s
+
+#5 [market-web internal] load build context
+#5 transferring context: 809.94kB 0.2s done
+#5 DONE 0.2s
+
+#6 [market-web base 2/5] RUN corepack enable
+#6 CACHED
+
+#7 [market-web base 3/5] RUN apk add git make
+#7 CACHED
+
+#8 [market-web base 4/5] COPY . /app
+#8 DONE 0.6s
+
+#9 [market-web base 5/5] WORKDIR /app
+#9 DONE 0.1s
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 0.762 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.3.tgz
+#10 1.691 ! The local project doesn't define a 'packageManager' field. Corepack will now add one referencing pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a.
+#10 1.691 ! For more details about this field, consult the documentation at https://nodejs.org/api/packages.html#packagemanager
+#10 1.691 
+#10 2.786 Lockfile is up to date, resolution step is skipped
+#10 2.903 Progress: resolved 1, reused 0, downloaded 0, added 0
+#10 3.184 Packages: +638
+#10 3.184 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#10 3.904 Progress: resolved 638, reused 9, downloaded 0, added 0
+#10 4.906 Progress: resolved 638, reused 110, downloaded 0, added 0
+#10 5.906 Progress: resolved 638, reused 246, downloaded 0, added 0
+#10 6.906 Progress: resolved 638, reused 430, downloaded 0, added 0
+#10 7.907 Progress: resolved 638, reused 636, downloaded 0, added 0
+#10 8.908 Progress: resolved 638, reused 636, downloaded 0, added 33
+#10 9.908 Progress: resolved 638, reused 636, downloaded 0, added 126
+#10 ...
+
+#11 [market-web build 1/2] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+#11 0.756 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.3.tgz
+#11 1.740 ! The local project doesn't define a 'packageManager' field. Corepack will now add one referencing pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a.
+#11 1.740 ! For more details about this field, consult the documentation at https://nodejs.org/api/packages.html#packagemanager
+#11 1.740 
+#11 2.798 Lockfile is up to date, resolution step is skipped
+#11 3.033 Progress: resolved 1, reused 0, downloaded 0, added 0
+#11 3.463 Packages: +1175
+#11 3.463 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#11 4.035 Progress: resolved 1175, reused 9, downloaded 0, added 0
+#11 5.036 Progress: resolved 1175, reused 126, downloaded 0, added 0
+#11 6.037 Progress: resolved 1175, reused 286, downloaded 0, added 0
+#11 7.039 Progress: resolved 1175, reused 439, downloaded 0, added 0
+#11 8.040 Progress: resolved 1175, reused 698, downloaded 0, added 0
+#11 9.040 Progress: resolved 1175, reused 1032, downloaded 0, added 0
+#11 10.04 Progress: resolved 1175, reused 1170, downloaded 0, added 59
+#11 CANCELED
+
+#10 [market-web prod-deps 1/1] RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+#10 CANCELED
+canceled

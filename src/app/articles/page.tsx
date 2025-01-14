@@ -22,6 +22,7 @@ import {
 import { endpoint } from '@/api/market/endpoint';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ITEMS_PER_PAGE = 10;
 const MAX_PAGINATION_ITEMS = 10;
@@ -32,6 +33,8 @@ interface ArticleElement {
   created_at: string;
   updated_at: string;
   head?: string;
+  views: number;
+  has_img: boolean;
   author: {
     id: string;
     username: string;
@@ -59,6 +62,7 @@ function ArticleList() {
   const router = useRouter();
 
   const [page, setPage] = useState(1);
+  const isMobile = useIsMobile();
   const offset = (page - 1) * ITEMS_PER_PAGE;
 
   const articles = useSWR<ArticleElement[]>(
@@ -88,40 +92,119 @@ function ArticleList() {
 
   const paginationItems = generatePagination();
 
+  const getTime = (date: string) => {
+    // yyyy. mm. dd. hh:mm:ss 형식으로 변환
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const d = new Date(date);
+    const today = new Date();
+    const year = new Date().getFullYear();
+    const isToday =
+      d.getFullYear() === today.getFullYear() &&
+      d.getMonth() === today.getMonth() &&
+      d.getDate() === today.getDate();
+
+    const isThisYear = d.getFullYear() === year;
+
+    return !isToday
+      ? `${!isThisYear ? d.getFullYear().toString().slice(-2) + '.' : ''}${pad(d.getMonth() + 1)}.${pad(d.getDate())}`
+      : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
   return (
     <div className="overflow-hidden">
-      <Table className="w-full min-w-0 max-w-full overflow-x-scroll">
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>말머리</TableHead>
-            <TableHead>제목</TableHead>
-            <TableHead>작성자</TableHead>
-            <TableHead>작성일</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {articles.data?.map((article) => (
-            <TableRow
-              onClick={() => router.push(`/articles/${article.id}`)}
-              className="cursor-pointer"
-              key={article.id}
-            >
-              <TableCell>{article.id}</TableCell>
-              <TableCell>{article.head ?? '일반'}</TableCell>
-              <TableCell className="w-full">{article.title}</TableCell>
-              <TableCell className="whitespace-nowrap">
-                {article.author.nickname ?? `@${article.author.username}`}
-              </TableCell>
-              <TableCell>
-                <div className="ml-auto w-min whitespace-nowrap">
-                  {new Date(article.created_at).toLocaleDateString()}
-                </div>
-              </TableCell>
+      {/* PC 버전 */}
+      {!isMobile && (
+        <Table className="w-full min-w-0 max-w-full overflow-x-scroll">
+          <TableHeader>
+            <TableRow>
+              <TableHead>말머리</TableHead>
+              <TableHead>제목</TableHead>
+              <TableHead>작성자</TableHead>
+              <TableHead>작성일</TableHead>
+              <TableHead>조회</TableHead>
             </TableRow>
+          </TableHeader>
+          <TableBody>
+            {articles.data?.map((article) => (
+              <TableRow
+                onClick={() => router.push(`/articles/${article.id}`)}
+                className="cursor-pointer"
+                key={article.id}
+              >
+                <TableCell>{article.head ?? '일반'}</TableCell>
+                <TableCell className="w-full">
+                  <em
+                    style={{
+                      background:
+                        "url('https://nstatic.dcinside.com/dc/w/images/sp/icon_img.png?1012')",
+                      display: 'inline-block',
+                      width: '15px',
+                      height: '15px',
+                      verticalAlign: '-3px',
+                      marginRight: '7px',
+                      backgroundPosition: !article.has_img
+                        ? '0px -123px'
+                        : '0px -100px',
+                    }}
+                  ></em>
+                  {article.title}
+                </TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {article.author.nickname ?? `@${article.author.username}`}
+                </TableCell>
+                <TableCell>
+                  <div className="ml-auto w-min whitespace-nowrap">
+                    {new Date(article.created_at).toLocaleDateString()}
+                  </div>
+                </TableCell>
+                <TableCell>{article.views}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+      {/* 모바일 버전 */}
+      {isMobile && (
+        <div className="flex flex-col justify-center border-y border-gray-200">
+          {articles.data?.map((article) => (
+            <div
+              key={article.id}
+              className="flex cursor-pointer justify-between border border-gray-200 px-4"
+              onClick={() => router.push(`/articles/${article.id}`)}
+            >
+              <div className="py-2">
+                <div>
+                  <em
+                    style={{
+                      background:
+                        "url('https://nstatic.dcinside.com/dc/w/images/sp/icon_img.png?1012')",
+                      display: 'inline-block',
+                      width: '15px',
+                      height: '15px',
+                      verticalAlign: '-3px',
+                      marginRight: '7px',
+                      backgroundPosition: !article.has_img
+                        ? '0px -123px'
+                        : '0px -100px',
+                    }}
+                  ></em>
+                  {article.title}
+                </div>
+                <div className="flex gap-1 text-sm text-gray-600">
+                  <span>{article.head ?? '일반'}</span>|
+                  <span>{article.author.nickname}</span>|
+                  <span>{getTime(article.created_at)}</span>|
+                  <span>조회 {article.views}</span>|<span>추천{}</span>
+                </div>
+              </div>
+              <div className="flex items-center border-l-2 pl-2 text-red-600">
+                <span>댓</span>
+              </div>
+            </div>
           ))}
-        </TableBody>
-      </Table>
+        </div>
+      )}
+      {/* 페이지네이션 */}
       <div className="mt-4">
         <Pagination>
           <PaginationContent>

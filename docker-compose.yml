@@ -1,0 +1,14 @@
+services:
+  market-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - market-internal
+    env_file: .env
+
+networks:
+  market-internal:
+    external: true
