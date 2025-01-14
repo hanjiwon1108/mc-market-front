@@ -59,12 +59,11 @@ export default function LikeComponent({
     getLikesAndDisLikes();
   };
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full justify-center gap-4">
       <button
-        className="flex items-center gap-1"
+        className="flex flex-col items-center"
         onClick={() => sendTypeOfLike(true)}
       >
-        추천 {likes}
         <em
           style={{
             backgroundImage:
@@ -76,10 +75,10 @@ export default function LikeComponent({
             height: '56px',
           }}
         />
+        {likes}
       </button>
-      <hr className="mx-4 h-20 border-r border-gray-300 dark:border-gray-700" />
       <button
-        className="flex items-center gap-1"
+        className="flex flex-col items-center"
         onClick={() => sendTypeOfLike(false)}
       >
         <em
@@ -93,7 +92,7 @@ export default function LikeComponent({
             height: '56px',
           }}
         />
-        비추천 {dislikes}
+        {dislikes}
       </button>
     </div>
   );
