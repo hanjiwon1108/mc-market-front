@@ -57,6 +57,9 @@ export default function CommentsContainer({
       return;
     }
 
+    setCommentText('');
+    setReplyTo('');
+    setComment('');
     getComments();
   };
 
@@ -93,6 +96,7 @@ export default function CommentsContainer({
       <h2 className="mb-4 px-4 text-2xl font-bold text-gray-900 dark:text-white">
         댓글 {comments.count ?? '0'}개
       </h2>
+      <hr className="m-auto mt-4 w-11/12 border-t border-gray-400 dark:border-gray-700" />
       {comments.comments?.length > 0 &&
         comments.comments.map((comment) => (
           <Comments
@@ -104,7 +108,6 @@ export default function CommentsContainer({
             child={0}
           />
         ))}
-      <hr className="mb-8 border-t border-gray-300 dark:border-gray-700" />
       {/* 페이지네이션 */}
       <div className="flex justify-center">
         <button

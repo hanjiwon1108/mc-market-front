@@ -59,9 +59,42 @@ export default function LikeComponent({
     getLikesAndDisLikes();
   };
   return (
-    <div>
-      <button onClick={() => sendTypeOfLike(true)}>추천 {likes}</button>|
-      <button onClick={() => sendTypeOfLike(false)}>비추천 {dislikes}</button>
+    <div className="flex w-full justify-center">
+      <button
+        className="flex items-center gap-1"
+        onClick={() => sendTypeOfLike(true)}
+      >
+        추천 {likes}
+        <em
+          style={{
+            backgroundImage:
+              'url(https://nstatic.dcinside.com/dc/w/images/sp/sp_img.png?1112)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: '0 -315px',
+            display: 'inline-block',
+            width: '56px',
+            height: '56px',
+          }}
+        />
+      </button>
+      <hr className="mx-4 h-20 border-r border-gray-300 dark:border-gray-700" />
+      <button
+        className="flex items-center gap-1"
+        onClick={() => sendTypeOfLike(false)}
+      >
+        <em
+          style={{
+            backgroundImage:
+              'url(https://nstatic.dcinside.com/dc/w/images/sp/sp_img.png?1112)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: '0 -377px',
+            display: 'inline-block',
+            width: '56px',
+            height: '56px',
+          }}
+        />
+        비추천 {dislikes}
+      </button>
     </div>
   );
 }

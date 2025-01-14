@@ -1,4 +1,5 @@
 import { endpoint } from '@/api/market/endpoint';
+import { useSession } from '@/api/surge';
 import { Comment } from '@/api/types/comment';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -16,6 +17,7 @@ export default function Comments({
   setReplyTo: (id: string) => void;
 }) {
   const isMobile = useIsMobile();
+  const session = useSession();
 
   const getTime = (date: string) => {
     // yyyy. mm. dd. hh:mm:ss 형식으로 변환
@@ -44,7 +46,7 @@ export default function Comments({
     >
       <div
         className={
-          'flex w-11/12 justify-between border-t border-gray-400 px-2 py-2' +
+          'flex w-11/12 justify-between border-b border-gray-400 px-2 py-2' +
           (child ? ' bg-gray-200' : '')
         }
       >
@@ -91,14 +93,16 @@ export default function Comments({
             )}
           </div>
         </div>
-        <div className="flex w-10 flex-col space-y-1">
-          <button
-            onClick={() => delComment(comment.id)}
-            className="text-red-500"
-          >
-            삭제
-          </button>
-        </div>
+        {comment.user.id === session?.user.id && (
+          <div className="flex w-10 flex-col space-y-1">
+            <button
+              onClick={() => delComment(comment.id)}
+              className="text-red-500"
+            >
+              삭제
+            </button>
+          </div>
+        )}
       </div>
       {comment.replies && (
         <div className="w-full">
