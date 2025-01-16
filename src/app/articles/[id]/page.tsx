@@ -22,6 +22,7 @@ type GetArticleResponse = {
   comments: ResponseCommentType;
   likes: number;
   dislikes: number;
+  head: string;
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -48,7 +49,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <article className="mx-auto w-full px-4 py-8">
         <header className="mb-4 w-full">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-            {article.title}
+            [{article.head ?? '일반'}] | {article.title}
           </h1>
           <div className="flex gap-2 space-y-1">
             <span className="text-lg font-medium text-gray-800 dark:text-gray-200">

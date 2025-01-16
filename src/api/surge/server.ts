@@ -51,9 +51,11 @@ const cachedClient = React.cache(async () => {
 export const createServerSurgeClient = cachedClient;
 
 export async function getSession() {
-  return createServerSurgeClient()
+  const a = createServerSurgeClient()
     .then((it) => it.getSession())
     .then((it) => it.data.session);
+
+  return a;
 }
 
 export async function getUser() {

@@ -20,7 +20,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { endpoint } from '@/api/market/endpoint';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -58,21 +58,32 @@ const TOTAL_ARTICLES = 57
 const dummyArticles = generateDummyArticles(TOTAL_ARTICLES)
 */
 
+type HeadType = {
+  id: number;
+  name: string;
+};
+
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 function ArticleList() {
   const router = useRouter();
+  const headId = parseInt(useSearchParams().get('head') || '0');
 
   const [page, setPage] = useState(1);
   const isMobile = useIsMobile();
   const offset = (page - 1) * ITEMS_PER_PAGE;
 
   const articles = useSWR<ArticleElement[]>(
-    endpoint(`/v1/articles`) + `?offset=${offset}&limit=${ITEMS_PER_PAGE}`,
+    endpoint(`/v1/articles`) +
+      `?offset=${offset}&limit=${ITEMS_PER_PAGE}&head_id=${headId}`,
     fetcher,
   );
 
   const totalArticles = useSWR<number>(endpoint('/v1/articles/count'), fetcher);
+  const articleHeads = useSWR<HeadType[]>(
+    endpoint('/v1/article_head/list'),
+    fetcher,
+  );
 
   if (articles.error || totalArticles.error)
     return <div>Failed to load articles</div>;
@@ -80,6 +91,7 @@ function ArticleList() {
     return <div>Loading...</div>;
 
   const totalPages = Math.ceil((totalArticles.data || 0) / ITEMS_PER_PAGE);
+  const articleHeadsData = articleHeads.data;
 
   const generatePagination = () => {
     let start = Math.max(1, page - Math.floor(MAX_PAGINATION_ITEMS / 2));
@@ -114,6 +126,30 @@ function ArticleList() {
 
   return (
     <div className="overflow-hidden">
+      <div
+        className="scrollbar-hide flex scroll-p-0 gap-2 overflow-x-scroll px-4 pb-2"
+        id="heads"
+      >
+        <Button
+          onClick={() => {
+            router.push('/articles');
+          }}
+          className={'bg-gray-200 ' + (headId === 0 ? ' bg-blue-400' : '')}
+        >
+          전체
+        </Button>
+        {articleHeadsData?.map((head) => (
+          <Button
+            key={head.id}
+            onClick={() => {
+              router.push(`/articles?head=${head.id}`);
+            }}
+            className={head.id === headId ? 'bg-blue-400' : 'bg-gray-200'}
+          >
+            {head.name}
+          </Button>
+        ))}
+      </div>
       {/* PC 버전 */}
       {!isMobile && (
         <Table className="w-full min-w-0 max-w-full overflow-x-scroll">
@@ -136,7 +172,7 @@ function ArticleList() {
                 key={article.id}
               >
                 <TableCell className="text-center">
-                  {article.head ?? '일반'}
+                  {article.head === '' ? '일반' : article.head}
                 </TableCell>
                 <TableCell className="w-full">
                   <em
@@ -201,7 +237,7 @@ function ArticleList() {
                   {article.title}
                 </div>
                 <div className="flex gap-1 text-sm text-gray-600">
-                  <span>{article.head ?? '일반'}</span>|
+                  <span>{article.head === '' ? '일반' : article.head}</span>|
                   <span>{article.author.nickname}</span>|
                   <span>{getTime(article.created_at)}</span>|
                   <span>조회 {article.views}</span>|

@@ -147,9 +147,12 @@ export function Navigator() {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+
+              {/* for testing */}
+              <Link href="/admin">admin</Link>
             </NavigationMenuList>
             <div className="mx-auto hidden md:block">
-              <div className="hidden min-w-0 max-w-96 transition-all lg:flex lg:min-w-[14rem] mx-2">
+              <div className="mx-2 hidden min-w-0 max-w-96 transition-all lg:flex lg:min-w-[14rem]">
                 <Input
                   spellCheck={false}
                   placeholder="제품 검색"

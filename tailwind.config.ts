@@ -2,6 +2,7 @@ import type { Config } from 'tailwindcss';
 
 import tailwindAnimate from 'tailwindcss-animate';
 import tailwindTypography from '@tailwindcss/typography';
+import tailwindScrollbarHide from 'tailwind-scrollbar-hide';
 
 export default {
   darkMode: ['class'],
@@ -96,5 +97,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindAnimate, tailwindTypography],
+  plugins: [tailwindAnimate, tailwindTypography, tailwindScrollbarHide],
 } satisfies Config;
