@@ -147,9 +147,6 @@ export function Navigator() {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-
-              {/* for testing */}
-              <Link href="/admin">admin</Link>
             </NavigationMenuList>
             <div className="mx-auto hidden md:block">
               <div className="mx-2 hidden min-w-0 max-w-96 transition-all lg:flex lg:min-w-[14rem]">
