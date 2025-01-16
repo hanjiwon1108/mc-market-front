@@ -25,12 +25,17 @@ type GetArticleResponse = {
   head: string;
 };
 
+<<<<<<< HEAD
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
+=======
+export default async function Page({ params }: { params: { id: string } }) {
+  const { id } = params;
+>>>>>>> 1dfcae7686fcf538aa911f810f245e3eac47a571
 
   const response = await fetch(endpoint(`/v1/articles/${id}`));
   if (!response.ok) {
@@ -56,7 +61,11 @@ export default async function Page({ params }: PageProps) {
             [{article.head ?? '일반'}] | {article.title}
           </h1>
           <div className="flex gap-2 space-y-1">
+<<<<<<< HEAD
             <span className="te</div>xt-lg font-medium text-gray-800 dark:text-gray-200">
+=======
+            <span className="text-lg font-medium text-gray-800 dark:text-gray-200">
+>>>>>>> 1dfcae7686fcf538aa911f810f245e3eac47a571
               {article.author.nickname || article.author.username}
             </span>
             |
