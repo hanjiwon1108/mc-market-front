@@ -30,7 +30,7 @@ export function ClientProvider({
         </AnimatePresence>
         <div className="min-h-screen">
           <Navigator />
-          <div className="overflow-x-hidden overflow-y-visible h-0 min-h-[calc(100vh-var(--navigator-height))]">
+          <div className="min-h-[calc(100vh-var(--navigator-height))] overflow-x-hidden overflow-y-visible">
             {children}
           </div>
         </div>

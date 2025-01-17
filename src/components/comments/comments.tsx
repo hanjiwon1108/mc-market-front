@@ -47,7 +47,7 @@ export default function Comments({
       <div
         className={
           'flex w-11/12 justify-between border-b border-gray-400 px-2 py-2' +
-          (child ? ' bg-gray-200' : '')
+          (child ? ' bg-gray-200 dark:bg-gray-900' : '')
         }
       >
         <div
@@ -63,7 +63,7 @@ export default function Comments({
           <div className="flex gap-1 space-y-1">
             <UserAvatar userId={comment.user.id} size={isMobile ? 6 : 8} />
             <span
-              className="font-medium text-gray-800 dark:text-gray-200"
+              className="flex w-20 items-center pl-1 font-medium text-gray-800 dark:text-gray-200"
               style={{ marginTop: isMobile ? '0px' : '3px' }}
             >
               {comment.user.nickname || comment.user.nickname}
@@ -93,7 +93,7 @@ export default function Comments({
           <div className="flex w-10 flex-col space-y-1">
             <button
               onClick={() => delComment(comment.id)}
-              className="text-red-500"
+              className="text-red-500 dark:text-red-400"
             >
               삭제
             </button>
