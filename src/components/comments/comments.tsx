@@ -1,7 +1,7 @@
-import { endpoint } from '@/api/market/endpoint';
 import { useSession } from '@/api/surge';
 import { Comment } from '@/api/types/comment';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { UserAvatar } from '../user/avatar';
 
 export default function Comments({
   comment,
@@ -61,11 +61,7 @@ export default function Comments({
           }}
         >
           <div className="flex gap-1 space-y-1">
-            <img
-              src={endpoint(`/v1/user/${comment.user.id}/avatar/`)}
-              className={'rounded-full' + (isMobile ? ' h-6 w-6' : ' h-8 w-8')}
-              alt="avatar"
-            />
+            <UserAvatar userId={comment.user.id} size={isMobile ? 6 : 8} />
             <span
               className="font-medium text-gray-800 dark:text-gray-200"
               style={{ marginTop: isMobile ? '0px' : '3px' }}
