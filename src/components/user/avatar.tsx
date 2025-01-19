@@ -18,6 +18,7 @@ export const UserAvatar = React.forwardRef<
     <Avatar {...props} ref={ref}>
       <AvatarImage
         src={endpoint(`/v1/user/${userId}/avatar`)}
+        className={props.className}
         alt="Avatar Image"
       />
       <AvatarFallback>

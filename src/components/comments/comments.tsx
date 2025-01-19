@@ -61,7 +61,10 @@ export default function Comments({
           }}
         >
           <div className="flex gap-1 space-y-1">
-            <UserAvatar userId={comment.user.id} size={isMobile ? 6 : 8} />
+            <UserAvatar
+              userId={comment.user.id}
+              className={isMobile ? 'h-8 w-8' : 'h-10 w-10'}
+            />
             <span
               className="flex w-20 items-center pl-1 font-medium text-gray-800 dark:text-gray-200"
               style={{ marginTop: isMobile ? '0px' : '3px' }}

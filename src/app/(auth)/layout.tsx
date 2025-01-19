@@ -52,7 +52,7 @@ export default function Layout({ children }: ChildrenProps) {
 
   return (
     <>
-      <div className="relative flex size-full flex-1 items-center justify-center overflow-hidden">
+      <div className="relative flex h-screen flex-1 items-center justify-center">
         <AnimatePresence
           custom={calculateDirection(pathnameRef.current, pathname)}
         >

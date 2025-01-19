@@ -160,7 +160,6 @@ function ArticleList() {
               <TableHead>작성자</TableHead>
               <TableHead>작성일</TableHead>
               <TableHead>조회</TableHead>
-              <TableHead>댓글수</TableHead>
               <TableHead>추천</TableHead>
             </TableRow>
           </TableHeader>
@@ -168,13 +167,16 @@ function ArticleList() {
             {articles.data?.map((article) => (
               <TableRow
                 onClick={() => router.push(`/articles/${article.id}`)}
-                className="cursor-pointer"
+                className={
+                  'cursor-pointer' +
+                  (article.head === '공지' ? ' font-bold' : '')
+                }
                 key={article.id}
               >
                 <TableCell className="text-center">
                   {article.head === '' ? '일반' : article.head}
                 </TableCell>
-                <TableCell className="w-full">
+                <TableCell className={'w-full'}>
                   <em
                     style={{
                       background:
@@ -184,12 +186,15 @@ function ArticleList() {
                       height: '15px',
                       verticalAlign: '-3px',
                       marginRight: '7px',
-                      backgroundPosition: !article.has_img
-                        ? '0px -123px'
-                        : '0px -100px',
+                      backgroundPosition:
+                        article.head === '공지'
+                          ? '0px 0px'
+                          : !article.has_img
+                            ? '0px -123px'
+                            : '0px -100px',
                     }}
                   ></em>
-                  {article.title}
+                  {article.title} [{article.comment_count}]
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   {article.author.nickname ?? `@${article.author.username}`}
@@ -200,9 +205,6 @@ function ArticleList() {
                   </div>
                 </TableCell>
                 <TableCell className="text-center">{article.views}</TableCell>
-                <TableCell className="text-center">
-                  {article.comment_count}
-                </TableCell>
                 <TableCell className="text-center">{article.likes}</TableCell>
               </TableRow>
             ))}

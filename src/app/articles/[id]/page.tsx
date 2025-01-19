@@ -52,7 +52,7 @@ export default async function Page({ params }: PageProps) {
     <div>
       <article className="mx-auto w-full px-4 py-8">
         <header className="mb-4 w-full">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-base font-bold text-gray-900 dark:text-white">
             [{article.head ?? '일반'}] | {article.title}
           </h1>
           <div className="flex gap-2 space-y-1">
