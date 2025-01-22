@@ -47,12 +47,14 @@ export function ChargeCashDialog({
     }
 
     (async () => {
+      console.log(process.env.NEXT_PUBLIC_TOSS_PAYMENTS_CLIENT_KEY);
       const tossPayments = await loadTossPayments(
-        'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm',
+        process.env.NEXT_PUBLIC_TOSS_PAYMENTS_CLIENT_KEY as string,
       );
       widgets.current = tossPayments.widgets({
         customerKey: ANONYMOUS,
       });
+      document.body.style.pointerEvents = '';
 
       await widgets.current.setAmount({ currency: 'KRW', value: amount });
 

@@ -32,6 +32,9 @@ export default function Page() {
         <AdministratorOption href="/admin/users">
           <UserRoundIcon /> 유저 목록
         </AdministratorOption>
+        <AdministratorOption href="/admin/user_charge_records">
+          <UserRoundIcon /> 유저 충전 기록
+        </AdministratorOption>
         <AdministratorOption href="/admin/products">
           <Rows4Icon /> 제품 관리자
         </AdministratorOption>
