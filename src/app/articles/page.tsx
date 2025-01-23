@@ -127,7 +127,7 @@ function ArticleList() {
   return (
     <div className="overflow-hidden">
       <div
-        className="scrollbar-hide flex scroll-p-0 gap-2 overflow-x-scroll px-4 pb-2"
+        className="flex scroll-p-0 gap-2 overflow-x-scroll px-4 pb-2 scrollbar-hide"
         id="heads"
       >
         <Button

@@ -33,7 +33,6 @@ import { CATEGORIES } from '@/features/category';
 import { NavigatorProfileMenu } from '@/components/navigator/navigator-profile-menu';
 import { useCart } from '@/core/cart/atom';
 import { useMapleUser } from '@/api/market/context';
-import { ChargeCashDialog } from '@/components/charge/charge-cash-dialog';
 
 export function Navigator() {
   const session = useSession();
@@ -46,17 +45,11 @@ export function Navigator() {
   );
   const isMobile = useIsMobile();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [isChargeCashOpen, setChargeCashOpen] = useState(false);
   const cart = useCart();
   const user = useMapleUser();
 
   return (
     <>
-      <ChargeCashDialog
-        isOpen={isChargeCashOpen}
-        onOpenChange={setChargeCashOpen}
-      />
-
       <NavigatorSidebar
         isOpen={isSidebarOpen && isMobile}
         onOpenChange={setSidebarOpen}
@@ -182,17 +175,14 @@ export function Navigator() {
             </div>
           </NavigationMenu>
 
-          <div className="mr-2 hidden md:block">
+          <Link href={'/billing'} className="mr-2 hidden md:block">
             {session && (
-              <button
-                onClick={() => setChargeCashOpen(true)}
-                className="flex select-none items-center gap-2 whitespace-nowrap font-semibold"
-              >
+              <button className="flex select-none items-center gap-2 whitespace-nowrap font-semibold">
                 {user?.cash}원
                 <CreditCardIcon />
               </button>
             )}
-          </div>
+          </Link>
           <div>
             <Link href="/cart" className="mr-2">
               <Button className="size-10 rounded-full p-0" variant="ghost">
