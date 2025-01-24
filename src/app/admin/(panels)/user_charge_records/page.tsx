@@ -27,7 +27,10 @@ import { Session } from '@entropi-co/surge-js';
 type paymentsType = {
   id: number;
   agent: number;
-  agent_name: string;
+  agent_name: {
+    String: string;
+    Valid: boolean;
+  };
   order_id: string;
   amount: number;
   approved: boolean;
@@ -71,6 +74,7 @@ export default function Page() {
     if (page > infinite.size) {
       void infinite.setSize(page);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   return (
@@ -99,7 +103,7 @@ export default function Page() {
                 <TableCell>{it.created_at}</TableCell>
                 <TableCell>{it.id}</TableCell>
                 <TableCell>{it.agent}</TableCell>
-                <TableCell>{it.agent_name}</TableCell>
+                <TableCell>{it.agent_name.String}</TableCell>
                 <TableCell>{it.amount}</TableCell>
                 <TableCell>{it.approved ? 'Yes' : 'No'}</TableCell>
                 <TableCell>{it.failed.Bool ? 'Yes' : 'No'}</TableCell>
