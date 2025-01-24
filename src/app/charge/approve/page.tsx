@@ -20,6 +20,7 @@ export default function Page() {
   const session = useSession();
   const orderId = searchParams.get('orderId');
   const amount = searchParams.get('amount');
+  const paymentKey = searchParams.get('paymentKey');
 
   const [approving, setApproving] = useState(false);
   const [approved, setApproved] = useState(false);
@@ -32,7 +33,8 @@ export default function Page() {
     try {
       const response = await authFetch(
         session,
-        endpoint(`/v1/payments/${orderId}/approve`) + `?amount=${amount}`,
+        endpoint(`/v1/payments/${orderId}/approve`) +
+          `?amount=${amount}&paymentKey=${paymentKey}`,
         {
           method: 'POST',
         },
@@ -49,6 +51,7 @@ export default function Page() {
       }
 
       setApproved(true);
+      window.location.href = '/';
     } catch (error) {
       toast.error(`요청 실패: ${error}`);
     }
