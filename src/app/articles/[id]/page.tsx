@@ -3,7 +3,7 @@ import React from 'react';
 import { ResponseCommentType } from '@/api/types/comment';
 import CommentsContainer from '@/components/comments/container';
 import LikeComponent from '@/components/article_likes/likecomponent';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 
 type ArticleAuthor = {
   id: string;
@@ -39,12 +39,13 @@ export async function generateMetadata({ params }: PageProps) {
   const article: GetArticleResponse = await response.json();
 
   const deletedTags = article.content.replace(/<[^>]*>?/gm, '');
+  const title = `[${article.head || '일반'}] - ${article.title}`;
 
   return {
-    title: article.title,
+    title,
     description: deletedTags.slice(0, 100),
     openGraph: {
-      title: article.title,
+      title,
       description: deletedTags.slice(0, 100),
       type: 'article',
       authors: [article.author.nickname || article.author.username],
@@ -53,6 +54,10 @@ export async function generateMetadata({ params }: PageProps) {
     },
   } as Metadata;
 }
+
+export const viewport: Viewport = {
+  themeColor: '#00FF80',
+};
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
