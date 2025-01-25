@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: PageProps) {
     title,
     description: deletedTags.slice(0, 100),
     openGraph: {
+      siteName: 'MC-Market',
       title,
       description: deletedTags.slice(0, 100),
       type: 'article',
