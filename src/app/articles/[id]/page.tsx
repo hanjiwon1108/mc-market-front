@@ -1,9 +1,9 @@
 import { endpoint } from '@/api/market/endpoint';
-import Markdown from 'react-markdown';
 import React from 'react';
 import { ResponseCommentType } from '@/api/types/comment';
 import CommentsContainer from '@/components/comments/container';
 import LikeComponent from '@/components/article_likes/likecomponent';
+import { Metadata } from 'next';
 
 type ArticleAuthor = {
   id: string;
@@ -28,6 +28,31 @@ type GetArticleResponse = {
 type PageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
+
+  const response = await fetch(endpoint(`/v1/articles/${id}`));
+  if (!response.ok) {
+    throw new Error('Failed to fetch article');
+  }
+  const article: GetArticleResponse = await response.json();
+
+  const deletedTags = article.content.replace(/<[^>]*>?/gm, '');
+
+  return {
+    title: article.title,
+    description: deletedTags.slice(0, 100),
+    openGraph: {
+      title: article.title,
+      description: deletedTags.slice(0, 100),
+      type: 'article',
+      authors: [article.author.nickname || article.author.username],
+      url: `https://mc-market.kr/articles/${id}`,
+      images: [article.content.match(/<img[^>]*src="([^"]*)"[^>]*>/)?.[1]],
+    },
+  } as Metadata;
+}
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
@@ -56,7 +81,7 @@ export default async function Page({ params }: PageProps) {
             [{article.head ?? '일반'}] | {article.title}
           </h1>
           <div className="flex gap-2 space-y-1">
-            <span className="text-lg font-medium text-gray-800 dark:text-gray-200">
+            <span className="text-md font-medium text-gray-800 dark:text-gray-200">
               {article.author.nickname || article.author.username}
             </span>
             |
@@ -67,11 +92,11 @@ export default async function Page({ params }: PageProps) {
             <span className="text-sm text-gray-600 dark:text-gray-400">
               {getTime(article.created_at)}
             </span>
-            {article.updated_at != article.created_at && (
+            {/* {article.updated_at != article.created_at && (
               <span className="text-xs text-gray-500 dark:text-gray-500">
                 업데이트: {getTime(article.updated_at)}
               </span>
-            )}
+            )} */}
           </div>
         </header>
         <hr className="border-t border-gray-300 dark:border-gray-700" />

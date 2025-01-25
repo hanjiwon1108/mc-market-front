@@ -221,7 +221,7 @@ function ArticleList() {
               onClick={() => router.push(`/articles/${article.id}`)}
             >
               <div className="py-2">
-                <div>
+                <div className={article.head === '공지' ? 'font-bold' : ''}>
                   <em
                     style={{
                       background:
@@ -231,9 +231,12 @@ function ArticleList() {
                       height: '15px',
                       verticalAlign: '-3px',
                       marginRight: '7px',
-                      backgroundPosition: !article.has_img
-                        ? '0px -123px'
-                        : '0px -100px',
+                      backgroundPosition:
+                        article.head === '공지'
+                          ? '0px 0px'
+                          : !article.has_img
+                            ? '0px -123px'
+                            : '0px -100px',
                     }}
                   ></em>
                   {article.title}
