@@ -23,22 +23,13 @@ import { endpoint } from '@/api/market/endpoint';
 import { authFetch } from '@/api/surge/fetch';
 import { useSession } from '@/api/surge';
 import { Session } from '@entropi-co/surge-js';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
-import { set } from 'lodash';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
 type HeadType = {
   id: number;
+  is_admin: boolean;
   name: string;
 };
 
@@ -157,6 +148,33 @@ export default function Page() {
     }
   };
 
+  const updateHeadPermission = async (
+    id: number,
+    name: string,
+    isAdmin: boolean,
+  ) => {
+    const response = await authFetch(
+      session,
+      endpoint(`/v1/article_head/update/${id}/`),
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          isAdmin: isAdmin,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      toast.error('수정 실패');
+    } else {
+      toast.success('수정 성공');
+    }
+  };
+
   return (
     <>
       <Table>
@@ -164,6 +182,7 @@ export default function Page() {
           <TableRow>
             <TableHead>ID</TableHead>
             <TableHead>말머리 이름</TableHead>
+            <TableHead>관리자용 유무</TableHead>
             <TableHead>수정/삭제</TableHead>
           </TableRow>
         </TableHeader>
@@ -186,6 +205,23 @@ export default function Page() {
                       onChange={(e) => setHeadName(e.target.value)}
                     />
                   )}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      const text =
+                        (it.is_admin
+                          ? '누구나 작성할 수 있도록'
+                          : '관리자 전용으로') + ' 변경하시겠습니까?';
+                      if (confirm(text)) {
+                        updateHeadPermission(it.id, it.name, !it.is_admin);
+                      }
+                    }}
+                  >
+                    {it.is_admin ? '관리자 전용' : '누구나 작성'}
+                  </Button>
                 </TableCell>
                 <TableCell>
                   {(updatingHeadId === null || updatingHeadId === it.id) && (

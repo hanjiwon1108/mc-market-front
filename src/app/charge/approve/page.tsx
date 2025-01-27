@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { authFetch } from '@/api/surge/fetch';
 import { endpoint } from '@/api/market/endpoint';
 import { useSession } from '@/api/surge';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import {
   ResponsiveDialog,
@@ -56,6 +56,11 @@ export default function Page() {
       toast.error(`요청 실패: ${error}`);
     }
   }
+
+  useEffect(() => {
+    approve();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

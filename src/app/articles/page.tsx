@@ -124,30 +124,65 @@ function ArticleList() {
       : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
   };
 
+  console.log(articleHeadsData);
+
   return (
     <div className="overflow-hidden">
       <div
-        className="flex scroll-p-0 gap-2 overflow-x-scroll px-4 pb-2 scrollbar-hide"
+        className="flex scroll-p-0 items-end gap-1 overflow-x-scroll px-4 pb-2 scrollbar-hide"
         id="heads"
       >
-        <Button
+        <button
           onClick={() => {
             router.push('/articles');
           }}
-          className={'bg-gray-200 ' + (headId === 0 ? ' bg-blue-400' : '')}
+          className={
+            'h-8 w-24 border ' +
+            (headId === 0 ? ' bg-blue-800 text-white' : ' bg-gray-100')
+          }
         >
           전체
-        </Button>
+        </button>
+        <button
+          onClick={() => {
+            router.push('/articles');
+          }}
+          className={'h-8 w-24 border'}
+        >
+          인기
+        </button>
         {articleHeadsData?.map((head) => (
-          <Button
-            key={head.id}
-            onClick={() => {
-              router.push(`/articles?head=${head.id}`);
-            }}
-            className={head.id === headId ? 'bg-blue-400' : 'bg-gray-200'}
-          >
-            {head.name}
-          </Button>
+          <>
+            {head.name === '공지' ? (
+              <button
+                key={head.id}
+                onClick={() => {
+                  router.push(`/articles?head=${head.id}`);
+                }}
+                className={
+                  'h-8 w-24 border ' +
+                  (headId === head.id
+                    ? ' bg-blue-800 text-white'
+                    : ' bg-gray-100')
+                }
+              >
+                공지
+              </button>
+            ) : (
+              <div
+                key={head.id}
+                onClick={() => {
+                  router.push(`/articles?head=${head.id}`);
+                }}
+                className={
+                  'flex cursor-pointer items-center px-2 py-1 text-xs ' +
+                  (head.id === headId ? 'bg-blue-400' : ' text-black')
+                }
+              >
+                {head.name}
+              </div>
+            )}
+          </>
         ))}
       </div>
       {/* PC 버전 */}
