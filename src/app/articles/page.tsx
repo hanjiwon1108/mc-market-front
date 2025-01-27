@@ -124,8 +124,6 @@ function ArticleList() {
       : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
   };
 
-  console.log(articleHeadsData);
-
   return (
     <div className="overflow-hidden">
       <div

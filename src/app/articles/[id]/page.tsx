@@ -4,6 +4,7 @@ import { ResponseCommentType } from '@/api/types/comment';
 import CommentsContainer from '@/components/comments/container';
 import LikeComponent from '@/components/article_likes/likecomponent';
 import { Metadata, Viewport } from 'next';
+import EditButton from '@/components/article/editbutton';
 
 type ArticleAuthor = {
   id: string;
@@ -115,6 +116,9 @@ export default async function Page({ params }: PageProps) {
         likesOrigin={article.likes}
         articleId={id}
       />
+      <div className="flex w-full justify-end px-4 py-8">
+        <EditButton articleId={article.id} authorId={article.author.id} />
+      </div>
       <CommentsContainer
         comments={article.comments as ResponseCommentType}
         articleId={id}
