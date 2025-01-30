@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import useSWR from 'swr';
 import {
   Table,
@@ -69,8 +69,8 @@ function ArticleList() {
   const router = useRouter();
   const headId = parseInt(useSearchParams().get('head') || '0');
 
-  const [page, setPage] = useState(1);
   const isMobile = useIsMobile();
+  const [page, setPage] = useState(1);
   const offset = (page - 1) * ITEMS_PER_PAGE;
 
   const articles = useSWR<ArticleElement[]>(
@@ -85,10 +85,10 @@ function ArticleList() {
     fetcher,
   );
 
-  if (articles.error || totalArticles.error)
-    return <div>Failed to load articles</div>;
   if (articles.isLoading || totalArticles.isLoading)
     return <div>Loading...</div>;
+  if (articles.error || totalArticles.error)
+    return <div>Failed to load articles</div>;
 
   const totalPages = Math.ceil((totalArticles.data || 0) / ITEMS_PER_PAGE);
   const articleHeadsData = articleHeads.data;
@@ -150,10 +150,9 @@ function ArticleList() {
           인기
         </button>
         {articleHeadsData?.map((head) => (
-          <>
+          <React.Fragment key={head.id}>
             {head.name === '공지' ? (
               <button
-                key={head.id}
                 onClick={() => {
                   router.push(`/articles?head=${head.id}`);
                 }}
@@ -168,7 +167,6 @@ function ArticleList() {
               </button>
             ) : (
               <div
-                key={head.id}
                 onClick={() => {
                   router.push(`/articles?head=${head.id}`);
                 }}
@@ -180,7 +178,7 @@ function ArticleList() {
                 {head.name}
               </div>
             )}
-          </>
+          </React.Fragment>
         ))}
       </div>
       {/* PC 버전 */}
