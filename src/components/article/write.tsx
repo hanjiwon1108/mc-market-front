@@ -49,9 +49,10 @@ export default function WriteComponent({
     }
 
     const data = await response.json();
-    const nHead = data.filter((head: HeadType) => head.name === newhead)[0].id;
-    setHead(nHead);
     setHeadList(data);
+    const nHead =
+      data.filter((head: HeadType) => head.name === newhead)[0]?.id || '';
+    setHead(nHead);
   }
 
   useEffect(() => {
@@ -75,17 +76,17 @@ export default function WriteComponent({
     <div className="scrollbar-override flex h-full w-full flex-col gap-2">
       <div className="text-4xl font-semibold">글 작성</div>
       <div className="flex gap-2">
-        {headList.length > 0 && (
+        {headList?.length > 0 && (
           <select
             className="py-y cursor-pointer rounded-lg border border-gray-300 px-4"
             value={newhead}
-            defaultValue={newhead}
+            defaultValue={newhead || ''}
             onChange={(e) => setHead(e.target.value)}
           >
             <option value="">말머리 선택</option>
-            {headList.map((head) => (
-              <>
-                {(head.is_admin ? isAdmin : true) && (
+            {headList.map(
+              (head) =>
+                (head.is_admin ? isAdmin : true) && (
                   <option
                     key={head.id}
                     value={head.id}
@@ -93,9 +94,8 @@ export default function WriteComponent({
                   >
                     {head.name}
                   </option>
-                )}
-              </>
-            ))}
+                ),
+            )}
           </select>
         )}
         <Input placeholder="제목" value={newtitle} onValueChange={setTitle} />

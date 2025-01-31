@@ -205,7 +205,13 @@ function ArticleList() {
                 key={article.id}
               >
                 <TableCell className="text-center">
-                  {article.head === '' ? '일반' : article.head}
+                  <span className="max-w-14 whitespace-nowrap">
+                    {article.head === ''
+                      ? '일반'
+                      : (article.head as string)?.length > 10
+                        ? (article.head as string).slice(0, 10) + '...'
+                        : article.head}
+                  </span>
                 </TableCell>
                 <TableCell className={'w-full'}>
                   <em
