@@ -16,7 +16,7 @@ import { ProductCard } from '@/components/product/product-card';
 import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import useSWR from 'swr';
-import { CATEGORIES, CategoryKey, TopCategoryKey } from '@/features/category';
+import { CATEGORIES, TopCategoryKey } from '@/features/category';
 
 const CategoryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
@@ -28,7 +28,8 @@ CategoryButton.displayName = 'CategoryButton';
 
 export default function Home() {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<TopCategoryKey>('all');
+  const [selectedCategory, setSelectedCategory] =
+    useState<TopCategoryKey>('all');
 
   const products = useSWR(
     endpoint(`/v1/products`) +
@@ -47,13 +48,13 @@ export default function Home() {
       <div>
         <div className="container mx-auto transition-all duration-300 ease-out lg:px-[0rem] xl:px-[9rem]">
           <div className="scrollbar-override-horizontal h-full border-x-2 bg-background pt-8 transition-all duration-300 ease-out lg:px-14">
-            <div className="flex items-center gap-2 md:text-3xl text-lg font-semibold">
+            <div className="flex items-center gap-2 text-lg font-semibold md:text-3xl">
               <DropdownMenu
                 open={isCategoryDropdownOpen}
                 onOpenChange={setCategoryDropdownOpen}
                 modal={false}
               >
-                <DropdownMenuTrigger className="visible flex h-12 md:w-48 w-24 select-none items-center gap-2 rounded-xl border-0 px-4 py-2 outline-0 ring-ring ring-offset-2 transition-all hover:bg-accent focus-visible:ring-2">
+                <DropdownMenuTrigger className="visible flex h-12 w-24 select-none items-center gap-2 rounded-xl border-0 px-4 py-2 outline-0 ring-ring ring-offset-2 transition-all hover:bg-accent focus-visible:ring-2 md:w-48">
                   <AnimatePresence>
                     <motion.div
                       key={selectedCategory}
@@ -72,7 +73,9 @@ export default function Home() {
                 <DropdownMenuContent>
                   <DropdownMenuRadioGroup
                     value={selectedCategory}
-                    onValueChange={(v) => setSelectedCategory(v as TopCategoryKey)}
+                    onValueChange={(v) =>
+                      setSelectedCategory(v as TopCategoryKey)
+                    }
                   >
                     {Object.entries(CATEGORIES).map(([key, value]) => (
                       <DropdownMenuRadioItem key={key} value={key}>
