@@ -67,6 +67,7 @@ export default function Page() {
     if (page > infinite.size) {
       void infinite.setSize(page);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const deleteHead = async (id: number) => {

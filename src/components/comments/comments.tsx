@@ -85,11 +85,11 @@ export default function Comments({
             <span className="text-sm text-gray-600 dark:text-gray-400">
               {getTime(comment.created_at)}
             </span>
-            {comment.updated_at != comment.created_at && (
+            {/* {comment.updated_at != comment.created_at && (
               <span className="text-xs text-gray-500 dark:text-gray-500">
                 업데이트: {getTime(comment.updated_at)}
               </span>
-            )}
+            )} */}
           </div>
         </div>
         {comment.user.id === session?.user.id && (

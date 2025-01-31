@@ -41,6 +41,9 @@ export default function Page() {
         <AdministratorOption href="/admin/article_head">
           <Rows4Icon /> 게시물 말머리 관리자
         </AdministratorOption>
+        <AdministratorOption href="/admin/banner">
+          <Rows4Icon /> 배너 관리
+        </AdministratorOption>
       </div>
     </div>
   );
