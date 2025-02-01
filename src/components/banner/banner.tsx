@@ -79,7 +79,7 @@ function BannerItem({
 
   return (
     <animated.div
-      className={`absolute flex ${isMobile ? 'h-full' : 'h-[24rem]'} items-center justify-center overflow-hidden border bg-card text-5xl font-bold`}
+      className={`absolute flex ${isMobile ? 'h-full' : `h-[${BANNER_WIDTH / 2}rem]`} items-center justify-center overflow-hidden border bg-card text-5xl font-bold`}
       style={{
         x: translate,
         opacity,
@@ -98,6 +98,7 @@ function BannerItem({
 }
 
 export function Banner() {
+  const ref = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [banners, setBanners] = useState<BannerType[]>([]);
   const [index, dispatchIndex] = useReducer(
@@ -117,6 +118,7 @@ export function Banner() {
 
   useEffect(() => {
     getBanners();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -151,7 +153,16 @@ export function Banner() {
         </div>
       )}
       {isMobile && (
-        <div className="relative flex min-h-[16rem] min-w-[32rem] items-center justify-center gap-4 overflow-hidden">
+        <div
+          className="relative flex items-center justify-center gap-4 overflow-hidden"
+          style={{
+            height: ref?.current?.offsetWidth
+              ? ref.current.offsetWidth / 2
+              : 'auto',
+            width: '100%',
+          }} // height is width half
+          ref={ref}
+        >
           {banners.map((banner, idx) => (
             <BannerItem
               key={banner.id}
@@ -160,7 +171,7 @@ export function Banner() {
               data={banner}
             />
           ))}
-          <div className="z-50 translate-x-[300%] translate-y-[6.5rem] select-none rounded-3xl bg-black/30 px-2 text-sm font-semibold text-white/80">
+          <div className="z-50 translate-x-[450%] translate-y-[6.5rem] select-none rounded-3xl bg-black/30 px-2 text-sm font-semibold text-white/80">
             {index + 1}/{banners.length}
           </div>
           <Button
