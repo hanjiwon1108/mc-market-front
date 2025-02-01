@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { Button } from '@/components/ui/button';
-import { animated, useSpringValue } from '@react-spring/web';
+import { animated, useSpring } from '@react-spring/web';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { endpoint } from '@/api/market/endpoint';
 import Link from 'next/link';
@@ -57,33 +57,32 @@ function BannerItem({
     [index, page],
   );
 
-  const translate = useSpringValue(
-    getTranslate(calculateRelative(index, page)),
-  );
-  const opacity = useSpringValue(getOpacity(calculateRelative(index, page)));
+  const [styles, api] = useSpring(() => ({
+    x: getTranslate(calculateRelative(index, page)),
+    opacity: getOpacity(calculateRelative(index, page)),
+  }));
+
   const indexRef = useRef(index);
 
   useEffect(() => {
     const previousRelative = calculateRelative(indexRef.current, page);
     const currentRelative = calculateRelative(index, page);
 
-    if (Math.abs(currentRelative - previousRelative) === 1) {
-      void translate.start(getTranslate(currentRelative));
-    } else {
-      translate.set(getTranslate(currentRelative));
-    }
-    void opacity.start(getOpacity(currentRelative));
+    api.start({
+      x: getTranslate(currentRelative),
+      opacity: getOpacity(currentRelative),
+    });
 
     indexRef.current = index;
-  }, [getOpacity, getTranslate, index, page, translate, opacity]);
+  }, [getOpacity, getTranslate, index, page, api]);
 
   return (
     <animated.div
-      className={`absolute flex ${isMobile ? 'h-full' : `h-[${BANNER_WIDTH / 2}rem]`} items-center justify-center overflow-hidden border bg-card text-5xl font-bold`}
+      className={`absolute flex items-center justify-center overflow-hidden border bg-card text-5xl font-bold`}
       style={{
-        x: translate,
-        opacity,
-        width: isMobile ? '100%' : `${BANNER_WIDTH}rem`, // 'w-full'을 '100%'로 변경
+        ...styles,
+        height: isMobile ? '100%' : `${BANNER_WIDTH / 2}rem`,
+        width: isMobile ? '100%' : `${BANNER_WIDTH}rem`,
       }}
     >
       <Link href={data.link_url}>
@@ -124,7 +123,7 @@ export function Banner() {
   return (
     <div className="flex w-full justify-center">
       {!isMobile && (
-        <div className="relative flex h-[24rem] w-[144rem] items-center justify-center gap-4 overflow-hidden">
+        <div className="relative flex h-[28rem] w-[144rem] items-center justify-center gap-4 overflow-hidden">
           {banners.map((banner, idx) => (
             <BannerItem
               key={banner.id}
