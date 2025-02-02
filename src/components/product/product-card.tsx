@@ -50,7 +50,7 @@ export function ProductCard(props: ProductCardProps) {
             {props.price == 0 ? (
               <p className="text-green-400">무료</p>
             ) : (
-              `${props.price}원`
+              `${props.price.toLocaleString()}원`
             )}
           </div>
         </div>
