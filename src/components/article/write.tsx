@@ -84,13 +84,13 @@ export default function WriteComponent({
     <div className="scrollbar-override flex h-full w-full flex-col gap-2">
       <div className="text-4xl font-semibold">
         글 작성
-        {!isAdmin && (
+        {isAdmin && (
           <>
             <Button onClick={() => setLikeDisabled(!likeDisabled)}>
-              {likeDisabled ? '추천 기능 사용' : '추천 기능 막힘'}
+              {!likeDisabled ? '추천 기능 사용' : '추천 기능 막힘'}
             </Button>
             <Button onClick={() => setCommentDisabled(!commentDisabled)}>
-              {commentDisabled ? '댓글 기능 사용' : '댓글 기능 막힘'}
+              {!commentDisabled ? '댓글 기능 사용' : '댓글 기능 막힘'}
             </Button>
           </>
         )}
