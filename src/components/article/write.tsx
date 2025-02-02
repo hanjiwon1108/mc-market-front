@@ -87,10 +87,10 @@ export default function WriteComponent({
         {!isAdmin && (
           <>
             <Button onClick={() => setLikeDisabled(!likeDisabled)}>
-              {!likeDisabled ? '추천 기능 사용' : '추천 기능 막힘'}
+              {likeDisabled ? '추천 기능 사용' : '추천 기능 막힘'}
             </Button>
             <Button onClick={() => setCommentDisabled(!commentDisabled)}>
-              {!commentDisabled ? '댓글 기능 사용' : '댓글 기능 막힘'}
+              {commentDisabled ? '댓글 기능 사용' : '댓글 기능 막힘'}
             </Button>
           </>
         )}
