@@ -24,6 +24,8 @@ type GetArticleResponse = {
   likes: number;
   dislikes: number;
   head: string;
+  comment_disabled: boolean;
+  like_disabled: boolean;
 };
 
 type PageProps = {
@@ -111,18 +113,22 @@ export default async function Page({ params }: PageProps) {
           <div dangerouslySetInnerHTML={{ __html: article.content }}></div>
         </div>
       </article>
-      <LikeComponent
-        dislikesOrigin={article.dislikes}
-        likesOrigin={article.likes}
-        articleId={id}
-      />
+      {!article.like_disabled && (
+        <LikeComponent
+          dislikesOrigin={article.dislikes}
+          likesOrigin={article.likes}
+          articleId={id}
+        />
+      )}
       <div className="flex w-full justify-end px-4 py-8">
         <EditButton articleId={article.id} authorId={article.author.id} />
       </div>
-      <CommentsContainer
-        comments={article.comments as ResponseCommentType}
-        articleId={id}
-      />
+      {!article.comment_disabled && (
+        <CommentsContainer
+          comments={article.comments as ResponseCommentType}
+          articleId={id}
+        />
+      )}
     </div>
   );
 }

@@ -14,7 +14,13 @@ export default function Page() {
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
-  async function upload(title: string, content: string, head: string) {
+  async function upload(
+    title: string,
+    content: string,
+    head: string,
+    comment_disabled: boolean,
+    like_disabled: boolean,
+  ) {
     if (head === '') {
       toast.error('말머리를 선택해주세요');
       return;
@@ -30,6 +36,8 @@ export default function Page() {
         title: title,
         content: content,
         head,
+        comment_disabled,
+        like_disabled,
       }),
     });
 

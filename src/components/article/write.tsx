@@ -23,7 +23,13 @@ type WriteProps = {
   title: string;
   content: string;
   head: string;
-  upload: (title: string, content: string, head: string) => Promise<void>;
+  upload: (
+    title: string,
+    content: string,
+    head: string,
+    commentDisabled: boolean,
+    likeDisabled: boolean,
+  ) => Promise<void>;
   uploading: boolean;
 };
 
@@ -40,6 +46,8 @@ export default function WriteComponent({
   const [newhead, setHead] = useState(head);
   const [headList, setHeadList] = useState<HeadType[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [commentDisabled, setCommentDisabled] = useState(false);
+  const [likeDisabled, setLikeDisabled] = useState(false);
 
   async function getHeadList() {
     const response = await fetch(endpoint('/v1/article_head/list/'));
@@ -74,7 +82,19 @@ export default function WriteComponent({
 
   return (
     <div className="scrollbar-override flex h-full w-full flex-col gap-2">
-      <div className="text-4xl font-semibold">글 작성</div>
+      <div className="text-4xl font-semibold">
+        글 작성
+        {!isAdmin && (
+          <>
+            <Button onClick={() => setLikeDisabled(!likeDisabled)}>
+              {!likeDisabled ? '추천 기능 사용' : '추천 기능 막힘'}
+            </Button>
+            <Button onClick={() => setCommentDisabled(!commentDisabled)}>
+              {!commentDisabled ? '댓글 기능 사용' : '댓글 기능 막힘'}
+            </Button>
+          </>
+        )}
+      </div>
       <div className="flex gap-2">
         {headList?.length > 0 && (
           <select
@@ -104,7 +124,15 @@ export default function WriteComponent({
         <BasicEditor content={newcontent} onContentChange={setContent} />
       </div>
       <Button
-        onClick={() => upload(newtitle, newcontent, newhead.toString())}
+        onClick={() =>
+          upload(
+            newtitle,
+            newcontent,
+            newhead.toString(),
+            commentDisabled,
+            likeDisabled,
+          )
+        }
         disabled={uploading}
         className="ml-auto w-32 px-6 py-6 text-lg"
       >
