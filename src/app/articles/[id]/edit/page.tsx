@@ -57,7 +57,13 @@ export default function Page({ params }: PageProps) {
     setHead(article.head);
   }
 
-  async function upload(title: string, content: string, head: string) {
+  async function upload(
+    title: string,
+    content: string,
+    head: string,
+    comment_disabled: boolean,
+    like_disabled: boolean,
+  ) {
     if (head === '') {
       toast.error('말머리를 선택해주세요');
       return;
@@ -73,6 +79,8 @@ export default function Page({ params }: PageProps) {
         title: title,
         content: content,
         head,
+        comment_disabled,
+        like_disabled,
       }),
     });
 
