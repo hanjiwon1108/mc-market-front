@@ -7,21 +7,27 @@ import { endpoint } from '@/api/market/endpoint';
 import { FallbackImage } from '@/components/util/fallback-image';
 import { MarketAuthor } from '@/api/types';
 import { UserAvatar } from '@/components/user/avatar';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export type ProductCardProps = {
   id: string;
   name: string;
   price: number;
   discountPrice?: number;
+  isBig?: boolean;
   author: MarketAuthor;
 };
 
 export function ProductCard(props: ProductCardProps) {
+  const isMobile = useIsMobile();
   return (
     <Link
       scroll={false}
       href={`/products/${props.id}`}
-      className="group min-w-52 max-w-52 cursor-pointer overflow-hidden rounded-2xl p-2 transition duration-300 hover:shadow-lg"
+      className={
+        'group cursor-pointer overflow-hidden rounded-2xl p-2 transition duration-300 hover:shadow-lg ' +
+        (!(props.isBig && isMobile) ? 'min-w-52 max-w-52' : 'min-w-full')
+      }
     >
       <div className="relative mt-2 aspect-video w-full overflow-hidden rounded-2xl border">
         <FallbackImage

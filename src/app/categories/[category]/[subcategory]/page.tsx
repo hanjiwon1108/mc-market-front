@@ -1,6 +1,11 @@
 import React from 'react';
 import { ProductCard } from '@/components/product/product-card';
-import { CATEGORIES, Category, CategoryKey, TopCategoryKey } from '@/features/category';
+import {
+  CATEGORIES,
+  Category,
+  CategoryKey,
+  TopCategoryKey,
+} from '@/features/category';
 import { redirect } from 'next/navigation';
 import { UnknownCategoryHandler } from '@/app/categories/[category]/unknown-category-handler';
 import { ProductSearch } from '@/components/product/search';
@@ -15,7 +20,9 @@ export default async function Page({
 }) {
   const awaitedParams = await params;
   const category = CATEGORIES[awaitedParams.category as TopCategoryKey];
-  const subcategory = (category.subcategories as Record<string, Category>)[awaitedParams.subcategory];
+  const subcategory = (category.subcategories as Record<string, Category>)[
+    awaitedParams.subcategory
+  ];
 
   if (!category) {
     return redirect('/categories/all?from_unknown=true');
@@ -40,7 +47,7 @@ export default async function Page({
           <div className="group flex items-center gap-2 text-3xl font-semibold">
             <p className="underline decoration-foreground/50 underline-offset-4 transition-all duration-300 ease-out group-hover:decoration-foreground">
               {category?.name} - {subcategory.name}
-            </p>{' '}
+            </p>
             인기 제품
           </div>
 

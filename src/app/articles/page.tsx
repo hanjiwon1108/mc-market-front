@@ -135,7 +135,7 @@ function ArticleList() {
             router.push('/articles');
           }}
           className={
-            'h-8 w-24 border ' +
+            'min-h-8 min-w-24 border ' +
             (headId === 0 ? ' bg-blue-800 text-white' : ' bg-gray-100')
           }
         >
@@ -145,7 +145,7 @@ function ArticleList() {
           onClick={() => {
             router.push('/articles');
           }}
-          className={'h-8 w-24 border'}
+          className={'min-h-8 min-w-24 border'}
         >
           인기
         </button>
@@ -157,7 +157,7 @@ function ArticleList() {
                   router.push(`/articles?head=${head.id}`);
                 }}
                 className={
-                  'h-8 w-24 border ' +
+                  'min-h-8 min-w-24 border ' +
                   (headId === head.id
                     ? ' bg-blue-800 text-white'
                     : ' bg-gray-100')
@@ -171,7 +171,7 @@ function ArticleList() {
                   router.push(`/articles?head=${head.id}`);
                 }}
                 className={
-                  'flex cursor-pointer items-center px-2 py-1 text-xs ' +
+                  'flex cursor-pointer items-center whitespace-nowrap px-2 py-1 text-xs' +
                   (head.id === headId ? 'bg-blue-400' : ' text-black')
                 }
               >
