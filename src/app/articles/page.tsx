@@ -127,59 +127,93 @@ function ArticleList() {
   return (
     <div className="overflow-hidden">
       <div
-        className="flex scroll-p-0 items-end gap-1 overflow-x-scroll px-4 pb-2 scrollbar-hide"
+        className={
+          'flex scroll-p-0 items-end gap-1 overflow-x-scroll px-4 pb-2 scrollbar-hide ' +
+          isMobile
+            ? 'flex-col'
+            : 'flex-row'
+        }
         id="heads"
       >
-        <button
-          onClick={() => {
-            router.push('/articles');
-          }}
-          className={
-            'min-h-8 min-w-24 border ' +
-            (headId === 0 ? ' bg-blue-800 text-white' : ' bg-gray-100')
-          }
-        >
-          전체
-        </button>
-        <button
-          onClick={() => {
-            router.push('/articles');
-          }}
-          className={'min-h-8 min-w-24 border'}
-        >
-          인기
-        </button>
-        {articleHeadsData?.map((head) => (
-          <React.Fragment key={head.id}>
-            {head.name === '공지' ? (
-              <button
-                onClick={() => {
-                  router.push(`/articles?head=${head.id}`);
-                }}
-                className={
-                  'min-h-8 min-w-24 border ' +
-                  (headId === head.id
-                    ? ' bg-blue-800 text-white'
-                    : ' bg-gray-100')
-                }
-              >
-                공지
-              </button>
-            ) : (
-              <div
-                onClick={() => {
-                  router.push(`/articles?head=${head.id}`);
-                }}
-                className={
-                  'flex cursor-pointer items-center whitespace-nowrap px-2 py-1 text-xs' +
-                  (head.id === headId ? 'bg-blue-400' : ' text-black')
-                }
-              >
-                {head.name}
-              </div>
-            )}
-          </React.Fragment>
-        ))}
+        <div className="flex items-end gap-1">
+          <button
+            onClick={() => {
+              router.push('/articles');
+            }}
+            className={
+              'min-h-8 min-w-24 border ' +
+              (headId === 0 ? ' bg-blue-800 text-white' : ' bg-gray-100')
+            }
+          >
+            전체
+          </button>
+          <button
+            onClick={() => {
+              router.push('/articles');
+            }}
+            className={'min-h-8 min-w-24 border'}
+          >
+            인기
+          </button>
+          {articleHeadsData?.map((head) => (
+            <React.Fragment key={head.id}>
+              {head.name === '공지' && (
+                <button
+                  onClick={() => {
+                    router.push(`/articles?head=${head.id}`);
+                  }}
+                  className={
+                    'min-h-8 min-w-24 border ' +
+                    (headId === head.id
+                      ? ' bg-blue-800 text-white'
+                      : ' bg-gray-100')
+                  }
+                >
+                  공지
+                </button>
+              )}
+            </React.Fragment>
+          ))}
+          {!isMobile &&
+            articleHeadsData?.map((head) => (
+              <React.Fragment key={head.id}>
+                {head.name !== '공지' && (
+                  <div
+                    onClick={() => {
+                      router.push(`/articles?head=${head.id}`);
+                    }}
+                    className={
+                      'flex cursor-pointer items-center whitespace-nowrap px-2 py-1 text-xs' +
+                      (head.id === headId ? 'bg-blue-400' : ' text-black')
+                    }
+                  >
+                    {head.name}
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+        </div>
+        {isMobile && (
+          <div className="flex gap-1">
+            {articleHeadsData?.map((head) => (
+              <React.Fragment key={head.id}>
+                {head.name !== '공지' && (
+                  <div
+                    onClick={() => {
+                      router.push(`/articles?head=${head.id}`);
+                    }}
+                    className={
+                      'flex cursor-pointer items-center whitespace-nowrap px-2 py-1 text-xs' +
+                      (head.id === headId ? 'bg-blue-400' : ' text-black')
+                    }
+                  >
+                    {head.name}
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </div>
       {/* PC 버전 */}
       {!isMobile && (
