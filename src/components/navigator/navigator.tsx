@@ -105,7 +105,7 @@ export function Navigator() {
         <NavigatorSidebarMenu
           display="게시판"
           icon={NewspaperIcon}
-          href="articles"
+          href="/articles"
         />
       </NavigatorSidebar>
 

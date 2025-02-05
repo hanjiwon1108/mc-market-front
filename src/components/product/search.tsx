@@ -17,6 +17,7 @@ import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import useSWRInfinite from 'swr/infinite';
 import { useDebouncedState } from '@/util/debounce';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 type OrderByOptions = 'time' | 'price' | 'purchases';
 type SortOptions = `asc` | 'desc';
@@ -32,6 +33,7 @@ export function ProductSearch(props: {
   initialKeywords?: string;
   category?: string;
 }) {
+  const isMobile = useIsMobile();
   const [orderByDebounced, setOrderBy, orderBy] =
     useDebouncedState<OrderByOptions>('time', 500);
   const [sortDebounced, setSort, sort] = useDebouncedState<SortOptions>(
@@ -102,7 +104,7 @@ export function ProductSearch(props: {
       </div>
       <div className="mt-12 flex flex-col gap-4 p-2 md:flex-row">
         <div className="w-full md:w-1/5">
-          <div className="flex h-96 w-full flex-col gap-2 rounded-lg bg-accent p-4">
+          <div className="flex w-full flex-col gap-2 rounded-lg bg-accent p-4">
             <p className="text-2xl font-semibold">필터</p>
             <Label htmlFor="search/select:sort">정렬 옵션</Label>
             <Select onValueChange={(v) => setOrderBy(v as OrderByOptions)}>
@@ -148,23 +150,45 @@ export function ProductSearch(props: {
         products.data.length != 0 &&
         products.data[0]?.length != 0 ? (
           <>
-            <div className="mb-20 grid w-full auto-rows-min grid-cols-3 xl:grid-cols-4 md:w-4/5">
-              {products.data
-                ?.flatMap((it) => it)
-                .map(
-                  (it) =>
-                    it && (
-                      <ProductCard
-                        key={it.id}
-                        id={it.id}
-                        name={it.name}
-                        price={it.price}
-                        discountPrice={it.price_discount}
-                        author={it.creator}
-                      />
-                    ),
-                )}
-            </div>
+            {!isMobile && (
+              <div className="mb-20 grid w-full auto-rows-min grid-cols-3 md:w-4/5 xl:grid-cols-4">
+                {products.data
+                  ?.flatMap((it) => it)
+                  .map(
+                    (it) =>
+                      it && (
+                        <ProductCard
+                          key={it.id}
+                          id={it.id}
+                          name={it.name}
+                          price={it.price}
+                          discountPrice={it.price_discount}
+                          author={it.creator}
+                        />
+                      ),
+                  )}
+              </div>
+            )}
+            {isMobile && (
+              <div className="mb-20 flex w-full flex-col items-center md:w-4/5">
+                {products.data
+                  ?.flatMap((it) => it)
+                  .map(
+                    (it) =>
+                      it && (
+                        <ProductCard
+                          isBig={true}
+                          key={it.id}
+                          id={it.id}
+                          name={it.name}
+                          price={it.price}
+                          discountPrice={it.price_discount}
+                          author={it.creator}
+                        />
+                      ),
+                  )}
+              </div>
+            )}
           </>
         ) : (
           <div className="flex flex-1 select-none items-center justify-center text-3xl font-semibold">

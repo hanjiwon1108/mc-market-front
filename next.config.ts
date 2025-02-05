@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '**', port: '' },
       { protocol: 'http', hostname: 'api.dev.entropi.kr' },
+      { protocol: 'http', hostname: 'localhost', port: '6568' },
     ],
     dangerouslyAllowSVG: true,
   },

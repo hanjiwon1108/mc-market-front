@@ -48,9 +48,9 @@ const items = [
 
 export default async function Layout({ children }: ChildrenProps) {
   const session = await getSession();
-  if (!session) {
-    return <ErrorScreen>인증 필요</ErrorScreen>;
-  }
+  // if (!session) {
+  //   return <ErrorScreen>인증 필요</ErrorScreen>;
+  // }
 
   return (
     <div className="w-full overflow-hidden">
@@ -79,7 +79,7 @@ export default async function Layout({ children }: ChildrenProps) {
           <SidebarFooter />
         </Sidebar>
         <main className="mb-[3.375rem] w-full gap-4 transition-all md:p-16">
-          <div className="flex items-center gap-2 px-4 pt-4 text-2xl font-semibold transition-all md:p-0 md:text-5xl mb-4">
+          <div className="mb-4 flex items-center gap-2 px-4 pt-4 text-2xl font-semibold transition-all md:p-0 md:text-5xl">
             <SidebarTrigger />
             판매자 대쉬보드
           </div>
