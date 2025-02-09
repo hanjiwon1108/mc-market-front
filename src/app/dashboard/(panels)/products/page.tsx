@@ -61,13 +61,10 @@ export default function Page() {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    console.log(infinite.data?.flatMap((v) => v.length));
     if (page + 1 > infinite.size) {
       void infinite.setSize(page + 1);
     }
   }, [infinite, page]);
-
-  console.log(JSON.stringify(infinite.data?.length));
 
   return (
     <div className="overflow-hidden">

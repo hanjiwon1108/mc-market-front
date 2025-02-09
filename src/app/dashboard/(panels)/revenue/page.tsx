@@ -67,8 +67,6 @@ export default function Page() {
         }),
   );
 
-  console.log(JSON.stringify(revenues.data));
-
   return (
     <div>
       <Table className="w-full min-w-0 max-w-full overflow-x-scroll">

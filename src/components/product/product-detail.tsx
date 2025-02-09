@@ -13,11 +13,11 @@ import {
   DownloadIcon,
   PlusIcon,
   ShoppingCartIcon,
-  UploadIcon,
+  HammerIcon,
   UserIcon,
 } from 'lucide-react';
 import dayjs from 'dayjs';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MarketProductWithShortUser } from '@/api/types';
 import { ChildrenProps } from '@/util/types-props';
 import {
@@ -234,6 +234,14 @@ type ProductDetailProps = {
   purchased?: boolean;
 };
 
+type ProductUpdateLog = {
+  id: number;
+  product_id: number;
+  title: string;
+  content: string;
+  update_at: string;
+};
+
 export function ProductDetail({
   onBack,
   product,
@@ -247,8 +255,56 @@ export function ProductDetail({
   const { addElement: addToCart, removeElement: removeFromCart } = useCart();
 
   const download = useDownload(product.id);
+  const session = useSession();
 
-  const [isPurchaseOpen, setPurchaseOpen] = React.useState(false);
+  const [isPurchaseOpen, setPurchaseOpen] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [updateLogs, setUpdateLogs] = useState<ProductUpdateLog[]>([]);
+  const [sendTitle, setSendTitle] = useState('');
+  const [sendContent, setSendContent] = useState('');
+  const [index, setIndex] = useState(0);
+
+  const getUpdateLog = async () => {
+    const res = await fetch(endpoint(`/v1/products_log/list/${product.id}`));
+    if (res.ok) {
+      const logs: ProductUpdateLog[] = await res.json();
+      setUpdateLogs(logs);
+      return;
+    }
+    toast.error('업데이트 내역을 불러오는데 실패했습니다');
+  };
+
+  const sendUpdateLog = async () => {
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_log/create/${product.id}`),
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: sendTitle,
+          content: sendContent,
+        }),
+      },
+    );
+    if (res.ok) {
+      toast.success('업데이트 내역이 성공적으로 작성되었습니다');
+      getUpdateLog();
+    } else {
+      toast.error('업데이트 내역 작성에 실패했습니다');
+    }
+  };
+
+  useEffect(() => {
+    console.log(session?.user.id, product.creator.id);
+    if (session?.user.id === product.creator.id) {
+      setIsAuthor(true);
+    }
+    getUpdateLog();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -319,7 +375,7 @@ export function ProductDetail({
                     <SmallCard
                       tooltip={new Date(product?.updated_at).toLocaleString()}
                     >
-                      <UploadIcon />
+                      <HammerIcon />
                       {dayjs(product?.updated_at).format('YYYY/MM/DD')}
                     </SmallCard>
                   )}
@@ -392,8 +448,75 @@ export function ProductDetail({
                 </div>
               </div>
             </div>
+            {/* 개요, 업데이트 내역, 버전 목록 */}
+            <div className="flex w-full gap-1 border-b border-gray-300">
+              <div
+                className={
+                  'cursor-pointer rounded-t-md border-2 border-b-0 px-4 py-2 ' +
+                  (index === 0 && 'bg-black text-white')
+                }
+                onClick={() => setIndex(0)}
+              >
+                개요
+              </div>
+              <div
+                className={
+                  'cursor-pointer rounded-t-md border-2 border-b-0 px-4 py-2 ' +
+                  (index === 1 && 'bg-black text-white')
+                }
+                onClick={() => setIndex(1)}
+              >
+                업데이트 내역
+              </div>
+              <div
+                className={
+                  'cursor-pointer rounded-t-md border-2 border-b-0 px-4 py-2 ' +
+                  (index === 2 && 'bg-black text-white')
+                }
+                onClick={() => setIndex(2)}
+              >
+                버전 목록
+              </div>
+            </div>
             <div className="prose prose-lg min-h-64 max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300 md:col-span-2">
-              <div dangerouslySetInnerHTML={{ __html: product.details }}></div>
+              {index === 0 && (
+                <div dangerouslySetInnerHTML={{ __html: product.details }} />
+              )}
+              {index === 1 && (
+                <div className="flex flex-col gap-4">
+                  {isAuthor && (
+                    <div className="flex flex-col gap-4">
+                      <div className="text-xl font-semibold">업데이트 작성</div>
+                      <input
+                        type="text"
+                        placeholder="업데이트 제목"
+                        className="rounded-md border-2 p-2"
+                        value={sendTitle}
+                        onChange={(e) => setSendTitle(e.target.value)}
+                      />
+                      <textarea
+                        placeholder="업데이트 내용"
+                        className="h-32 rounded-md border-2 p-2"
+                        value={sendContent}
+                        onChange={(e) => setSendContent(e.target.value)}
+                      />
+                      <Button onClick={sendUpdateLog}>작성</Button>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-4">
+                    <div className="text-xl font-semibold">업데이트 내역</div>
+                    {updateLogs.map((log) => (
+                      <div key={log.id} className="mt-4">
+                        <div className="text-xl font-semibold">
+                          {log.title} -{' '}
+                          {dayjs(log.update_at).format('YYYY/MM/DD')}
+                        </div>
+                        <div className="ml-6 text-lg">{log.content}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

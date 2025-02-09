@@ -17,5 +17,7 @@ export function endpoint(endpoint: string) {
 export async function fetchMapleUser(session?: Session) {
   return await authFetch(session, endpoint('/v1/user/session'))
     .then((it) => it.json() as Promise<MarketUser>)
-    .catch(() => isBrowser() ? void toast.error('An API error has occurred.') : undefined);
+    .catch(() =>
+      isBrowser() ? void toast.error('An API error has occurred.') : undefined,
+    );
 }
