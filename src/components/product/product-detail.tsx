@@ -35,6 +35,8 @@ import { ProductPurchaseDialog } from '@/components/product/product-purchase-dia
 import { FallbackImage } from '@/components/util/fallback-image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { UserAvatar } from '@/components/user/avatar';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 
 const SmallCard = React.forwardRef<
   HTMLButtonElement,
@@ -259,9 +261,12 @@ export function ProductDetail({
 
   const [isPurchaseOpen, setPurchaseOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
+  const [updatingIndex, setUpdatingIndex] = useState(-1);
   const [updateLogs, setUpdateLogs] = useState<ProductUpdateLog[]>([]);
   const [sendTitle, setSendTitle] = useState('');
   const [sendContent, setSendContent] = useState('');
+  const [updatedTitle, setUpdatedTitle] = useState('');
+  const [updatedContent, setUpdatedContent] = useState('');
   const [index, setIndex] = useState(0);
 
   const getUpdateLog = async () => {
@@ -297,6 +302,46 @@ export function ProductDetail({
     }
   };
 
+  const updateUpdateLog = async (id: number) => {
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_log/update/${id}`),
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: product.id,
+          title: updatedTitle,
+          content: updatedContent,
+        }),
+      },
+    );
+    if (res.ok) {
+      toast.success('업데이트 내역이 성공적으로 수정되었습니다');
+      getUpdateLog();
+    } else {
+      toast.error('업데이트 내역 수정에 실패했습니다');
+    }
+  };
+
+  const delUpdateLog = async (id: number) => {
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_log/delete/${id}`),
+      {
+        method: 'POST',
+      },
+    );
+    if (res.ok) {
+      toast.success('업데이트 내역이 성공적으로 삭제되었습니다');
+      getUpdateLog();
+    } else {
+      toast.error('업데이트 내역 삭제에 실패했습니다');
+    }
+  };
+
   useEffect(() => {
     console.log(session?.user.id, product.creator.id);
     if (session?.user.id === product.creator.id) {
@@ -305,6 +350,13 @@ export function ProductDetail({
     getUpdateLog();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const log = updateLogs.find((log) => log.id === updatingIndex);
+    setUpdatedContent(log?.content ?? '');
+    setUpdatedTitle(log?.title ?? '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updatingIndex]);
 
   return (
     <>
@@ -507,11 +559,72 @@ export function ProductDetail({
                     <div className="text-xl font-semibold">업데이트 내역</div>
                     {updateLogs.map((log) => (
                       <div key={log.id} className="mt-4">
-                        <div className="text-xl font-semibold">
-                          {log.title} -{' '}
-                          {dayjs(log.update_at).format('YYYY/MM/DD')}
+                        <div className="flex justify-between">
+                          {updatingIndex !== log.id && (
+                            <div className="text-xl font-semibold">
+                              {log.title} -{' '}
+                              {dayjs(log.update_at).format('YYYY/MM/DD')}
+                            </div>
+                          )}
+                          {updatingIndex === log.id && (
+                            <>
+                              <Input
+                                value={updatedTitle}
+                                onChange={(e) =>
+                                  setUpdatedTitle(e.target.value)
+                                }
+                              />
+                              <Textarea
+                                value={updatedContent}
+                                onChange={(e) =>
+                                  setUpdatedContent(e.target.value)
+                                }
+                              />
+                            </>
+                          )}
+
+                          {isAuthor && (
+                            <div className="flex gap-2">
+                              {updatingIndex !== log.id && (
+                                <>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setUpdatingIndex(log.id)}
+                                  >
+                                    수정
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => delUpdateLog(log.id)}
+                                  >
+                                    삭제
+                                  </Button>
+                                </>
+                              )}
+                              {updatingIndex === log.id && (
+                                <>
+                                  <Button
+                                    onClick={() => {
+                                      updateUpdateLog(log.id);
+                                      setUpdatingIndex(-1);
+                                    }}
+                                  >
+                                    완료
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => setUpdatingIndex(-1)}
+                                  >
+                                    취소
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          )}
                         </div>
-                        <div className="ml-6 text-lg">{log.content}</div>
+                        {updatingIndex !== log.id && (
+                          <div className="ml-6 text-lg">{log.content}</div>
+                        )}
                       </div>
                     ))}
                   </div>
