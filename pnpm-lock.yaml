@@ -18,14 +18,14 @@ importers:
         specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.53.2(react@19.0.0-rc-66855b96-20241106))
       '@mdx-js/loader':
-        specifier: ^3.1.0
-        version: 3.1.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2))
+        specifier: 3.0.0
+        version: 3.0.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2))
       '@mdx-js/react':
         specifier: ^3.1.0
         version: 3.1.0(@types/react@18.3.12)(react@19.0.0-rc-66855b96-20241106)
       '@next/mdx':
         specifier: ^15.0.3
-        version: 15.0.3(@mdx-js/loader@3.1.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2)))(@mdx-js/react@3.1.0(@types/react@18.3.12)(react@19.0.0-rc-66855b96-20241106))
+        version: 15.0.3(@mdx-js/loader@3.0.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2)))(@mdx-js/react@3.1.0(@types/react@18.3.12)(react@19.0.0-rc-66855b96-20241106))
       '@radix-ui/react-accordion':
         specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
@@ -1232,13 +1232,10 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@mdx-js/loader@3.1.0':
-    resolution: {integrity: sha512-xU/lwKdOyfXtQGqn3VnJjlDrmKXEvMi1mgYxVmukEUtVycIz1nh7oQ40bKTd4cA7rLStqu0740pnhGYxGoqsCg==}
+  '@mdx-js/loader@3.0.0':
+    resolution: {integrity: sha512-9kLv83YtgxpoXVYHaf0ygx1dmhCffo0MQCv6KtNG67jy/JlBK/2Q0dSWfuuyStP3jnZKABHfbjv8zsiT1buu6A==}
     peerDependencies:
       webpack: '>=5'
-    peerDependenciesMeta:
-      webpack:
-        optional: true
 
   '@mdx-js/mdx@3.1.0':
     resolution: {integrity: sha512-/QxEhPAvGwbQmy1Px8F899L5Uc2KZ6JtXwlCgJmjSTBedwOZkByYcBG4GceIGPXRDsmfxhHazuS+hlOShRLeDw==}
@@ -6989,11 +6986,10 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mdx-js/loader@3.1.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2))':
+  '@mdx-js/loader@3.0.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2))':
     dependencies:
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       source-map: 0.7.4
-    optionalDependencies:
       webpack: 5.96.1(esbuild@0.24.2)
     transitivePeerDependencies:
       - acorn
@@ -7047,11 +7043,11 @@ snapshots:
     dependencies:
       fast-glob: 3.3.1
 
-  '@next/mdx@15.0.3(@mdx-js/loader@3.1.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2)))(@mdx-js/react@3.1.0(@types/react@18.3.12)(react@19.0.0-rc-66855b96-20241106))':
+  '@next/mdx@15.0.3(@mdx-js/loader@3.0.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2)))(@mdx-js/react@3.1.0(@types/react@18.3.12)(react@19.0.0-rc-66855b96-20241106))':
     dependencies:
       source-map: 0.7.4
     optionalDependencies:
-      '@mdx-js/loader': 3.1.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2))
+      '@mdx-js/loader': 3.0.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2))
       '@mdx-js/react': 3.1.0(@types/react@18.3.12)(react@19.0.0-rc-66855b96-20241106)
 
   '@next/swc-darwin-arm64@15.0.3':
