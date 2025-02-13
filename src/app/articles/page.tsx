@@ -292,7 +292,11 @@ function ArticleList() {
               onClick={() => router.push(`/articles/${article.id}`)}
             >
               <div className="py-2">
-                <div className={article.head === '공지' ? 'font-bold' : ''}>
+                <div
+                  className={
+                    'text-sm ' + (article.head === '공지' ? 'font-bold' : '')
+                  }
+                >
                   <em
                     style={{
                       background:
