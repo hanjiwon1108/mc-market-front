@@ -27,9 +27,10 @@ RUN pnpm run build || true
 # 최종 실행 단계
 FROM base
 
-# node_modules을 복사할 때, 만약 없는 경우를 대비해서 존재하는 폴더만 복사하도록 수정
-COPY --from=prod-deps /app/node_modules /app/node_modules || true
-COPY --from=build /app/.next /app/.next || true
+# node_modules이 존재하는 경우에만 복사
+RUN if [ -d "/app/node_modules" ]; then echo "Copying node_modules"; else echo "Skipping node_modules"; fi
+COPY --from=prod-deps /app/node_modules /app/node_modules 2>/dev/null || true
+COPY --from=build /app/.next /app/.next 2>/dev/null || true
 
 # 포트 공개
 EXPOSE 3000
