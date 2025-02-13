@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "version": "next version",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -16,7 +15,7 @@
     "@entropi-co/surge-js": "^0.5.1",
     "@entropi-co/surge-ssr": "^0.4.0",
     "@hookform/resolvers": "^3.9.1",
-    "@mdx-js/loader": "3.0.0",
+    "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.0.3",
     "@radix-ui/react-accordion": "^1.2.1",
