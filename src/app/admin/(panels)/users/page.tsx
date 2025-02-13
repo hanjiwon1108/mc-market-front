@@ -95,7 +95,7 @@ export default function Page() {
                 ? infinite.data[page]
                 : []
               : []
-            ).map((it) => <UserRow user={it} />)}
+            ).map((it) => <UserRow key={it.id} user={it} />)}
         </TableBody>
       </Table>
       <Pagination className="mt-auto border-t pt-2">

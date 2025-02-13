@@ -13,11 +13,11 @@ import {
   DownloadIcon,
   PlusIcon,
   ShoppingCartIcon,
-  UploadIcon,
+  HammerIcon,
   UserIcon,
 } from 'lucide-react';
 import dayjs from 'dayjs';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MarketProductWithShortUser } from '@/api/types';
 import { ChildrenProps } from '@/util/types-props';
 import {
@@ -35,6 +35,17 @@ import { ProductPurchaseDialog } from '@/components/product/product-purchase-dia
 import { FallbackImage } from '@/components/util/fallback-image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { UserAvatar } from '@/components/user/avatar';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import Link from 'next/link';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../ui/table';
 
 const SmallCard = React.forwardRef<
   HTMLButtonElement,
@@ -234,6 +245,23 @@ type ProductDetailProps = {
   purchased?: boolean;
 };
 
+type ProductUpdateLog = {
+  id: number;
+  product_id: number;
+  title: string;
+  content: string;
+  update_at: string;
+};
+
+type ProductVersion = {
+  id: number;
+  product_id: number;
+  version_name: string;
+  link: string;
+  index: number;
+  updated_at: string;
+};
+
 export function ProductDetail({
   onBack,
   product,
@@ -247,8 +275,214 @@ export function ProductDetail({
   const { addElement: addToCart, removeElement: removeFromCart } = useCart();
 
   const download = useDownload(product.id);
+  const session = useSession();
 
-  const [isPurchaseOpen, setPurchaseOpen] = React.useState(false);
+  const [isPurchaseOpen, setPurchaseOpen] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [updatingIndex, setUpdatingIndex] = useState(-1);
+  const [updateLogs, setUpdateLogs] = useState<ProductUpdateLog[]>([]);
+  const [versions, setVersions] = useState<ProductVersion[]>([]);
+  const [sendTitle, setSendTitle] = useState('');
+  const [sendContent, setSendContent] = useState('');
+  const [updatedTitle, setUpdatedTitle] = useState('');
+  const [updatedContent, setUpdatedContent] = useState('');
+  const [createVersionValues, setCreateVersionValues] =
+    useState<ProductVersion>({
+      id: 0,
+      product_id: 0,
+      version_name: '',
+      link: '',
+      index: 0,
+      updated_at: '',
+    });
+  const [updateVersionValues, setUpdateVersionValues] =
+    useState<ProductVersion>({
+      id: 0,
+      product_id: 0,
+      version_name: '',
+      link: '',
+      index: 0,
+      updated_at: '',
+    });
+  const [versionUpdatingIndex, setVersionUpdatingIndex] = useState(-1);
+  const [index, setIndex] = useState(0);
+
+  const getUpdateLog = async () => {
+    const res = await fetch(endpoint(`/v1/products_log/list/${product.id}`));
+    if (res.ok) {
+      const logs: ProductUpdateLog[] = await res.json();
+      setUpdateLogs(logs);
+      return;
+    }
+    toast.error('업데이트 내역을 불러오는데 실패했습니다');
+  };
+
+  const sendUpdateLog = async () => {
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_log/create/${product.id}`),
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: sendTitle,
+          content: sendContent,
+        }),
+      },
+    );
+    if (res.ok) {
+      toast.success('업데이트 내역이 성공적으로 작성되었습니다');
+      getUpdateLog();
+    } else {
+      toast.error('업데이트 내역 작성에 실패했습니다');
+    }
+  };
+
+  const updateUpdateLog = async (id: number) => {
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_log/update/${id}`),
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: product.id,
+          title: updatedTitle,
+          content: updatedContent,
+        }),
+      },
+    );
+    if (res.ok) {
+      toast.success('업데이트 내역이 성공적으로 수정되었습니다');
+      getUpdateLog();
+    } else {
+      toast.error('업데이트 내역 수정에 실패했습니다');
+    }
+  };
+
+  const delUpdateLog = async (id: number) => {
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_log/delete/${id}`),
+      {
+        method: 'POST',
+      },
+    );
+    if (res.ok) {
+      toast.success('업데이트 내역이 성공적으로 삭제되었습니다');
+      getUpdateLog();
+    } else {
+      toast.error('업데이트 내역 삭제에 실패했습니다');
+    }
+  };
+
+  const getVersionList = async () => {
+    if (!purchased) return;
+    const res = await fetch(
+      endpoint(`/v1/products_versions/list/${product.id}`),
+    );
+    if (res.ok) {
+      const versions: ProductVersion[] = await res.json();
+      setVersions(versions);
+    }
+  };
+
+  const createVersion = async () => {
+    if (!isAuthor) return;
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_versions/create/${product.id}`),
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          version_name: createVersionValues.version_name,
+          link: createVersionValues.link,
+          index: 0,
+        }),
+      },
+    );
+
+    if (res.ok) {
+      toast.success('버전이 성공적으로 추가되었습니다');
+      setCreateVersionValues({
+        id: 0,
+        product_id: 0,
+        version_name: '',
+        link: '',
+        index: 0,
+        updated_at: '',
+      });
+      getVersionList();
+    } else {
+      toast.error('버전 추가에 실패했습니다');
+    }
+  };
+
+  const deleteVersion = async (id: number) => {
+    if (!isAuthor) return;
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_versions/delete/${id}`),
+      {
+        method: 'POST',
+      },
+    );
+
+    if (res.ok) {
+      toast.success('버전이 성공적으로 삭제되었습니다');
+      getVersionList();
+    } else {
+      toast.error('버전 삭제에 실패했습니다');
+    }
+  };
+
+  const updateVersion = async (id: number) => {
+    if (!isAuthor) return;
+    if (!updateVersionValues.version_name || !updateVersionValues.link) {
+      toast.error('버전 이름과 링크를 입력해주세요');
+      return;
+    }
+    if (!confirm('정말 수정하시겠습니까?')) return;
+    const res = await authFetch(
+      session,
+      endpoint(`/v1/products_versions/update/${id}`),
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          version_name: updateVersionValues.version_name,
+          link: updateVersionValues.link,
+          index: 0,
+        }),
+      },
+    );
+
+    if (res.ok) {
+      toast.success('버전이 성공적으로 수정되었습니다');
+      setVersionUpdatingIndex(-1);
+      getVersionList();
+    } else {
+      toast.error('버전 수정에 실패했습니다');
+    }
+  };
+
+  useEffect(() => {
+    if (session?.user.id === product.creator.id) setIsAuthor(true);
+    getUpdateLog();
+    getVersionList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const log = updateLogs.find((log) => log.id === updatingIndex);
+    setUpdatedContent(log?.content ?? '');
+    setUpdatedTitle(log?.title ?? '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updatingIndex]);
 
   return (
     <>
@@ -319,7 +553,7 @@ export function ProductDetail({
                     <SmallCard
                       tooltip={new Date(product?.updated_at).toLocaleString()}
                     >
-                      <UploadIcon />
+                      <HammerIcon />
                       {dayjs(product?.updated_at).format('YYYY/MM/DD')}
                     </SmallCard>
                   )}
@@ -343,22 +577,10 @@ export function ProductDetail({
                 </div>
                 <div className="mt-4 flex flex-col gap-2 *:flex-1 *:gap-2 *:py-4 *:text-xl md:flex-row md:*:p-6">
                   {purchased ? (
-                    download.isDownloading ? (
-                      <Button disabled>
-                        <CircleDashed />
-                        다운로드 중 {download.progress * 100}%
-                      </Button>
-                    ) : download.isCacheAvailable ? (
-                      <Button onClick={download.download}>
-                        <CheckIcon />
-                        다운로드 완료
-                      </Button>
-                    ) : (
-                      <Button onClick={download.download}>
-                        <DownloadIcon />
-                        다운로드
-                      </Button>
-                    )
+                    <Button onClick={() => setIndex(2)}>
+                      <DownloadIcon />
+                      다운로드
+                    </Button>
                   ) : (
                     <Button size="lg" onClick={() => setPurchaseOpen(true)}>
                       <CreditCardIcon />
@@ -392,8 +614,269 @@ export function ProductDetail({
                 </div>
               </div>
             </div>
+            {/* 개요, 업데이트 내역, 버전 목록 */}
+            <div className="flex w-full gap-1 border-b border-gray-300">
+              <div
+                className={
+                  'cursor-pointer rounded-t-md border-2 border-b-0 px-4 py-2 ' +
+                  (index === 0 && 'bg-black text-white')
+                }
+                onClick={() => setIndex(0)}
+              >
+                개요
+              </div>
+              <div
+                className={
+                  'cursor-pointer rounded-t-md border-2 border-b-0 px-4 py-2 ' +
+                  (index === 1 && 'bg-black text-white')
+                }
+                onClick={() => setIndex(1)}
+              >
+                업데이트 내역
+              </div>
+              <div
+                className={
+                  'cursor-pointer rounded-t-md border-2 border-b-0 px-4 py-2 ' +
+                  (index === 2 && 'bg-black text-white')
+                }
+                onClick={() => setIndex(2)}
+              >
+                버전 목록
+              </div>
+            </div>
             <div className="prose prose-lg min-h-64 max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300 md:col-span-2">
-              <div dangerouslySetInnerHTML={{ __html: product.details }}></div>
+              {index === 0 && (
+                <div dangerouslySetInnerHTML={{ __html: product.details }} />
+              )}
+              {index === 1 && (
+                <div className="flex flex-col gap-4">
+                  {isAuthor && (
+                    <div className="flex flex-col gap-4">
+                      <div className="text-xl font-semibold">업데이트 작성</div>
+                      <input
+                        type="text"
+                        placeholder="업데이트 제목"
+                        className="rounded-md border-2 p-2"
+                        value={sendTitle}
+                        onChange={(e) => setSendTitle(e.target.value)}
+                      />
+                      <textarea
+                        placeholder="업데이트 내용"
+                        className="h-32 rounded-md border-2 p-2"
+                        value={sendContent}
+                        onChange={(e) => setSendContent(e.target.value)}
+                      />
+                      <Button onClick={sendUpdateLog}>작성</Button>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-4">
+                    <div className="text-xl font-semibold">업데이트 내역</div>
+                    {updateLogs.map((log) => (
+                      <div key={log.id} className="mt-4">
+                        <div className="flex justify-between">
+                          {updatingIndex !== log.id && (
+                            <div className="text-xl font-semibold">
+                              {log.title} -{' '}
+                              {dayjs(log.update_at).format('YYYY/MM/DD')}
+                            </div>
+                          )}
+                          {updatingIndex === log.id && (
+                            <>
+                              <Input
+                                value={updatedTitle}
+                                onChange={(e) =>
+                                  setUpdatedTitle(e.target.value)
+                                }
+                              />
+                              <Textarea
+                                value={updatedContent}
+                                onChange={(e) =>
+                                  setUpdatedContent(e.target.value)
+                                }
+                              />
+                            </>
+                          )}
+
+                          {isAuthor && (
+                            <div className="flex gap-2">
+                              {updatingIndex !== log.id && (
+                                <>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setUpdatingIndex(log.id)}
+                                  >
+                                    수정
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => delUpdateLog(log.id)}
+                                  >
+                                    삭제
+                                  </Button>
+                                </>
+                              )}
+                              {updatingIndex === log.id && (
+                                <>
+                                  <Button
+                                    onClick={() => {
+                                      updateUpdateLog(log.id);
+                                      setUpdatingIndex(-1);
+                                    }}
+                                  >
+                                    완료
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => setUpdatingIndex(-1)}
+                                  >
+                                    취소
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        {updatingIndex !== log.id && (
+                          <div className="ml-6 text-lg">{log.content}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {index === 2 && (
+                <>
+                  {!purchased && (
+                    <div className="text-xl font-semibold">
+                      구매 후 버전 목록을 확인할 수 있습니다.
+                    </div>
+                  )}
+                  {purchased && (
+                    <div className="flex flex-col gap-4">
+                      <div className="text-xl font-semibold">버전 목록</div>
+                      {isAuthor && (
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="버전 이름"
+                            value={createVersionValues?.version_name}
+                            onChange={(e) =>
+                              setCreateVersionValues({
+                                ...createVersionValues,
+                                version_name: e.target.value,
+                              })
+                            }
+                          />
+                          <Input
+                            placeholder="링크"
+                            value={createVersionValues?.link}
+                            onChange={(e) =>
+                              setCreateVersionValues({
+                                ...createVersionValues,
+                                link: e.target.value,
+                              })
+                            }
+                          />
+                          <Button onClick={createVersion}>추가</Button>
+                        </div>
+                      )}
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>업데이트 일자</TableHead>
+                            <TableHead>버전</TableHead>
+                            <TableHead>링크</TableHead>
+                            {isAuthor && (
+                              <>
+                                <TableHead>수정/삭제</TableHead>
+                              </>
+                            )}
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {versions?.map((version) => (
+                            <TableRow key={version.id}>
+                              <TableCell>
+                                {new Date(
+                                  version.updated_at,
+                                ).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell>
+                                {versionUpdatingIndex !== version.id &&
+                                  version.version_name}
+                                {versionUpdatingIndex === version.id && (
+                                  <Input
+                                    value={updateVersionValues.version_name}
+                                    onChange={(e) =>
+                                      setUpdateVersionValues({
+                                        ...updateVersionValues,
+                                        version_name: e.target.value,
+                                      })
+                                    }
+                                    placeholder="버전 이름"
+                                  />
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {versionUpdatingIndex !== version.id && (
+                                  <Link href={version.link}>Download</Link>
+                                )}
+                                {versionUpdatingIndex === version.id && (
+                                  <>
+                                    <Input
+                                      value={updateVersionValues.link}
+                                      onChange={(e) =>
+                                        setUpdateVersionValues({
+                                          ...updateVersionValues,
+                                          link: e.target.value,
+                                        })
+                                      }
+                                      placeholder="링크"
+                                    />
+                                  </>
+                                )}
+                              </TableCell>
+                              {isAuthor && (
+                                <>
+                                  <TableCell className="flex gap-2">
+                                    {versionUpdatingIndex !== version.id && (
+                                      <Button
+                                        size="sm"
+                                        onClick={() => {
+                                          setUpdateVersionValues(version);
+                                          setVersionUpdatingIndex(version.id);
+                                        }}
+                                      >
+                                        수정
+                                      </Button>
+                                    )}
+                                    {versionUpdatingIndex === version.id && (
+                                      <Button
+                                        size="sm"
+                                        onClick={() =>
+                                          updateVersion(version.id)
+                                        }
+                                      >
+                                        완료
+                                      </Button>
+                                    )}
+                                    <Button
+                                      size="sm"
+                                      variant="destructive"
+                                      onClick={() => deleteVersion(version.id)}
+                                    >
+                                      삭제
+                                    </Button>
+                                  </TableCell>
+                                </>
+                              )}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>
