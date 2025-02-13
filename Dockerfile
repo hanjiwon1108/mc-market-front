@@ -1,7 +1,7 @@
 FROM node:18-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@8.6.0 --activate
 
 # Install git, make
 RUN apk add git make
