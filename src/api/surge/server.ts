@@ -2,9 +2,9 @@
 
 import { cookies } from 'next/headers';
 import { createServerClient } from '@entropi-co/surge-ssr';
-import React from 'react';
+import { unstable_cache } from 'next/cache';
 
-const cachedClient = React.cache(async () => {
+const cachedClient = unstable_cache(async () => {
   const cookieStore = await cookies();
 
   // console.log(
