@@ -21,7 +21,7 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(acorn@8.14.0)(webpack@5.96.1(esbuild@0.24.2))
       '@mdx-js/react':
-        specifier: ^3.1.0
+        specifier: ^3.0.0
         version: 3.1.0(@types/react@18.3.12)(react@19.0.0-rc-66855b96-20241106)
       '@next/mdx':
         specifier: ^15.0.3
