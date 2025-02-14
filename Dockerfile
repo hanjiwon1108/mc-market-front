@@ -1,8 +1,11 @@
 FROM node:18-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-
+RUN echo "Before: corepack version => $(corepack --version || echo 'not installed')" && \
+    npm install -g corepack@latest && \
+    echo "After : corepack version => $(corepack --version)" && \
+    corepack enable && \
+    pnpm --version
 # Install git, make
 RUN apk add git make
 
