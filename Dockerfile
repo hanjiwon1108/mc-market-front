@@ -2,7 +2,7 @@ FROM node:18-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN echo "Before: corepack version => $(corepack --version || echo 'not installed')" && \
-    pnpm install -g corepack@latest && \
+    npm install -g corepack@latest && \
     echo "After : corepack version => $(corepack --version)" && \
     corepack enable && \
     pnpm --version
