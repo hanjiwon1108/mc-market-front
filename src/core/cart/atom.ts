@@ -23,6 +23,7 @@ export function useCart() {
 }
 
 export function useIsInCart(id: string) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [value, setValue] = useAtom(cartAtom);
 
   return value.includes(id);

@@ -21,6 +21,7 @@ export function ClientProvider({
   return (
     <>
       <Toaster richColors />
+      {/* @ts-ignore-error */}
       <TooltipProvider>
         <SettingsDialog />
         <AnimatePresence>

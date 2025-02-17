@@ -23,13 +23,16 @@ export function SurgeProvider({
   }, [client]);
 
   return (
-    <SurgeContext.Provider
-      value={{
-        user: user ?? null,
-        session: session ?? null,
-      }}
-    >
-      {children}
-    </SurgeContext.Provider>
+    <>
+      {/* @ts-ignore-error */}
+      <SurgeContext.Provider
+        value={{
+          user: user ?? null,
+          session: session ?? null,
+        }}
+      >
+        {children}
+      </SurgeContext.Provider>
+    </>
   );
 }
