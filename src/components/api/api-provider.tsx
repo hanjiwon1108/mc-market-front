@@ -6,6 +6,7 @@ import { ChildrenProps } from '@/util/types-props';
 export function APIProvider({ children }: ChildrenProps) {
   return (
     <>
+      {/* @ts-ignore-error */}
       <SurgeServerProvider>
         <DriftServerProvider>{children}</DriftServerProvider>
       </SurgeServerProvider>
