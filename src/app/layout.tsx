@@ -36,6 +36,7 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${pretendard.variable} antialiased`}
       >
+        {/* @ts-ignore-error */}
         <ThemeProvider attribute="class" defaultTheme="light">
           <APIProvider>
             <ClientProvider modal={modal}>{children}</ClientProvider>
