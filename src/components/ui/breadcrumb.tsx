@@ -50,6 +50,7 @@ const BreadcrumbLink = React.forwardRef<
   return (
     // @ts-ignore-error
     <Comp
+      // @ts-ignore-error
       ref={ref}
       className={cn('transition-colors hover:text-foreground', className)}
       {...props}
