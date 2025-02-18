@@ -6,7 +6,6 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import React from 'react';
-import { Rows4Icon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { CATEGORIES, Category } from '@/features/category';
@@ -30,7 +29,7 @@ function CategoryDisplay({ category }: { category: Category }) {
   return (
     <div>
       <CategoryLink href={category.link!}>{category.name}</CategoryLink>
-      {Object.values(category.subcategories).map((subcategory) => {
+      {Object.values(category.subcategories).map((subcategory: Category) => {
         const Icon = subcategory.icon;
 
         return (
