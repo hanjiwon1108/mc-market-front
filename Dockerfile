@@ -23,8 +23,6 @@ COPY . .
 # Next.js 빌드 실행
 RUN pnpm run build
 
----
-
 # 2️⃣ 실행 환경 설정
 FROM node:18-alpine AS runner
 
