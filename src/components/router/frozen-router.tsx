@@ -14,7 +14,6 @@ export function FrozenRouter(props: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* @ts-expect-error */}
       <LayoutRouterContext.Provider value={frozen}>
         {props.children}
       </LayoutRouterContext.Provider>
