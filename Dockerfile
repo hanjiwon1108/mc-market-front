@@ -1,35 +1,47 @@
-FROM node:18-alpine AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN echo "Before: corepack version => $(corepack --version || echo 'not installed')" && \
-    npm install -g corepack@latest && \
-    echo "After : corepack version => $(corepack --version)" && \
-    corepack enable && \
-    pnpm --version
-RUN apk add git make
+# 1️⃣ 빌드 환경 설정
+FROM node:18-alpine AS builder
 
-# Set working directory
-COPY . /app
+# 환경 변수 설정
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# 작업 디렉토리 설정
 WORKDIR /app
 
-# Install dependencies (including devDependencies)
-FROM base AS prod-deps
-RUN pnpm install --no-frozen-lockfile  # `--mount=type=cache` 제거
+# pnpm 설치 (필요시 npm, yarn으로 변경 가능)
+RUN npm install -g pnpm
 
-FROM base AS build
-ENV NODE_ENV=development
-RUN pnpm install --no-frozen-lockfile  # `--mount=type=cache` 제거
+# package.json, pnpm-lock.yaml만 복사하여 종속성 설치 최적화
+COPY package.json pnpm-lock.yaml ./
+
+# 의존성 설치
+RUN pnpm install --frozen-lockfile
+
+# 프로젝트 전체 복사
+COPY . .
+
+# Next.js 빌드 실행
 RUN pnpm run build
-RUN ls -al /app/.next  # 디버깅
 
-FROM base
+---
+
+# 2️⃣ 실행 환경 설정
+FROM node:18-alpine AS runner
+
+# 환경 변수 설정
 ENV NODE_ENV=production
 
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/.next /app/.next
+# 작업 디렉토리 설정
+WORKDIR /app
 
-# Expose port
+# node_modules, .next 및 필요한 파일들만 복사
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./
+
+# 포트 노출
 EXPOSE 3000
 
-# Start the Node.js server
+# Next.js 실행
 CMD ["pnpm", "start"]
