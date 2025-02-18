@@ -8,6 +8,7 @@ export function APIProvider({ children }: ChildrenProps) {
     <>
       {/* @ts-ignore-error */}
       <SurgeServerProvider>
+        {/* @ts-ignore-error */}
         <DriftServerProvider>{children}</DriftServerProvider>
       </SurgeServerProvider>
     </>
