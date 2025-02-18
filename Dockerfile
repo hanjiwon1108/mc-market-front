@@ -14,11 +14,11 @@ WORKDIR /app
 
 # Install dependencies (including devDependencies)
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile  # `--mount=type=cache` 제거
 
 FROM base AS build
 ENV NODE_ENV=development
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile  # `--mount=type=cache` 제거
 RUN pnpm run build
 RUN ls -al /app/.next  # 디버깅
 
