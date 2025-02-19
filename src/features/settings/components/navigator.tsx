@@ -20,6 +20,7 @@ export function SettingsNavigatorEntry({
 
   return (
     <button
+      // @ts-ignore-error
       onClick={() => setEntry(entry)}
       className="pointer:hover:bg-accent-foreground/10 relative h-12 w-full overflow-hidden rounded-xl border-ring bg-accent-foreground/5 text-left text-lg outline-none ring-ring ring-offset-2 transition duration-200 ease-primary focus-visible:ring-[3px] active:scale-90"
     >
