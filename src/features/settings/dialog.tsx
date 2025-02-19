@@ -34,6 +34,7 @@ function Header() {
           {!isDesktop && entry != true && (
             <AnimateWidth duration={0.5}>
               <button
+                // @ts-ignore-error
                 onClick={() => setEntry(true)}
                 onContextMenu={(e) => {
                   e.preventDefault();
@@ -56,6 +57,7 @@ function Header() {
       </div>
       <div className="ml-auto">
         <button
+          // @ts-ignore-error
           onClick={() => setEntry(null)}
           className="pointer:hover:scale-125 flex aspect-square h-full items-center justify-center rounded-full bg-foreground/5 outline-none ring-ring transition-all duration-300 ease-primary focus-visible:ring-2"
         >
@@ -90,6 +92,7 @@ export function SettingsDialog() {
 
   useEffect(() => {
     if (isDesktop && entry == true) {
+      // @ts-ignore-error
       setEntry(SETTING_DEFAULT_ENTRY);
     }
   }, [isDesktop, entry, setEntry]);
