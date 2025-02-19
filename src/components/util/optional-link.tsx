@@ -1,4 +1,5 @@
 import { ChildrenProps } from '@/util/types-props';
+// @ts-ignore-error
 import { JSX } from 'react';
 import Link, { LinkProps } from 'next/link';
 
