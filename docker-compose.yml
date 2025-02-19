@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:3000
+    environment:
+      - NODE_ENV=production
     networks:
       - market-internal
     env_file: .env
