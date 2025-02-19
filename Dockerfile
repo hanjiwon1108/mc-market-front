@@ -1,7 +1,6 @@
 FROM node:18-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ENV NODE_ENV=production
 
 RUN echo "Before: corepack version => $(corepack --version || echo 'not installed')" && \
     npm install -g corepack@latest && \
@@ -25,7 +24,6 @@ RUN pnpm run build
 RUN ls -al /app/.next  # 디버깅
 
 FROM base
-ENV NODE_ENV=production
 
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/.next /app/.next
