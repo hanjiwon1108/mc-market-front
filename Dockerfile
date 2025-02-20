@@ -1,17 +1,29 @@
-FROM node:18-alpine AS builder
-WORKDIR /app
-# 필요한 글로벌 도구 설치 (pnpm 및 corepack)
-RUN npm install -g corepack pnpm && corepack enable
-# 의존성 설치 및 빌드 단계
-COPY package*.json pnpm-lock.yaml ./
-RUN pnpm install
-COPY . .
-RUN pnpm run build
+FROM node:18-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
-FROM node:18-alpine AS production
+RUN echo "Before: corepack version => $(corepack --version || echo 'not installed')" && \
+    npm install -g corepack@latest && \
+    echo "After : corepack version => $(corepack --version)" && \
+    corepack enable && \
+    pnpm --version
+
+RUN apk add git make
+
+# Set working directory
 WORKDIR /app
-# 빌드 산출물을 복사
-COPY --from=builder /app . 
+COPY . .
+
+# Install dependencies (include dev dependencies)
+RUN pnpm install --no-frozen-lockfile
+
+# Expose port
 EXPOSE 3000
-ENV NODE_ENV=production
-CMD ["pnpm", "start"]
+
+# Environment variables
+ENV NODE_ENV=development
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Run Next.js in development mode (no build)
+CMD ["pnpm", "dev"]
