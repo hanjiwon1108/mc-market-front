@@ -21,13 +21,9 @@ RUN pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
 # 전체 프로젝트 파일 복사
 COPY . .
 
----
-
 # 2️⃣ Build 단계
 FROM base AS build
 RUN pnpm run build
-
----
 
 # 3️⃣ Production 실행 단계
 FROM node:18-alpine AS runner
