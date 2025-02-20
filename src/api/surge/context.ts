@@ -22,5 +22,5 @@ export function useUser() {
 }
 
 export function useSession() {
-  return useSurge().session;
+  return useSurge()?.session;
 }
