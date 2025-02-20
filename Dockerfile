@@ -1,6 +1,7 @@
 FROM node:18-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV DOCKER_BUILDKIT=1
 RUN corepack enable
 
 # Install git, make
