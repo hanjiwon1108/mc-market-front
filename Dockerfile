@@ -14,10 +14,10 @@ COPY . /app
 WORKDIR /app
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --no-frozen-lockfile
+RUN id=pnpm,target=/pnpm/store pnpm install --prod --no-frozen-lockfile
 
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-frozen-lockfile
+RUN id=pnpm,target=/pnpm/store pnpm install --no-frozen-lockfile
 RUN pnpm run build
 
 FROM base
@@ -29,7 +29,7 @@ COPY --from=build /app/.next /app/.next
 EXPOSE 3000
 
 # Start the Node.js server
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
