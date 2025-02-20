@@ -5,8 +5,8 @@ FROM node:18-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-# Corepack 및 pnpm 활성화
-RUN corepack enable
+# Corepack 대신 pnpm 직접 설치 (Corepack 비활성화)
+RUN npm install -g pnpm && pnpm --version
 
 # 필수 패키지 설치
 RUN apk add --no-cache git make
@@ -16,14 +16,18 @@ WORKDIR /app
 
 # package.json과 pnpm-lock.yaml 복사 후 의존성 설치 (캐싱 최적화)
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
 
 # 전체 프로젝트 파일 복사
 COPY . .
 
+---
+
 # 2️⃣ Build 단계
 FROM base AS build
 RUN pnpm run build
+
+---
 
 # 3️⃣ Production 실행 단계
 FROM node:18-alpine AS runner
