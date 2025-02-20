@@ -7,6 +7,9 @@ WORKDIR /app
 # package.json과 lock 파일을 복사
 COPY package.json package-lock.json* pnpm-lock.yaml* ./
 
+# pnpm 설치
+RUN npm install -g pnpm
+
 # 의존성 설치
 RUN pnpm install --frozen-lockfile
 
