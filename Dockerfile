@@ -1,35 +1,49 @@
+# 1️⃣ Base 이미지 설정
 FROM node:18-alpine AS base
+
+# 환경 변수 설정
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ENV DOCKER_BUILDKIT=1
+
+# Corepack 및 pnpm 활성화
 RUN corepack enable
 
-# Install git, make
-RUN apk add git make
+# 필수 패키지 설치
+RUN apk add --no-cache git make
 
-# Set working directory
-COPY . /app
+# 작업 디렉토리 설정
 WORKDIR /app
 
+# package.json과 pnpm-lock.yaml 복사 후 의존성 설치 (캐싱 최적화)
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+# 전체 프로젝트 파일 복사
+COPY . .
 
+# 2️⃣ Build 단계
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
-FROM base
+# 3️⃣ Production 실행 단계
+FROM node:18-alpine AS runner
 
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/.next /app/.next
+# 환경 변수 설정
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-# Expose port
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# 필요한 파일들만 복사하여 최적화
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=base /app/public ./public
+COPY --from=base /app/package.json ./package.json
+
+# 포트 개방
 EXPOSE 3000
 
-# Start the Node.js server
-ENV NODE_ENV=production
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-
+# Next.js 실행
 CMD ["pnpm", "start"]
