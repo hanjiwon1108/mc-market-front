@@ -2,8 +2,6 @@
 FROM node:18-alpine AS base
 
 # 환경 변수 설정
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
 
 # Corepack 대신 pnpm 직접 설치 (Corepack 비활성화)
 RUN npm install -g pnpm && pnpm --version
