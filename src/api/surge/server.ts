@@ -2,9 +2,8 @@
 
 import { cookies } from 'next/headers';
 import { createServerClient } from '@entropi-co/surge-ssr';
-import { unstable_cache } from 'next/cache';
 
-const cachedClient = unstable_cache(async () => {
+const cachedClient = async () => {
   const cookieStore = await cookies();
 
   // console.log(
@@ -46,7 +45,7 @@ const cachedClient = unstable_cache(async () => {
     },
     suppressGetSessionWarning: true,
   });
-});
+};
 
 export const createServerSurgeClient = cachedClient;
 
