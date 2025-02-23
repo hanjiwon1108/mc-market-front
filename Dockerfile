@@ -49,4 +49,4 @@ COPY --from=base /app/package.json ./package.json
 EXPOSE 3000
 
 # Next.js 실행 (컨테이너 유지)
-CMD ["sh", "-c", "pnpm dev && tail -f /dev/null"]
+CMD ["sh", "-c", "pnpm start && tail -f /dev/null"]
