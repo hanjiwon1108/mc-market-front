@@ -65,7 +65,7 @@ export const CATEGORY_MINECRAFT: Category<
     ),
     modeling: category(
       'minecraft.modeling',
-      '/categories/minecraft/blocks',
+      '/categories/minecraft/modeling',
       '모델링',
       ViewIcon,
     ),

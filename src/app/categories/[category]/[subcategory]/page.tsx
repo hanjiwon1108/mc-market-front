@@ -24,6 +24,7 @@ export default async function Page({
     awaitedParams.subcategory
   ];
 
+  console.log(awaitedParams.subcategory);
   if (!category) {
     return redirect('/categories/all?from_unknown=true');
   }
