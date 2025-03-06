@@ -381,7 +381,7 @@ export function ProductDetail({
   };
 
   const getVersionList = async () => {
-    if (!purchased) return;
+    // if (!purchased) return;
     const res = await fetch(
       endpoint(`/v1/products_versions/list/${product.id}`),
     );
@@ -745,137 +745,127 @@ export function ProductDetail({
                 </div>
               )}
               {index === 2 && (
-                <>
-                  {!purchased && (
-                    <div className="text-xl font-semibold">
-                      구매 후 버전 목록을 확인할 수 있습니다.
+                <div className="flex flex-col gap-4">
+                  <div className="text-xl font-semibold">버전 목록</div>
+                  {isAuthor && (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="버전 이름"
+                        value={createVersionValues?.version_name}
+                        onChange={(e) =>
+                          setCreateVersionValues({
+                            ...createVersionValues,
+                            version_name: e.target.value,
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="링크"
+                        value={createVersionValues?.link}
+                        onChange={(e) =>
+                          setCreateVersionValues({
+                            ...createVersionValues,
+                            link: e.target.value,
+                          })
+                        }
+                      />
+                      <Button onClick={createVersion}>추가</Button>
                     </div>
                   )}
-                  {purchased && (
-                    <div className="flex flex-col gap-4">
-                      <div className="text-xl font-semibold">버전 목록</div>
-                      {isAuthor && (
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="버전 이름"
-                            value={createVersionValues?.version_name}
-                            onChange={(e) =>
-                              setCreateVersionValues({
-                                ...createVersionValues,
-                                version_name: e.target.value,
-                              })
-                            }
-                          />
-                          <Input
-                            placeholder="링크"
-                            value={createVersionValues?.link}
-                            onChange={(e) =>
-                              setCreateVersionValues({
-                                ...createVersionValues,
-                                link: e.target.value,
-                              })
-                            }
-                          />
-                          <Button onClick={createVersion}>추가</Button>
-                        </div>
-                      )}
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>업데이트 일자</TableHead>
-                            <TableHead>버전</TableHead>
-                            <TableHead>링크</TableHead>
-                            {isAuthor && (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>업데이트 일자</TableHead>
+                        <TableHead>버전</TableHead>
+                        <TableHead>링크</TableHead>
+                        {isAuthor && (
+                          <>
+                            <TableHead>수정/삭제</TableHead>
+                          </>
+                        )}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {versions?.map((version) => (
+                        <TableRow key={version.id}>
+                          <TableCell>
+                            {new Date(version.updated_at).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {versionUpdatingIndex !== version.id &&
+                              (purchased || isAuthor
+                                ? version.version_name
+                                : '구매 후 확인 가능')}
+                            {versionUpdatingIndex === version.id && (
+                              <Input
+                                value={updateVersionValues.version_name}
+                                onChange={(e) =>
+                                  setUpdateVersionValues({
+                                    ...updateVersionValues,
+                                    version_name: e.target.value,
+                                  })
+                                }
+                                placeholder="버전 이름"
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {versionUpdatingIndex !== version.id &&
+                              (purchased || isAuthor) && (
+                                <Link href={version.link}>Download</Link>
+                              )}
+                            {versionUpdatingIndex === version.id && (
                               <>
-                                <TableHead>수정/삭제</TableHead>
+                                <Input
+                                  value={updateVersionValues.link}
+                                  onChange={(e) =>
+                                    setUpdateVersionValues({
+                                      ...updateVersionValues,
+                                      link: e.target.value,
+                                    })
+                                  }
+                                  placeholder="링크"
+                                />
                               </>
                             )}
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {versions?.map((version) => (
-                            <TableRow key={version.id}>
-                              <TableCell>
-                                {new Date(
-                                  version.updated_at,
-                                ).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell>
-                                {versionUpdatingIndex !== version.id &&
-                                  version.version_name}
-                                {versionUpdatingIndex === version.id && (
-                                  <Input
-                                    value={updateVersionValues.version_name}
-                                    onChange={(e) =>
-                                      setUpdateVersionValues({
-                                        ...updateVersionValues,
-                                        version_name: e.target.value,
-                                      })
-                                    }
-                                    placeholder="버전 이름"
-                                  />
-                                )}
-                              </TableCell>
-                              <TableCell>
+                          </TableCell>
+                          {isAuthor && (
+                            <>
+                              <TableCell className="flex gap-2">
                                 {versionUpdatingIndex !== version.id && (
-                                  <Link href={version.link}>Download</Link>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      setUpdateVersionValues(version);
+                                      setVersionUpdatingIndex(version.id);
+                                    }}
+                                  >
+                                    수정
+                                  </Button>
                                 )}
                                 {versionUpdatingIndex === version.id && (
-                                  <>
-                                    <Input
-                                      value={updateVersionValues.link}
-                                      onChange={(e) =>
-                                        setUpdateVersionValues({
-                                          ...updateVersionValues,
-                                          link: e.target.value,
-                                        })
-                                      }
-                                      placeholder="링크"
-                                    />
-                                  </>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => updateVersion(version.id)}
+                                  >
+                                    완료
+                                  </Button>
                                 )}
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => deleteVersion(version.id)}
+                                >
+                                  삭제
+                                </Button>
                               </TableCell>
-                              {isAuthor && (
-                                <>
-                                  <TableCell className="flex gap-2">
-                                    {versionUpdatingIndex !== version.id && (
-                                      <Button
-                                        size="sm"
-                                        onClick={() => {
-                                          setUpdateVersionValues(version);
-                                          setVersionUpdatingIndex(version.id);
-                                        }}
-                                      >
-                                        수정
-                                      </Button>
-                                    )}
-                                    {versionUpdatingIndex === version.id && (
-                                      <Button
-                                        size="sm"
-                                        onClick={() =>
-                                          updateVersion(version.id)
-                                        }
-                                      >
-                                        완료
-                                      </Button>
-                                    )}
-                                    <Button
-                                      size="sm"
-                                      variant="destructive"
-                                      onClick={() => deleteVersion(version.id)}
-                                    >
-                                      삭제
-                                    </Button>
-                                  </TableCell>
-                                </>
-                              )}
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  )}
-                </>
+                            </>
+                          )}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
             </div>
           </div>
