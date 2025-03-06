@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import {
   Table,
@@ -23,6 +23,13 @@ import { endpoint } from '@/api/market/endpoint';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  getMapleUserPermission,
+  MAPLE_USER_PERMISSION_ADMINISTRATOR,
+} from '@/api/permissions';
+import { authFetch } from '@/api/surge/fetch';
+import { toast } from 'sonner';
+import { useSession } from '@/api/surge';
 
 const ITEMS_PER_PAGE = 10;
 const MAX_PAGINATION_ITEMS = 10;
@@ -67,10 +74,11 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 function ArticleList() {
   const router = useRouter();
+  const session = useSession();
   const headId = parseInt(useSearchParams().get('head') || '0');
-
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
+  const [isAdmin, setIsAdmin] = useState(false);
   const offset = (page - 1) * ITEMS_PER_PAGE;
 
   const articles = useSWR<ArticleElement[]>(
@@ -84,6 +92,33 @@ function ArticleList() {
     endpoint('/v1/article_head/list'),
     fetcher,
   );
+
+  const deleteArticle = async (id: number) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    const response = await authFetch(session, endpoint(`/v1/articles/${id}`), {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      toast.error('삭제 실패');
+    } else {
+      router.push('/articles/');
+    }
+  };
+
+  const initialize = async () => {
+    const permission = await getMapleUserPermission(
+      MAPLE_USER_PERMISSION_ADMINISTRATOR,
+    );
+    setIsAdmin(permission);
+  };
+
+  useEffect(() => {
+    initialize();
+  }, []);
 
   if (articles.isLoading || totalArticles.isLoading)
     return <div>Loading...</div>;
@@ -226,6 +261,7 @@ function ArticleList() {
               <TableHead>작성일</TableHead>
               <TableHead>조회</TableHead>
               <TableHead>추천</TableHead>
+              {isAdmin && <TableHead>삭제</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -277,6 +313,17 @@ function ArticleList() {
                 </TableCell>
                 <TableCell className="text-center">{article.views}</TableCell>
                 <TableCell className="text-center">{article.likes}</TableCell>
+                {isAdmin && (
+                  <TableCell className="text-center">
+                    <Button
+                      onClick={() => {
+                        deleteArticle(article.id);
+                      }}
+                    >
+                      삭제
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
