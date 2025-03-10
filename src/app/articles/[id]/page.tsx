@@ -109,7 +109,7 @@ export default async function Page({ params }: PageProps) {
           </div>
         </header>
         <hr className="border-t border-gray-300 dark:border-gray-700" />
-        <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300">
+        <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:text-gray-900 prose-p:m-0 prose-p:h-5 prose-p:text-gray-700 dark:prose-headings:text-white dark:prose-p:text-gray-300">
           <div dangerouslySetInnerHTML={{ __html: article.content }}></div>
         </div>
       </article>

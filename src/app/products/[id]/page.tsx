@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   const title = product.name;
-  const description = `[${product.created_at}] - ${product.creator.nickname}님이 제작한 ${product.name}`;
+  const description = `[${product.created_at}] - ${product.creator.nickname}님이 제작한 ${product.name}, ${product.price}원 ${product.description}`;
   const images =
     product.details
       .match(/<img[^>]+src="([^">]+)"/g)
