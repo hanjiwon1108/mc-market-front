@@ -31,6 +31,7 @@ type HeadType = {
   id: number;
   is_admin: boolean;
   name: string;
+  webhook_url: string;
 };
 
 const fetcher = async ([session, u]: [Session, string]) => {
@@ -61,6 +62,7 @@ export default function Page() {
   const [page, setPage] = useState(0);
   const [updatingHeadId, setUpdatingHeadId] = useState<number | null>(null);
   const [headName, setHeadName] = useState<string>('');
+  const [webhookUrl, setWebhookUrl] = useState<string>('');
   const [isCreatingHead, setIsCreatingHead] = useState<boolean>(false);
 
   useEffect(() => {
@@ -110,6 +112,7 @@ export default function Page() {
         },
         body: JSON.stringify({
           name: headName,
+          webhook_url: webhookUrl,
         }),
       },
     );
@@ -146,6 +149,7 @@ export default function Page() {
       toast.success('추가 성공');
       setIsCreatingHead(false);
       setHeadName('');
+      setWebhookUrl('');
     }
   };
 
@@ -183,6 +187,7 @@ export default function Page() {
           <TableRow>
             <TableHead>ID</TableHead>
             <TableHead>말머리 이름</TableHead>
+            <TableHead>웹훅 링크</TableHead>
             <TableHead>관리자용 유무</TableHead>
             <TableHead>수정/삭제</TableHead>
           </TableRow>
@@ -204,6 +209,16 @@ export default function Page() {
                     <Input
                       value={headName}
                       onChange={(e) => setHeadName(e.target.value)}
+                    />
+                  )}
+                </TableCell>
+                <TableCell>
+                  {updatingHeadId !== it.id ? (
+                    it.webhook_url
+                  ) : (
+                    <Input
+                      value={webhookUrl}
+                      onChange={(e) => setWebhookUrl(e.target.value)}
                     />
                   )}
                 </TableCell>
@@ -240,6 +255,7 @@ export default function Page() {
                         if (updatingHeadId === null) {
                           setIsCreatingHead(false);
                           setUpdatingHeadId(it.id);
+                          setWebhookUrl(it.webhook_url);
                           setHeadName(it.name);
                           return;
                         }
@@ -285,6 +301,7 @@ export default function Page() {
                       return;
                     }
                     setHeadName('');
+                    setWebhookUrl('');
                     setUpdatingHeadId(null);
                     setIsCreatingHead(true);
                   }}
