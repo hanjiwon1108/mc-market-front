@@ -15,8 +15,8 @@ export default async function Layout({ children }: ChildrenProps) {
 
   return (
     <div className="flex size-full flex-col md:p-16">
-      {permission ? children : <InsufficientPermissionScreen />}
-      {/* {children} */}
+      {/* {permission ? children : <InsufficientPermissionScreen />} */}
+      {children}
     </div>
   );
 }

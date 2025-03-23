@@ -69,29 +69,15 @@ export default function Page() {
   return (
     <div className="overflow-hidden">
       <CreateProductButton />
-      <Table className="w-full min-w-0 max-w-full overflow-x-scroll">
-        <TableHeader>
-          <TableRow>
-            <TableHead>이미지</TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>이름</TableHead>
-            <TableHead>설명</TableHead>
-            <TableHead>상품 생성</TableHead>
-            <TableHead>상품 업데이트</TableHead>
-            <TableHead>정가 (할인가)</TableHead>
-            <TableHead>미정산 수익</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {infinite.data &&
-            (infinite.size >= page
+      <div className="flex flex-col gap-4">
+        {infinite.data &&
+          (infinite.size >= page
+            ? infinite.data[page]
               ? infinite.data[page]
-                ? infinite.data[page]
-                : []
               : []
-            ).map((it) => <ProductRow key={it.id} product={it} />)}
-        </TableBody>
-      </Table>
+            : []
+          ).map((it) => <ProductRow key={it.id} product={it} />)}
+      </div>
       <Pagination className="mt-auto border-t pt-2">
         <PaginationContent>
           <PaginationItem>

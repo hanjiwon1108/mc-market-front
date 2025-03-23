@@ -72,60 +72,80 @@ export function ProductRow({
         isOpen={fileDialogOpen}
         onOpenChange={setFileDialogOpen}
       />
-      <TableRow>
-        <TableCell className="mx-auto my-2 mr-4 flex h-16 w-full min-w-24 max-w-40 items-center justify-center rounded-2xl bg-accent">
+      <div className="flex flex-row items-center justify-between gap-4 rounded-xl border p-4 shadow-sm">
+        {/* 이미지 */}
+        <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-accent">
           <Image
             src={endpoint(`/v1/products/${product.id}/image`)}
-            height={32}
-            width={32}
-            alt="Product Image"
+            alt="상품 이미지"
+            width={64}
+            height={64}
+            className="object-contain"
           />
-        </TableCell>
-        <TableCell>{product.id}</TableCell>
-        <TableCell>{product.name}</TableCell>
-        <TableCell>{product.description}</TableCell>
-        <TableCell>{product.created_at.toLocaleString()}</TableCell>
-        <TableCell>{product.updated_at.toLocaleString()}</TableCell>
-        <TableCell>
-          {product.price}{' '}
-          {product.price_discount && `(${product.price_discount})`}
-        </TableCell>
-        <TableCell>{revenues.data ?? '불러오는 중'}</TableCell>
-        <TableCell>
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>작업</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => router.push(`/products/${product.id}`)}
-              >
-                Open product details
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
-                내용 수정
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setImageDialogOpen(true)}>
-                이미지 업로드/수정
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFileDialogOpen(true)}>
-                컨텐츠 업로드
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-destructive"
-                onClick={() => setDeleteDialogOpen(true)}
-              >
-                상품 삭제
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </TableCell>
-      </TableRow>
+        </div>
+
+        {/* 텍스트 정보 */}
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <div className="truncate font-semibold">{product.name}</div>
+          <div className="truncate text-sm text-muted-foreground">
+            {product.description}
+          </div>
+          <div className="text-sm">
+            {product.price}원{' '}
+            {product.price_discount && (
+              <span className="text-muted-foreground">
+                ({product.price_discount}원)
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-gray-400">
+            생성: {product.created_at.toLocaleString()} / 수정:{' '}
+            {product.updated_at.toLocaleString()}
+          </div>
+        </div>
+
+        {/* 수익 정보 */}
+        <div className="min-w-28 text-right text-sm text-muted-foreground">
+          미정산 수익
+          <div className="font-medium text-black">
+            {revenues.data ?? '불러오는 중'}
+          </div>
+        </div>
+
+        {/* 메뉴 버튼 */}
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="h-8 w-8 p-0">
+              <MoreHorizontal className="h-4 w-4" />
+              <span className="sr-only">메뉴 열기</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>작업</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => router.push(`/products/${product.id}`)}
+            >
+              상품 상세 보기
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setEditDialogOpen(true)}>
+              내용 수정
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setImageDialogOpen(true)}>
+              이미지 업로드/수정
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFileDialogOpen(true)}>
+              컨텐츠 업로드
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              상품 삭제
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </>
   );
 }
