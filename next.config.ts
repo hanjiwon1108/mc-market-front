@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'api.mc-market.kr' },
-      { protocol: 'https', hostname: '**', port: '' },
+      { protocol: 'https', hostname: '*' },
       { protocol: 'http', hostname: 'api.dev.entropi.kr' },
       { protocol: 'http', hostname: 'localhost', port: '6568' },
     ],
