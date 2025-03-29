@@ -19,6 +19,7 @@ import { signUpPasswordInputAtom } from '@/app/(auth)/signup/password/atom';
 import { useAtom, useAtomValue } from 'jotai';
 import { endpoint } from '@/api/market/endpoint';
 import { useSessionStorage } from '@/hooks/use-session-storage';
+import { toast } from 'sonner';
 
 function AnimateInOut({
   children,
@@ -95,6 +96,13 @@ export default function Page() {
         password: passwordRef,
       })
       .then((it) => {
+        console.log(it);
+        if (it['code']) {
+          toast.error(
+            '닉네임을 중복됩니다. 다른 닉네임을 입력해주세요. ' + it['message'],
+          );
+          return;
+        }
         router.push('/signup/completed');
       });
   }

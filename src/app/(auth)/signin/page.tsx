@@ -53,11 +53,11 @@ export default function Page() {
       >
         <ResponsiveDialogContent>
           <ResponsiveDialogHeader>
-            <ResponsiveDialogTitle>중복된 사용자 이름</ResponsiveDialogTitle>
+            <ResponsiveDialogTitle>중복된 아이디</ResponsiveDialogTitle>
             <ResponsiveDialogDescription>
-              이 사용자 이름은 중복되었습니다.
+              이 아이디는 중복되었습니다.
               <br />
-              다른 사용자 이름을 시도하십시오
+              다른 아이디 시도하십시오
             </ResponsiveDialogDescription>
           </ResponsiveDialogHeader>
         </ResponsiveDialogContent>
@@ -69,10 +69,10 @@ export default function Page() {
           <p className="text-xl">MC-Market에 로그인</p>
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="auth:signin/username">사용자 이름</Label>
+          <Label htmlFor="auth:signin/username">아이디</Label>
           <Input
             id="auth:signin/username"
-            placeholder="사용자 이름 입력"
+            placeholder="아이디 입력"
             value={username}
             onValueChange={setUsername}
           />

@@ -60,11 +60,11 @@ export default function Page() {
       >
         <ResponsiveDialogContent>
           <ResponsiveDialogHeader>
-            <ResponsiveDialogTitle>중복된 사용자 이름</ResponsiveDialogTitle>
+            <ResponsiveDialogTitle>중복된 아이디</ResponsiveDialogTitle>
             <ResponsiveDialogDescription>
-              이 사용자 이름은 중복되었습니다.
+              이 아이디은 중복되었습니다.
               <br />
-              다른 사용자 이름을 시도하십시오
+              다른 아이디로 시도하십시오
             </ResponsiveDialogDescription>
             <div className="p-2 text-2xl font-semibold">{value}</div>
           </ResponsiveDialogHeader>
@@ -78,7 +78,7 @@ export default function Page() {
         </div>
         <div>
           <Input
-            placeholder="사용자 이름 입력"
+            placeholder="아이디 입력"
             value={value}
             onValueChange={(v) => setValue(v.toLowerCase())}
             disabled={checkUsernameMutation.isMutating}
@@ -86,8 +86,8 @@ export default function Page() {
           <div className="mt-1 flex gap-1 pl-4">
             <p className="text-red-500">*</p>
             <p className="max-w-64 text-sm font-bold text-gray-700">
-              사용자 이름은 로그인할 때 사용되며{' '}
-              <span>이후 변경할 수 있습니다.</span>
+              아이디는 로그인할 때 사용되며
+              <span>이후 변경할 수 없습니다.</span>
             </p>
           </div>
         </div>
