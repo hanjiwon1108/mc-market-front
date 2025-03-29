@@ -80,14 +80,16 @@ export default function Page() {
           <Input
             placeholder="아이디 입력"
             value={value}
-            onValueChange={(v) => setValue(v.toLowerCase())}
+            onValueChange={(v) => {
+              setValue(v.toLowerCase().replace(/[^a-z0-9]/g, ''));
+            }}
             disabled={checkUsernameMutation.isMutating}
           />
           <div className="mt-1 flex gap-1 pl-4">
             <p className="text-red-500">*</p>
             <p className="max-w-64 text-sm font-bold text-gray-700">
-              아이디는 로그인할 때 사용되며
-              <span>이후 변경할 수 없습니다.</span>
+              아이디는 영어로만 입력이 가능합니다. 아이디는 로그인할 때 사용되며
+              이후 변경할 수 없습니다.
             </p>
           </div>
         </div>
