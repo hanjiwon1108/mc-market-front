@@ -48,9 +48,9 @@ const items = [
 
 export default async function Layout({ children }: ChildrenProps) {
   const session = await getSession();
-  // if (!session) {
-  //   return <ErrorScreen>인증 필요</ErrorScreen>;
-  // }
+  if (!session) {
+    return <ErrorScreen>로그인 필요합니다.</ErrorScreen>;
+  }
 
   return (
     <div className="w-full overflow-hidden">

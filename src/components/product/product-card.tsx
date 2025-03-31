@@ -48,15 +48,19 @@ export function ProductCard(props: ProductCardProps) {
 
         <p className="text-xl font-semibold">{props.name}</p>
         <div className="flex">
-          {/*<div className="flex items-center gap-2 font-semibold">*/}
-          {/*  <StarIcon size={18} fill="yellow" strokeWidth={0} /> 5.0*/}
-          {/*  <p className="text-gray-500">(34)</p>*/}
-          {/*</div>*/}
           <div className="ml-auto font-semibold">
             {props.price == 0 ? (
               <p className="text-green-400">무료</p>
+            ) : props.discountPrice ? (
+              <p>
+                <span className="text-red-500 line-through">
+                  {props.price.toLocaleString()}원
+                </span>
+                {' => '}
+                {props.discountPrice.toLocaleString()}원
+              </p>
             ) : (
-              `${props.price.toLocaleString()}원`
+              <p>{props.price.toLocaleString()}원</p>
             )}
           </div>
         </div>

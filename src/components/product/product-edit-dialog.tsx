@@ -358,7 +358,7 @@ function PricingStage(props: StageProps) {
   function tryParseInt(v: string) {
     try {
       const parsed = parseInt(v);
-      return isNaN(parsed) ? null : parsed;
+      return isNaN(parsed) || parsed > 3000000 ? null : parsed;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err: unknown) {
       return null;
