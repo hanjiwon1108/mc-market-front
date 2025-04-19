@@ -529,7 +529,8 @@ export function ProductDetail({
                 <UserAvatar userId={product.creator.id} />
                 <div className="h-full">
                   <p className="text-xl font-bold">
-                    {product.creator.nickname ?? `@${product.creator.username}`}
+                    {product.creator?.nickname ??
+                      `@${product.creator?.username}`}
                   </p>
                 </div>
               </div>
