@@ -16,6 +16,8 @@ export async function generateMetadata({ params }: PageProps) {
     (res) => res.json() as Promise<MarketProductWithShortUser | undefined>,
   );
 
+  // type check
+
   if (!product) {
     console.error('Failed to fetch product');
     return {
@@ -32,10 +34,10 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   const title = product.name;
-  const description = `[${product.created_at}] - ${product.creator?.nickname}님이 제작한 ${product.name}, ${product.price}원 ${product.description}`;
+  const description = `[${product.created_at}] - ${product.creator?.nickname || 'Not Found'}님이 제작한 ${product.name}, ${product.price}원 ${product.description}`;
   const images =
     product.details
-      .match(/<img[^>]+src="([^">]+)"/g)
+      ?.match(/<img[^>]+src="([^">]+)"/g)
       ?.map((imgTag) => {
         const match = imgTag.match(/src="([^">]+)"/);
         return match ? match[1] : null;
