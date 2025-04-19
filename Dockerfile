@@ -23,7 +23,9 @@ COPY . .
 
 # 2️⃣ Build 단계
 FROM base AS build
-RUN pnpm run build
+# Enable caching for Next.js builds
+RUN --mount=type=cache,target=/app/.next/cache \
+  pnpm run build
 
 # 3️⃣ Production 실행 단계
 FROM node:18-alpine AS runner
