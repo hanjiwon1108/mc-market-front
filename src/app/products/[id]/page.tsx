@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   const title = product.name;
-  const description = `[${product.created_at}] - ${product.creator.nickname}님이 제작한 ${product.name}, ${product.price}원 ${product.description}`;
+  const description = `[${product.created_at}] - ${product.creator?.nickname}님이 제작한 ${product.name}, ${product.price}원 ${product.description}`;
   const images =
     product.details
       .match(/<img[^>]+src="([^">]+)"/g)
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: PageProps) {
       title,
       description,
       type: 'website',
-      authors: [product.creator.nickname],
+      authors: [product.creator?.nickname],
       url: `https://mc-market.kr/articles/${id}`,
       images,
     },
