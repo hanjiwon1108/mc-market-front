@@ -268,7 +268,8 @@ export function ProductDetail({
   purchased,
 }: ProductDetailProps) {
   const category =
-    (product && CATEGORIES[product.category.split('.')[0] as TopCategoryKey]) ??
+    (product &&
+      CATEGORIES[product.category?.split('.')[0] as TopCategoryKey]) ??
     CATEGORY_ALL;
 
   const isInCart = useIsInCart(product.id);
