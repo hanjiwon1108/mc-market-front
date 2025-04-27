@@ -104,6 +104,9 @@ export default function Page() {
           return;
         }
         router.push('/signup/completed');
+      })
+      .catch((e) => {
+        toast.error('회원가입 실패: ' + e);
       });
   }
 
