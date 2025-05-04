@@ -44,6 +44,9 @@ export default function Page() {
         <AdministratorOption href="/admin/banner">
           <Rows4Icon /> 배너 관리
         </AdministratorOption>
+        <AdministratorOption href="/admin/adcard">
+          <Rows4Icon /> 광고 슬롯 관리
+        </AdministratorOption>
       </div>
     </div>
   );

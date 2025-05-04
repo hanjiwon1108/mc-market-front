@@ -17,6 +17,7 @@ import { endpoint } from '@/api/market/endpoint';
 import { MarketProductWithShortUser } from '@/api/types';
 import useSWR from 'swr';
 import { CATEGORIES, TopCategoryKey } from '@/features/category';
+import Adcard from '@/components/adcard/adcard';
 
 const CategoryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
@@ -44,6 +45,7 @@ export default function Home() {
     <div className="h-full pt-8">
       <div>
         <Banner />
+        <Adcard />
       </div>
       <div>
         <div className="container mx-auto transition-all duration-300 ease-out lg:px-[0rem] xl:px-[9rem]">

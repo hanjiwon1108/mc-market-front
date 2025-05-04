@@ -3,6 +3,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useReducer,
   useRef,
   useState,
@@ -48,7 +49,8 @@ function BannerItem({
   };
 
   const getTranslate = useCallback(
-    (relative: number) => `${-relative * (BANNER_WIDTH + BANNER_GAP)}rem`,
+    // (relative: number) => `${-relative * (BANNER_WIDTH + BANNER_GAP)}rem`,
+    (relative: number) => `${-relative * (BANNER_WIDTH * 2 + BANNER_GAP)}rem`,
     [],
   );
   const getOpacity = useCallback(
@@ -81,11 +83,12 @@ function BannerItem({
       className={`absolute flex items-center justify-center overflow-hidden border bg-card text-5xl font-bold`}
       style={{
         ...styles,
-        height: isMobile ? '100%' : `${BANNER_WIDTH / 2}rem`,
-        width: isMobile ? '100%' : `${BANNER_WIDTH}rem`,
+        // height: isMobile ? '100%' : `${BANNER_WIDTH / 2}rem`,
+        // width: isMobile ? '100%' : `${BANNER_WIDTH}rem`,
+        width: '100svw',
       }}
     >
-      <Link href={data.link_url}>
+      <Link href={data.link_url} className="w-full">
         <img
           src={endpoint(data.image_url)}
           alt={data.title}
@@ -115,7 +118,7 @@ export function Banner() {
     setBanners(banners);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getBanners();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -123,7 +126,7 @@ export function Banner() {
   return (
     <div className="flex w-full justify-center">
       {!isMobile && (
-        <div className="relative flex h-[28rem] w-[144rem] items-center justify-center gap-4 overflow-hidden">
+        <div className="relative flex h-[28rem] w-full items-center justify-center gap-4 overflow-hidden">
           {banners.map((banner, idx) => (
             <BannerItem
               key={banner.id}

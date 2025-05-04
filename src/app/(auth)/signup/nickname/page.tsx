@@ -16,7 +16,7 @@ import { User } from '@entropi-co/surge-js';
 import { Key } from 'swr';
 import { isBrowser } from '@/util/browser';
 import { signUpPasswordInputAtom } from '@/app/(auth)/signup/password/atom';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { endpoint } from '@/api/market/endpoint';
 import { useSessionStorage } from '@/hooks/use-session-storage';
 import { toast } from 'sonner';
