@@ -154,19 +154,7 @@ export function ProductSearch(props: {
               <div className="mb-20 grid w-full auto-rows-min grid-cols-3 md:w-4/5 xl:grid-cols-4">
                 {products.data
                   ?.flatMap((it) => it)
-                  .map(
-                    (it) =>
-                      it && (
-                        <ProductCard
-                          key={it.id}
-                          id={it.id}
-                          name={it.name}
-                          price={it.price}
-                          discountPrice={it.price_discount}
-                          author={it.creator}
-                        />
-                      ),
-                  )}
+                  .map((it) => it && <ProductCard key={it.id} {...it} />)}
               </div>
             )}
             {isMobile && (
@@ -175,17 +163,7 @@ export function ProductSearch(props: {
                   ?.flatMap((it) => it)
                   .map(
                     (it) =>
-                      it && (
-                        <ProductCard
-                          isBig={true}
-                          key={it.id}
-                          id={it.id}
-                          name={it.name}
-                          price={it.price}
-                          discountPrice={it.price_discount}
-                          author={it.creator}
-                        />
-                      ),
+                      it && <ProductCard isBig={true} key={it.id} {...it} />,
                   )}
               </div>
             )}

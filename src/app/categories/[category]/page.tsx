@@ -37,16 +37,7 @@ export default async function Page({
 
           <div className="mt-4 flex h-[16.5rem] gap-4 overflow-y-visible overflow-x-scroll px-2 py-4">
             {products && products?.length > 0 ? (
-              products?.map((it) => (
-                <ProductCard
-                  key={it.id}
-                  id={it.id}
-                  name={it.name}
-                  price={it.price}
-                  discountPrice={it.price_discount}
-                  author={it.creator}
-                />
-              ))
+              products?.map((it) => <ProductCard key={it.id} {...it} />)
             ) : (
               <div className="flex size-full items-center justify-center text-2xl font-semibold">
                 해당하는 상품 없음
@@ -55,7 +46,7 @@ export default async function Page({
           </div>
         </div>
       </div>
-      <ProductSearch category={category.path}/>
+      <ProductSearch category={category.path} />
     </div>
   );
 }

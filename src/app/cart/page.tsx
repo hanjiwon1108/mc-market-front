@@ -51,17 +51,7 @@ export default function Page() {
             <>
               <div className="grid-rows-auto mb-20 grid w-full grid-cols-4 md:w-4/5">
                 {products.data?.map(
-                  (it) =>
-                    it && (
-                      <ProductCard
-                        key={it.id}
-                        id={it.id}
-                        name={it.name}
-                        price={it.price}
-                        discountPrice={it.price_discount}
-                        author={it.creator}
-                      />
-                    ),
+                  (it) => it && <ProductCard key={it.id} {...it} />,
                 )}
               </div>
             </>

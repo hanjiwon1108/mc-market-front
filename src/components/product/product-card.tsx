@@ -5,18 +5,13 @@ import React from 'react';
 import Link from 'next/link';
 import { endpoint } from '@/api/market/endpoint';
 import { FallbackImage } from '@/components/util/fallback-image';
-import { MarketAuthor } from '@/api/types';
+import { MarketProductWithShortUser } from '@/api/types';
 import { UserAvatar } from '@/components/user/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export type ProductCardProps = {
-  id: string;
-  name: string;
-  price: number;
-  discountPrice?: number;
   isBig?: boolean;
-  author: MarketAuthor;
-};
+} & MarketProductWithShortUser;
 
 export function ProductCard(props: ProductCardProps) {
   const isMobile = useIsMobile();
@@ -38,31 +33,42 @@ export function ProductCard(props: ProductCardProps) {
         />
         <Avatar />
       </div>
-      <div className="mt-2">
-        <div className="flex gap-2">
-          <UserAvatar className="size-8" userId={props.author.id} />
-          <div className="flex flex-col justify-center">
-            <p>{props.author.nickname ?? '@' + props.author.username}</p>
-          </div>
-        </div>
 
-        <p className="text-xl font-semibold">{props.name}</p>
-        <div className="flex">
-          <div className="ml-auto font-semibold">
-            {props.price == 0 ? (
-              <p className="text-green-400">무료</p>
-            ) : props.discountPrice ? (
-              <p>
-                <span className="text-red-500 line-through">
+      <div className="mt-2 flex flex-col gap-1">
+        {/* 1라인: 제목 */}
+        <p className="flex text-lg font-bold">
+          <UserAvatar className="size-8" userId={props.creator.id} />
+          {props.name}
+        </p>
+
+        {/* 2라인: 제작자 - 카테고리 */}
+        <p className="text-sm text-gray-600">
+          {props.creator.nickname ?? '@' + props.creator.username} -{' '}
+          {props.category}
+        </p>
+
+        {/* 3라인: 소개 */}
+        <p className="truncate text-sm text-gray-500">{props.description}</p>
+
+        {/* 맨 아래줄: 왼쪽 가격, 오른쪽 조회수 */}
+        <div className="mt-2 flex items-center justify-between">
+          <div className="text-sm font-semibold">
+            {props.price === 0 ? (
+              <span className="text-green-500">무료</span>
+            ) : props.price_discount ? (
+              <>
+                <span className="mr-1 text-red-500 line-through">
                   {props.price.toLocaleString()}원
                 </span>
-                {' => '}
-                {props.discountPrice.toLocaleString()}원
-              </p>
+                <span>{props.price_discount.toLocaleString()}원</span>
+              </>
             ) : (
-              <p>{props.price.toLocaleString()}원</p>
+              <span>{props.price.toLocaleString()}원</span>
             )}
           </div>
+          {/* <div className="text-sm text-gray-500">
+            조회수: {props.views.toLocaleString()}회
+          </div> */}
         </div>
       </div>
     </Link>

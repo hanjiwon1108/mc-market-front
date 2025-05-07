@@ -91,16 +91,7 @@ export default function Home() {
             </div>
             <div className="mt-4 flex gap-4 overflow-y-visible overflow-x-scroll px-4 pb-4">
               {products.data && products.data?.length > 0 ? (
-                products.data?.map((it) => (
-                  <ProductCard
-                    key={it.id}
-                    id={it.id}
-                    name={it.name}
-                    price={it.price}
-                    discountPrice={it.price_discount}
-                    author={it.creator}
-                  />
-                ))
+                products.data?.map((it) => <ProductCard key={it.id} {...it} />)
               ) : (
                 <div className="flex size-full items-center justify-center text-2xl font-semibold">
                   해당하는 상품 없음
