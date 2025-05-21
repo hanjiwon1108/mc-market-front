@@ -23,7 +23,6 @@ function PasswordRequirement({
 }: ChildrenProps & { check?: boolean }) {
   return (
     <div className="flex items-center gap-1">
-      {' '}
       <p className="max-w-64 text-sm font-bold text-gray-700">{children}</p>
       <div className="ml-auto size-6">
         <AnimatePresence>

@@ -61,11 +61,12 @@ export default function Page() {
     }
   }, [password, pathname, router]);
 
-  const [value, setValue] = useSessionStorage(SIGNUP_NICKNAME_STORAGE_KEY, '');
-  const isValidate = useMemo(() => value.trim() != '', [value]);
+  const usernameRef = useMemo(
+    () => sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY)!,
+    [],
+  );
 
   function handleBack() {
-    sessionStorage.setItem(SIGNUP_NICKNAME_STORAGE_KEY, value);
     router.back();
   }
 
@@ -85,14 +86,12 @@ export default function Page() {
   );
 
   function handleProceed() {
-    const usernameRef = sessionStorage.getItem(SIGNUP_USERNAME_STORAGE_KEY)!;
-    const nicknameRef = value;
     const passwordRef = password;
 
     signUpMutation
       .trigger({
         username: usernameRef,
-        nickname: nicknameRef ?? undefined,
+        nickname: undefined,
         password: passwordRef,
       })
       .then((it) => {
@@ -114,21 +113,13 @@ export default function Page() {
     <>
       <div className="container flex min-w-96 flex-col gap-4 px-12 md:px-0">
         <div>
-          <p className="text-4xl font-semibold md:text-5xl">이름 설정</p>
-          <p className="text-xl">세부 사항 입력 및 완료</p>
+          <p className="text-4xl font-semibold md:text-5xl">
+            가입하시겠습니까?
+          </p>
         </div>
         <div>
-          <Input
-            placeholder="닉네임 입력"
-            value={value}
-            onValueChange={setValue}
-          />
-          <div className="mt-1 flex gap-1 pl-4">
-            <p className="text-red-500">*</p>
-            <p className="max-w-64 text-sm font-bold text-gray-700">
-              특수 문자 제외한 모든 문자 사용 가능
-            </p>
-          </div>
+          <p>ID: {usernameRef}</p>
+          <p>비밀번호: {password} </p>
         </div>
         <div className="mt-4 flex gap-2">
           <Button
@@ -143,21 +134,14 @@ export default function Page() {
           <Button
             className="relative flex-1 overflow-hidden text-lg font-semibold duration-300"
             size="lg"
-            variant={isValidate ? 'default' : 'secondary'}
+            variant="default"
             onClick={handleProceed}
           >
             <AnimatePresence initial={false}>
-              {isValidate ? (
-                <AnimateInOut from="down" key="continue">
-                  완료
-                  <CheckIcon />
-                </AnimateInOut>
-              ) : (
-                <AnimateInOut from="up" key="skip">
-                  건너뛰고 완료
-                  <SkipForwardIcon />
-                </AnimateInOut>
-              )}
+              <AnimateInOut from="up" key="skip">
+                건너뛰고 완료
+                <SkipForwardIcon />
+              </AnimateInOut>
             </AnimatePresence>
           </Button>
         </div>
