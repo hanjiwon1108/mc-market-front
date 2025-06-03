@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import React, { createContext, useContext, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AnimateHeight } from '@/components/animate/animate-size';
-import { OptionalLink } from '@/components/util/optional-link';
+import { useRouter } from 'next/navigation';
 import { ChevronDownIcon, LucideIcon, Rows4Icon } from 'lucide-react';
 
 const NavigatorSidebarContext = createContext<{
@@ -36,28 +36,34 @@ export function NavigatorSidebarMenu({
 }) {
   const [expand, setExpand] = useState(false);
   const context = useContext(NavigatorSidebarContext);
-
+  const router = useRouter();
   const Icon = icon;
+
+  const handleClick = () => {
+    if (children) {
+      setExpand((p) => !p);
+    } else {
+      if (href) {
+        router.push(href);
+      }
+      context.onOpenChange(false);
+    }
+  };
 
   return (
     <div>
-      <OptionalLink href={href}>
-        <Button
-          variant={expand ? 'outline' : 'ghost'}
-          onClick={() => {
-            if (children) setExpand((p) => !p);
-            else context.onOpenChange(false);
-          }}
-          className="flex w-full justify-start gap-2"
-        >
-          <ChevronDownIcon
-            color="gray"
-            className={children ? 'opacity-100' : 'opacity-0'}
-          />
-          {display}
-          {Icon && <Icon className="ml-auto" />}
-        </Button>
-      </OptionalLink>
+      <Button
+        variant={expand ? 'outline' : 'ghost'}
+        onClick={handleClick}
+        className="flex w-full justify-start gap-2"
+      >
+        <ChevronDownIcon
+          color="gray"
+          className={children ? 'opacity-100' : 'opacity-0'}
+        />
+        {display}
+        {Icon && <Icon className="ml-auto" />}
+      </Button>
 
       {children && (
         <AnimatePresence>

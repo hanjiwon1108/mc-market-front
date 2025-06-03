@@ -5,13 +5,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { CreditCardIcon, UserRoundIcon } from 'lucide-react';
+import { CreditCardIcon, SettingsIcon, LogOutIcon, UserRoundIcon } from 'lucide-react';
 import { createBrowserSurgeClient } from '@/api/surge';
 import { toast } from 'sonner';
 import React from 'react';
 import { useSettingsDialog } from '@/features/settings';
 import { useMapleUser } from '@/api/market/context';
 import { UserAvatar } from '@/components/user/avatar';
+import { cn } from '@/lib/utils';
 
 export function NavigatorProfileMenu() {
   const settings = useSettingsDialog();
@@ -20,26 +21,31 @@ export function NavigatorProfileMenu() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button className="size-10 rounded-full p-0 border" variant="ghost">
-          {user && <UserAvatar userId={user?.id} />}
+        <Button 
+          className="size-10 rounded-full p-0 border border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600 transition-all duration-200 shadow-sm hover:shadow" 
+          variant="ghost"
+        >
+          {user && <UserAvatar userId={user?.id} className="w-full h-full" />}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>
+      <DropdownMenuContent className="w-56 p-1 rounded-md shadow-lg">
+        <DropdownMenuItem className="flex items-center gap-2 p-3 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
           <div className="flex select-none items-center gap-2 font-semibold">
             {user?.cash}원
-            <CreditCardIcon />
+            <CreditCardIcon className="text-primary" size={16} />
           </div>
         </DropdownMenuItem>
-        <DropdownMenuItem
+        <DropdownMenuItem 
+          className="flex items-center gap-2 p-3 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
           onClick={() => {
             settings.open();
           }}
         >
-          설정
+          <SettingsIcon className="text-gray-600 dark:text-gray-400" size={16} />
+          <span>설정</span>
         </DropdownMenuItem>
         <DropdownMenuItem
-          className="text-destructive"
+          className="flex items-center gap-2 p-3 rounded-md cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors duration-200"
           onClick={() => {
             createBrowserSurgeClient()
               .signOut()
@@ -52,7 +58,8 @@ export function NavigatorProfileMenu() {
               });
           }}
         >
-          로그아웃
+          <LogOutIcon size={16} />
+          <span>로그아웃</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

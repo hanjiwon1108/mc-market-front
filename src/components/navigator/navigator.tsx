@@ -12,13 +12,9 @@ import { NavigatorCategoryItem } from '@/components/navigator/navigator-category
 import { Input } from '@/components/ui/input';
 import {
   CreditCardIcon,
-  HomeIcon,
   MenuIcon,
-  NewspaperIcon,
-  Rows4Icon,
   SearchIcon,
   ShoppingCartIcon,
-  TablePropertiesIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/brand/logo';
@@ -29,10 +25,11 @@ import {
   NavigatorSidebarMenu,
 } from '@/components/navigator/navigator-sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { CATEGORIES } from '@/features/category';
 import { NavigatorProfileMenu } from '@/components/navigator/navigator-profile-menu';
 import { useCart } from '@/core/cart/atom';
 import { useMapleUser } from '@/api/market/context';
+import { HomeIcon, NewspaperIcon, TablePropertiesIcon } from 'lucide-react';
+import { CATEGORIES } from '@/features/category';
 
 export function Navigator() {
   const session = useSession();
@@ -50,55 +47,24 @@ export function Navigator() {
 
   return (
     <>
+      {/* Mobile Sidebar */}
       <NavigatorSidebar
         isOpen={isSidebarOpen && isMobile}
         onOpenChange={setSidebarOpen}
       >
         <NavigatorSidebarMenu display="홈" icon={HomeIcon} href="/" />
         <NavigatorSidebarMenu display="카테고리" icon={TablePropertiesIcon}>
-          <NavigatorSidebarMenu
-            display={
-              <>
-                모든 카테고리 보기
-                <Rows4Icon className="ml-auto" />
-              </>
-            }
-            href="/categories/all"
-          />
           {Object.values(CATEGORIES)
             .filter((it) => !it.hidden)
             .map((category) => {
               const Icon = category.icon;
-
               return (
                 <NavigatorSidebarMenu
-                  display={
-                    <>
-                      {category.name} <Icon className="ml-auto" />
-                    </>
-                  }
+                  display={category.name}
                   key={category.path}
-                >
-                  {Object.values(category.subcategories).length > 0 && (
-                    <>
-                      <NavigatorSidebarMenu
-                        display="이 카테고리 보기"
-                        icon={category.icon}
-                        href={category.link}
-                      />
-                      {Object.values(category.subcategories).map(
-                        (subcategory) => (
-                          <NavigatorSidebarMenu
-                            key={subcategory.path}
-                            display={subcategory.name}
-                            icon={subcategory.icon}
-                            href={subcategory.link}
-                          />
-                        ),
-                      )}
-                    </>
-                  )}
-                </NavigatorSidebarMenu>
+                  icon={Icon}
+                  href={category.link}
+                />
               );
             })}
         </NavigatorSidebarMenu>
@@ -109,8 +75,10 @@ export function Navigator() {
         />
       </NavigatorSidebar>
 
+      {/* Top Navigation Bar */}
       <div className="fixed z-50 flex h-[3.375rem] w-dvw items-center border-b-2 bg-background/80 p-2 backdrop-blur-2xl">
         <div className="container mx-auto flex items-center justify-center sm:justify-normal sm:px-8">
+          {/* Mobile Menu Button */}
           <Button
             className="size-10 rounded-full p-0 sm:hidden"
             variant="ghost"
@@ -118,12 +86,16 @@ export function Navigator() {
           >
             <MenuIcon />
           </Button>
+
+          {/* Logo */}
           <Link href="/" className="absolute sm:static">
             <Logo className="min-w-32 max-w-32 sm:mr-12" />
           </Link>
+
+          {/* Desktop Navigation Menu */}
           <NavigationMenu className="hidden max-w-full sm:flex">
             <NavigationMenuList>
-              <NavigatorHomeItem />
+              {/* <NavigatorHomeItem />
               <NavigatorCategoryItem />
               <NavigationMenuItem>
                 <Link href="/dashboard" legacyBehavior passHref>
@@ -132,46 +104,48 @@ export function Navigator() {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              {/*<NavigatorEventItem />*/}
               <NavigationMenuItem>
                 <Link href="/articles" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     게시판
                   </NavigationMenuLink>
                 </Link>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
             </NavigationMenuList>
-            <div className="mx-auto hidden md:block">
-              <div className="mx-2 hidden min-w-0 max-w-96 transition-all lg:flex lg:min-w-[14rem]">
-                <Input
-                  spellCheck={false}
-                  placeholder="제품 검색"
-                  className="peer rounded-r-none border-r-0"
-                  value={searchKeywords}
-                  onValueChange={setSearchKeywords}
-                  onKeyDown={(event) => {
-                    if (event.key == 'Enter') {
-                      router.push(
-                        `/search?keywords=${encodeURIComponent(searchKeywords)}`,
-                      );
-                    }
-                  }}
-                />
-                <Button
-                  variant="outline"
-                  className="flex size-9 items-center justify-center rounded-lg rounded-l-none border-l-0 p-0 ring-ring ring-offset-foreground transition-all peer-focus-visible:ring-1"
-                  onClick={() => {
+          </NavigationMenu>
+
+          {/* Search Box (Desktop) */}
+          <div className="mx-auto hidden md:block">
+            <div className="mx-2 hidden min-w-0 max-w-96 transition-all lg:flex lg:min-w-[14rem]">
+              <Input
+                spellCheck={false}
+                placeholder="제품 검색"
+                className="peer rounded-r-none border-r-0"
+                value={searchKeywords}
+                onValueChange={setSearchKeywords}
+                onKeyDown={(event) => {
+                  if (event.key == 'Enter') {
                     router.push(
                       `/search?keywords=${encodeURIComponent(searchKeywords)}`,
                     );
-                  }}
-                >
-                  <SearchIcon size={16} />
-                </Button>
-              </div>
+                  }
+                }}
+              />
+              <Button
+                variant="outline"
+                className="flex size-9 items-center justify-center rounded-lg rounded-l-none border-l-0 p-0 ring-ring ring-offset-foreground transition-all peer-focus-visible:ring-1"
+                onClick={() => {
+                  router.push(
+                    `/search?keywords=${encodeURIComponent(searchKeywords)}`,
+                  );
+                }}
+              >
+                <SearchIcon size={16} />
+              </Button>
             </div>
-          </NavigationMenu>
+          </div>
 
+          {/* Cash Display (Desktop) */}
           <Link href={'/billing'} className="mr-2 hidden md:block">
             {session && (
               <button className="flex select-none items-center gap-2 whitespace-nowrap font-semibold">
@@ -180,6 +154,8 @@ export function Navigator() {
               </button>
             )}
           </Link>
+
+          {/* Cart Link */}
           <div>
             <Link href="/cart" className="mr-2">
               <Button className="size-10 rounded-full p-0" variant="ghost">
@@ -192,6 +168,8 @@ export function Navigator() {
               </Button>
             </Link>
           </div>
+
+          {/* Login/Profile Button */}
           <div className="ml-auto mr-2">
             {!session ? (
               <Link href="/signin">
@@ -206,6 +184,7 @@ export function Navigator() {
         </div>
       </div>
 
+      {/* Spacer to push content below the fixed navigation bar */}
       <div className="h-[var(--navigator-height)]"></div>
     </>
   );

@@ -12,8 +12,8 @@ import { Button } from '@/components/ui/button';
 import { animated, useSpring } from '@react-spring/web';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { endpoint } from '@/api/market/endpoint';
-import Link from 'next/link';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useRouter } from 'next/navigation';
 
 const BANNER_COUNT = 7;
 const BANNER_WIDTH = 52;
@@ -38,6 +38,7 @@ function BannerItem({
   data: BannerType;
 }) {
   const isMobile = useIsMobile();
+  const router = useRouter();
   const calculateRelative = (index: number, page: number) => {
     if (index === 0 && page >= BANNER_COUNT - 3) return page - BANNER_COUNT;
     if (index === 1) {
@@ -78,23 +79,34 @@ function BannerItem({
     indexRef.current = index;
   }, [getOpacity, getTranslate, index, page, api]);
 
+  const handleClick = () => {
+    // Navigate to the banner's link URL
+    if (data.link_url) {
+      router.push(data.link_url);
+    }
+  };
+
   return (
     <animated.div
-      className={`absolute flex items-center justify-center overflow-hidden border bg-card text-5xl font-bold`}
+      className={`absolute flex cursor-pointer items-center justify-center overflow-hidden border bg-card text-5xl font-bold`}
       style={{
         ...styles,
-        // height: isMobile ? '100%' : `${BANNER_WIDTH / 2}rem`,
-        // width: isMobile ? '100%' : `${BANNER_WIDTH}rem`,
         width: '100svw',
       }}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleClick();
+        }
+      }}
     >
-      <Link href={data.link_url} className="w-full">
-        <img
-          src={endpoint(data.image_url)}
-          alt={data.title}
-          className="h-auto w-full object-scale-down"
-        />
-      </Link>
+      <img
+        src={endpoint(data.image_url)}
+        alt={data.title}
+        className="h-auto w-full object-scale-down"
+      />
     </animated.div>
   );
 }

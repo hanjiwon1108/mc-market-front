@@ -11,6 +11,7 @@ import { Footer } from '@/components/footer/footer';
 import { usePathname } from 'next/navigation';
 import { SettingsDialog } from '@/features/settings/dialog';
 import { useTheme } from 'next-themes';
+import { NavigatorAside } from '@/components/navigator/navigator-aside';
 
 export function ClientProvider({
   children,
@@ -31,8 +32,9 @@ export function ClientProvider({
         </AnimatePresence>
         <div className="min-h-screen">
           <Navigator />
-          <div className="min-h-[calc(100vh-var(--navigator-height))] overflow-x-hidden overflow-y-visible">
-            {children}
+          <div className="flex min-h-[calc(100vh-var(--navigator-height))] overflow-x-hidden overflow-y-visible">
+            <NavigatorAside />
+            <div className="flex-1">{children}</div>
           </div>
         </div>
         <Footer />
