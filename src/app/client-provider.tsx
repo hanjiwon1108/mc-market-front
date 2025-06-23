@@ -10,7 +10,6 @@ import { Navigator } from '@/components/navigator/navigator';
 import { Footer } from '@/components/footer/footer';
 import { usePathname } from 'next/navigation';
 import { SettingsDialog } from '@/features/settings/dialog';
-import { useTheme } from 'next-themes';
 import { NavigatorAside } from '@/components/navigator/navigator-aside';
 
 export function ClientProvider({
@@ -22,7 +21,6 @@ export function ClientProvider({
   return (
     <>
       <Toaster richColors />
-      {/* @ts-ignore-error */}
       <TooltipProvider>
         <SettingsDialog />
         <AnimatePresence>
@@ -34,10 +32,12 @@ export function ClientProvider({
           <Navigator />
           <div className="flex min-h-[calc(100vh-var(--navigator-height))] overflow-x-hidden overflow-y-visible">
             <NavigatorAside />
-            <div className="flex-1">{children}</div>
+            <div className="flex flex-1 flex-col items-start justify-start">
+              <div className="w-full flex-1">{children}</div>
+              <Footer />
+            </div>
           </div>
         </div>
-        <Footer />
       </TooltipProvider>
     </>
   );

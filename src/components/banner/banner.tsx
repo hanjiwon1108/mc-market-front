@@ -151,18 +151,18 @@ export function Banner() {
             {index + 1}/{banners.length}
           </div>
           <Button
-            className="absolute z-40 size-8 translate-x-[-24rem] rounded-full p-0"
-            variant="outline"
+            className="absolute z-40 size-12 translate-x-[-24rem] rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl hover:from-blue-600 hover:to-purple-700"
+            variant="ghost"
             onClick={() => dispatchIndex(-1)}
           >
-            <ArrowLeftIcon size={16} />
+            <ArrowLeftIcon size={20} className="text-white" />
           </Button>
           <Button
-            className="absolute z-40 size-8 translate-x-[24rem] rounded-full p-0"
-            variant="outline"
+            className="absolute z-40 size-12 translate-x-[24rem] rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl hover:from-blue-600 hover:to-purple-700"
+            variant="ghost"
             onClick={() => dispatchIndex(1)}
           >
-            <ArrowRightIcon size={16} />
+            <ArrowRightIcon size={20} className="text-white" />
           </Button>
         </div>
       )}

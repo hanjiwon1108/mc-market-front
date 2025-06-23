@@ -42,14 +42,14 @@ export default function Home() {
   );
 
   return (
-    <div className="h-full pt-8">
-      <div>
+    <div className="h-full">
+      <div className="pl-0">
         <Banner />
         <Adcard />
       </div>
       <div>
-        <div className="container mx-auto transition-all duration-300 ease-out lg:px-[0rem] xl:px-[9rem]">
-          <div className="scrollbar-override-horizontal h-full border-x-2 bg-background pt-8 transition-all duration-300 ease-out lg:px-14">
+        <div className="transition-all duration-300 ease-out">
+          <div className="h-full bg-background pl-4 pt-8 transition-all duration-300 ease-out">
             <div className="flex items-center gap-2 text-lg font-semibold md:text-3xl">
               <DropdownMenu
                 open={isCategoryDropdownOpen}
