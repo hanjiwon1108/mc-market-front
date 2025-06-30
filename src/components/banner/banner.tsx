@@ -53,8 +53,7 @@ function BannerItem({
   };
 
   const getTranslate = useCallback(
-    // (relative: number) => `${-relative * (BANNER_WIDTH + BANNER_GAP)}rem`,
-    (relative: number) => `${-relative * (BANNER_WIDTH * 2 + BANNER_GAP)}rem`,
+    (relative: number) => `${-relative * 100}%`,
     [],
   );
   const getOpacity = useCallback(
@@ -101,11 +100,12 @@ function BannerItem({
 
   return (
     <animated.div
-      className={`absolute flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 shadow-md`}
+      className={`absolute top-0 left-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 shadow-md`}
       style={{
-        ...styles,
-        width: '100svw',
+        width: '100%',
         height: '28rem',
+        transform: styles.x,
+        opacity: styles.opacity,
       }}
       onClick={handleClick}
       role="button"
