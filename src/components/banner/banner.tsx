@@ -140,6 +140,7 @@ export function Banner() {
   const ref = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [banners, setBanners] = useState<BannerType[]>([]);
+  const [loading, setLoading] = useState(true);
   const [index, dispatchIndex] = useReducer(
     (state: number, delta: number) =>
       state === 0 && delta < 0
@@ -149,84 +150,145 @@ export function Banner() {
   );
 
   const getBanners = async () => {
-    const response = await fetch(endpoint('/v1/banner/list'));
-    if (!response.ok) throw new Error('Failed to fetch banners');
-    const banners = await response.json();
-    setBanners(banners);
+    try {
+      setLoading(true);
+      const response = await fetch(endpoint('/v1/banner/list'));
+      if (!response.ok) throw new Error('Failed to fetch banners');
+      const data = await response.json();
+      setBanners(data || []);
+    } catch (error) {
+      console.error('Banner fetch error:', error);
+      // 배포 환경에서 API 실패 시 기본 배너 제공
+      setBanners([
+        {
+          id: 1,
+          title: 'MC Market',
+          image_url: '/logo.png',
+          link_url: '/',
+          created_at: new Date().toISOString(),
+          index_num: 0,
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useLayoutEffect(() => {
     getBanners();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-[28rem] w-full items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (banners.length === 0) {
+    return null;
+  }
 
   return (
     <div className="flex w-full justify-center">
       {!isMobile && (
-        <div className="relative flex h-[28rem] w-full items-center justify-center gap-4 overflow-hidden">
-          {banners.map((banner, idx) => (
-            <BannerItem
-              key={banner.id}
-              index={idx}
-              page={index}
-              data={banner}
-            />
-          ))}
-          <div className="z-50 translate-x-[24rem] translate-y-[10.5rem] select-none rounded-3xl bg-black/30 px-2 text-sm font-semibold text-white/80">
-            {index + 1}/{banners.length}
+        <div className="relative h-[28rem] w-full max-w-7xl overflow-hidden rounded-lg">
+          {/* 배너 컨테이너 */}
+          <div className="relative h-full w-full">
+            {banners.map((banner, idx) => (
+              <BannerItem
+                key={banner.id}
+                index={idx}
+                page={index}
+                data={banner}
+              />
+            ))}
           </div>
-          <Button
-            className="absolute z-40 size-12 translate-x-[-24rem] rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl"
-            variant="ghost"
-            onClick={() => dispatchIndex(-1)}
-          >
-            <ArrowLeftIcon size={20} className="text-white" />
-          </Button>
-          <Button
-            className="absolute z-40 size-12 translate-x-[24rem] rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl"
-            variant="ghost"
-            onClick={() => dispatchIndex(1)}
-          >
-            <ArrowRightIcon size={20} className="text-white" />
-          </Button>
+
+          {/* 네비게이션 UI - 배너가 여러 개일 때만 표시 */}
+          {banners.length > 1 && (
+            <>
+              {/* 페이지 인디케이터 */}
+              <div className="absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-3xl bg-black/30 px-3 py-1 text-sm font-semibold text-white/90">
+                {index + 1} / {banners.length}
+              </div>
+
+              {/* 왼쪽 버튼 */}
+              <Button
+                className="absolute left-4 top-1/2 z-40 size-12 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl"
+                variant="ghost"
+                onClick={() => dispatchIndex(-1)}
+                aria-label="이전 배너"
+              >
+                <ArrowLeftIcon size={20} className="text-white" />
+              </Button>
+
+              {/* 오른쪽 버튼 */}
+              <Button
+                className="absolute right-4 top-1/2 z-40 size-12 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl"
+                variant="ghost"
+                onClick={() => dispatchIndex(1)}
+                aria-label="다음 배너"
+              >
+                <ArrowRightIcon size={20} className="text-white" />
+              </Button>
+            </>
+          )}
         </div>
       )}
+
       {isMobile && (
         <div
-          className="relative flex items-center justify-center gap-4 overflow-hidden"
+          className="relative w-full overflow-hidden rounded-lg"
           style={{
             height: ref?.current?.offsetWidth
               ? ref.current.offsetWidth / 2
-              : 'auto',
-            width: '100%',
-          }} // height is width half
+              : '200px',
+          }}
           ref={ref}
         >
-          {banners.map((banner, idx) => (
-            <BannerItem
-              key={banner.id}
-              index={idx}
-              page={index}
-              data={banner}
-            />
-          ))}
-          <div className="z-50 translate-x-[450%] translate-y-[6.5rem] select-none rounded-3xl bg-black/30 px-2 text-sm font-semibold text-white/80">
-            {index + 1}/{banners.length}
+          {/* 배너 컨테이너 */}
+          <div className="relative h-full w-full">
+            {banners.map((banner, idx) => (
+              <BannerItem
+                key={banner.id}
+                index={idx}
+                page={index}
+                data={banner}
+              />
+            ))}
           </div>
-          <Button
-            className="absolute z-40 size-8 translate-x-[-500%] rounded-full p-0"
-            variant="outline"
-            onClick={() => dispatchIndex(-1)}
-          >
-            <ArrowLeftIcon size={16} />
-          </Button>
-          <Button
-            className="absolute z-40 size-8 translate-x-[500%] rounded-full p-0"
-            variant="outline"
-            onClick={() => dispatchIndex(1)}
-          >
-            <ArrowRightIcon size={16} />
-          </Button>
+
+          {/* 모바일 네비게이션 UI */}
+          {banners.length > 1 && (
+            <>
+              {/* 페이지 인디케이터 */}
+              <div className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2 rounded-3xl bg-black/30 px-2 py-1 text-xs font-semibold text-white/90">
+                {index + 1} / {banners.length}
+              </div>
+
+              {/* 왼쪽 버튼 */}
+              <Button
+                className="absolute left-2 top-1/2 z-40 size-8 -translate-y-1/2 rounded-full bg-white/80 p-0 shadow-md hover:bg-white"
+                variant="ghost"
+                onClick={() => dispatchIndex(-1)}
+                aria-label="이전 배너"
+              >
+                <ArrowLeftIcon size={16} className="text-gray-700" />
+              </Button>
+
+              {/* 오른쪽 버튼 */}
+              <Button
+                className="absolute right-2 top-1/2 z-40 size-8 -translate-y-1/2 rounded-full bg-white/80 p-0 shadow-md hover:bg-white"
+                variant="ghost"
+                onClick={() => dispatchIndex(1)}
+                aria-label="다음 배너"
+              >
+                <ArrowRightIcon size={16} className="text-gray-700" />
+              </Button>
+            </>
+          )}
         </div>
       )}
     </div>
