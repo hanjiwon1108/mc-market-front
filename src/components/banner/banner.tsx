@@ -155,15 +155,31 @@ export function Banner() {
       const response = await fetch(endpoint('/v1/banner/list'));
       if (!response.ok) throw new Error('Failed to fetch banners');
       const data = await response.json();
-      setBanners(data || []);
+
+      // 데이터 검증 및 기본 배너 설정
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        setBanners([
+          {
+            id: 1,
+            title: 'MC Market에 오신 것을 환영합니다',
+            image_url: '/api/placeholder/1200/400', // 플레이스홀더 이미지
+            link_url: '/',
+            created_at: new Date().toISOString(),
+            index_num: 0,
+          },
+        ]);
+      } else {
+        setBanners(data);
+      }
     } catch (error) {
       console.error('Banner fetch error:', error);
-      // 배포 환경에서 API 실패 시 기본 배너 제공
+      // API 실패 시 기본 배너 제공
       setBanners([
         {
           id: 1,
           title: 'MC Market',
-          image_url: '/logo.png',
+          image_url:
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI0MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDQwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjZjNmNGY2Ii8+Cjx0ZXh0IHg9IjYwMCIgeT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDgiIGZpbGw9IiM2MzY2ZjEiPk1DIE1hcmtldDwvdGV4dD4KPHR3eHQgeD0iNjAwIiB5PSIyNTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzY5NzU5MyI+7JuI7KCE7Y2Y7LqQPC90ZXh0Pgo8L3N2Zz4K',
           link_url: '/',
           created_at: new Date().toISOString(),
           index_num: 0,
@@ -180,20 +196,27 @@ export function Banner() {
 
   if (loading) {
     return (
-      <div className="flex h-[28rem] w-full items-center justify-center">
+      <div className="mx-auto flex h-[28rem] w-full max-w-7xl items-center justify-center rounded-lg bg-gray-50">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
 
   if (banners.length === 0) {
-    return null;
+    return (
+      <div className="mx-auto flex h-[28rem] w-full max-w-7xl items-center justify-center rounded-lg bg-gray-50">
+        <div className="text-center text-gray-500">
+          <div className="mb-2 text-4xl">📢</div>
+          <div>배너를 불러올 수 없습니다</div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="w-screen">
       {!isMobile && (
-        <div className="relative h-[28rem] w-full max-w-7xl overflow-hidden rounded-lg">
+        <div className="relative h-[28rem] w-screen overflow-hidden bg-gray-100 shadow-lg">
           {/* 배너 컨테이너 */}
           <div className="relative h-full w-full">
             {banners.map((banner, idx) => (
@@ -210,28 +233,28 @@ export function Banner() {
           {banners.length > 1 && (
             <>
               {/* 페이지 인디케이터 */}
-              <div className="absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-3xl bg-black/30 px-3 py-1 text-sm font-semibold text-white/90">
+              <div className="absolute bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-black/50 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                 {index + 1} / {banners.length}
               </div>
 
               {/* 왼쪽 버튼 */}
               <Button
-                className="absolute left-4 top-1/2 z-40 size-12 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl"
+                className="absolute left-6 top-1/2 z-50 size-14 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-2xl"
                 variant="ghost"
                 onClick={() => dispatchIndex(-1)}
                 aria-label="이전 배너"
               >
-                <ArrowLeftIcon size={20} className="text-white" />
+                <ArrowLeftIcon size={24} className="text-gray-700" />
               </Button>
 
               {/* 오른쪽 버튼 */}
               <Button
-                className="absolute right-4 top-1/2 z-40 size-12 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0 shadow-lg transition-all duration-300 hover:scale-110 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl"
+                className="absolute right-6 top-1/2 z-50 size-14 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-xl transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-2xl"
                 variant="ghost"
                 onClick={() => dispatchIndex(1)}
                 aria-label="다음 배너"
               >
-                <ArrowRightIcon size={20} className="text-white" />
+                <ArrowRightIcon size={24} className="text-gray-700" />
               </Button>
             </>
           )}
@@ -240,11 +263,10 @@ export function Banner() {
 
       {isMobile && (
         <div
-          className="relative w-full overflow-hidden rounded-lg"
+          className="relative w-screen overflow-hidden bg-gray-100 shadow-lg"
           style={{
-            height: ref?.current?.offsetWidth
-              ? ref.current.offsetWidth / 2
-              : '200px',
+            height: '200px',
+            minHeight: '200px',
           }}
           ref={ref}
         >
@@ -264,28 +286,28 @@ export function Banner() {
           {banners.length > 1 && (
             <>
               {/* 페이지 인디케이터 */}
-              <div className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2 rounded-3xl bg-black/30 px-2 py-1 text-xs font-semibold text-white/90">
+              <div className="absolute bottom-3 left-1/2 z-50 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
                 {index + 1} / {banners.length}
               </div>
 
               {/* 왼쪽 버튼 */}
               <Button
-                className="absolute left-2 top-1/2 z-40 size-8 -translate-y-1/2 rounded-full bg-white/80 p-0 shadow-md hover:bg-white"
+                className="absolute left-3 top-1/2 z-50 size-10 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white"
                 variant="ghost"
                 onClick={() => dispatchIndex(-1)}
                 aria-label="이전 배너"
               >
-                <ArrowLeftIcon size={16} className="text-gray-700" />
+                <ArrowLeftIcon size={18} className="text-gray-700" />
               </Button>
 
               {/* 오른쪽 버튼 */}
               <Button
-                className="absolute right-2 top-1/2 z-40 size-8 -translate-y-1/2 rounded-full bg-white/80 p-0 shadow-md hover:bg-white"
+                className="absolute right-3 top-1/2 z-50 size-10 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white"
                 variant="ghost"
                 onClick={() => dispatchIndex(1)}
                 aria-label="다음 배너"
               >
-                <ArrowRightIcon size={16} className="text-gray-700" />
+                <ArrowRightIcon size={18} className="text-gray-700" />
               </Button>
             </>
           )}
