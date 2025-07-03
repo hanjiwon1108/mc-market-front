@@ -42,11 +42,11 @@ export default function Home() {
   );
 
   return (
-    <div className="h-full w-full">
-      <div className="w-full">
+    <div className="h-full">
+      <div className="w-full overflow-hidden">
         <Banner />
+        <Adcard />
       </div>
-      <Adcard />
       <div>
         <div className="transition-all duration-300 ease-out">
           <div className="h-full bg-background pl-4 pt-8 transition-all duration-300 ease-out">

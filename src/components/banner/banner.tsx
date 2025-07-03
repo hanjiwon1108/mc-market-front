@@ -138,7 +138,7 @@ function BannerItem({
 
 export function Banner() {
   const ref = useRef<HTMLDivElement>(null);
-  const { isMobile, isInitialized } = useIsMobile();
+  const isMobile = useIsMobile();
   const [banners, setBanners] = useState<BannerType[]>([]);
   const [loading, setLoading] = useState(true);
   const [index, dispatchIndex] = useReducer(
@@ -194,10 +194,9 @@ export function Banner() {
     getBanners();
   }, []);
 
-  // 초기화가 완료되지 않았다면 로딩 표시
-  if (!isInitialized || loading) {
+  if (loading) {
     return (
-      <div className="responsive-container flex h-[28rem] w-full items-center justify-center rounded-lg bg-gray-50">
+      <div className="mx-auto flex h-[28rem] w-full max-w-7xl items-center justify-center rounded-lg bg-gray-50">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
@@ -205,7 +204,7 @@ export function Banner() {
 
   if (banners.length === 0) {
     return (
-      <div className="responsive-container flex h-[28rem] w-full items-center justify-center rounded-lg bg-gray-50">
+      <div className="mx-auto flex h-[28rem] w-full max-w-7xl items-center justify-center rounded-lg bg-gray-50">
         <div className="text-center text-gray-500">
           <div className="mb-2 text-4xl">📢</div>
           <div>배너를 불러올 수 없습니다</div>
@@ -215,9 +214,9 @@ export function Banner() {
   }
 
   return (
-    <div className="responsive-container">
+    <div className="w-screen">
       {!isMobile && (
-        <div className="relative h-[28rem] w-full overflow-hidden bg-gray-100 shadow-lg">
+        <div className="relative h-[28rem] w-screen overflow-hidden bg-gray-100 shadow-lg">
           {/* 배너 컨테이너 */}
           <div className="relative h-full w-full">
             {banners.map((banner, idx) => (
@@ -264,7 +263,7 @@ export function Banner() {
 
       {isMobile && (
         <div
-          className="relative w-full overflow-hidden bg-gray-100 shadow-lg"
+          className="relative w-screen overflow-hidden bg-gray-100 shadow-lg"
           style={{
             height: '200px',
             minHeight: '200px',

@@ -4,99 +4,12 @@
 
 :root {
   interpolate-size: allow-keywords;
-  /* 브라우저 화면 크기 측정 개선을 위한 설정 */
-  --viewport-width: 100vw;
-  --viewport-height: 100vh;
-  --actual-viewport-width: 100dvw;
-  --actual-viewport-height: 100dvh;
-}
-
-/* 브라우저 화면 크기 측정 개선 */
-html {
-  /* 정확한 viewport 크기 계산을 위한 기본 설정 */
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  /* iOS Safari viewport 이슈 해결 */
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  /* 스크롤바 크기 고려 */
-  overflow-x: hidden;
-}
-
-*, *::before, *::after {
-  box-sizing: inherit;
 }
 
 body {
   /*noinspection CssUnresolvedCustomProperty*/
   font-family: var(--font-pretendard), var(--font-poppins), Arial, Helvetica,
     sans-serif;
-  /* 브라우저 크기 측정 개선 */
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh; /* 동적 viewport 지원 */
-  margin: 0;
-  padding: 0;
-  position: relative;
-  /* iOS Safari의 bounce 효과 방지 */
-  overscroll-behavior: none;
-}
-
-/* 미디어 쿼리 기반 화면 크기 감지 개선 */
-@media screen and (max-width: 767px) {
-  :root {
-    --screen-type: mobile;
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  :root {
-    --screen-type: tablet;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  :root {
-    --screen-type: desktop;
-  }
-}
-
-/* 브라우저별 viewport 이슈 해결 */
-@supports (height: 100dvh) {
-  :root {
-    --viewport-height: 100dvh;
-  }
-}
-
-@supports (width: 100dvw) {
-  :root {
-    --viewport-width: 100dvw;
-  }
-}
-
-/* 화면 크기 변화 감지를 위한 CSS */
-.responsive-container {
-  width: 100%;
-  min-width: 320px; /* 최소 모바일 크기 */
-  max-width: 100vw;
-  max-width: 100dvw;
-  overflow-x: hidden;
-}
-
-/* 뷰포트 크기를 정확히 측정하기 위한 유틸리티 클래스 */
-.w-viewport {
-  width: 100vw;
-  width: 100dvw;
-}
-
-.h-viewport {
-  height: 100vh;
-  height: 100dvh;
-}
-
-.w-screen-safe {
-  width: calc(100vw - var(--scrollbar-width, 0px));
 }
 
 @layer base {
