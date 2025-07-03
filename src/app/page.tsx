@@ -51,12 +51,15 @@ export default function Home() {
 
   return (
     <div className="h-full">
-      <div className="w-full overflow-hidden">
+      <div className="w-full overflow-hidden" style={{ maxWidth: innerWidth }}>
         <Banner />
         <Adcard />
       </div>
-      <div className="mx-auto w-full max-w-screen-xl px-4" ref={innerRef}>
-        <div className="relative w-full transition-all duration-300 ease-out">
+      <div className="mx-auto max-w-full px-4" ref={innerRef}>
+        <div
+          className="relative w-full transition-all duration-300 ease-out"
+          style={{ maxWidth: `${innerWidth}px` }}
+        >
           <div className="h-full bg-background pt-8 transition-all duration-300 ease-out">
             {/* 헤더 영역 */}
             <div className="flex items-center gap-2 text-lg font-semibold md:text-3xl">

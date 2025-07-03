@@ -214,9 +214,9 @@ export function Banner() {
   }
 
   return (
-    <div className="w-screen">
+    <div className="w-full">
       {!isMobile && (
-        <div className="relative h-[28rem] w-screen overflow-hidden bg-gray-100 shadow-lg">
+        <div className="relative h-[28rem] w-full overflow-hidden bg-gray-100 shadow-lg">
           {/* 배너 컨테이너 */}
           <div className="relative h-full w-full">
             {banners.map((banner, idx) => (
