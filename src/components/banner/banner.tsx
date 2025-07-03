@@ -104,30 +104,34 @@ function BannerItem({
         }
       }}
     >
+      {/* 로딩 상태 */}
       {!imageLoaded && !imageError && (
-        <div className="flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
         </div>
       )}
 
+      {/* 에러 상태 */}
       {imageError && (
-        <div className="flex flex-col items-center justify-center text-gray-500">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 text-gray-500">
           <div className="mb-2 text-6xl">📷</div>
           <div className="text-xl font-semibold">{data.title}</div>
           <div className="text-sm">이미지를 불러올 수 없습니다</div>
         </div>
       )}
 
-      <img
-        src={endpoint(data.image_url)}
-        alt={data.title}
-        className={`h-full w-full object-cover transition-opacity duration-300 ${
-          imageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        style={{ display: imageError ? 'none' : 'block' }}
-      />
+      {/* 이미지 - 에러가 없을 때만 렌더링 */}
+      {!imageError && (
+        <img
+          src={endpoint(data.image_url)}
+          alt={data.title}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+        />
+      )}
     </animated.div>
   );
 }
