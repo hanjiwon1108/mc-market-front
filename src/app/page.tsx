@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, ButtonProps } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 import { Banner } from '@/components/banner/banner';
 import {
@@ -31,6 +31,14 @@ export default function Home() {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<TopCategoryKey>('all');
+  const [innerWidth, setInnerWidth] = useState(0);
+  const innerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (innerRef.current && innerWidth === 0) {
+      setInnerWidth(innerRef.current.clientWidth);
+    }
+    console.log('innerWidth', innerWidth, innerRef.current?.clientWidth);
+  }, [innerRef]);
 
   const products = useSWR(
     endpoint(`/v1/products`) +
@@ -47,9 +55,10 @@ export default function Home() {
         <Banner />
         <Adcard />
       </div>
-      <div>
-        <div className="transition-all duration-300 ease-out">
-          <div className="h-full bg-background pl-4 pt-8 transition-all duration-300 ease-out">
+      <div className="mx-auto w-full max-w-screen-xl px-4" ref={innerRef}>
+        <div className="relative w-full transition-all duration-300 ease-out">
+          <div className="h-full bg-background pt-8 transition-all duration-300 ease-out">
+            {/* 헤더 영역 */}
             <div className="flex items-center gap-2 text-lg font-semibold md:text-3xl">
               <DropdownMenu
                 open={isCategoryDropdownOpen}
@@ -89,14 +98,15 @@ export default function Home() {
               </DropdownMenu>
               인기 상품
             </div>
-            <div className="mt-4 flex gap-4 overflow-y-visible overflow-x-scroll px-4 pb-4">
-              {products.data && products.data?.length > 0 ? (
-                products.data?.map((it) => <ProductCard key={it.id} {...it} />)
-              ) : (
-                <div className="flex size-full items-center justify-center text-2xl font-semibold">
-                  해당하는 상품 없음
-                </div>
-              )}
+
+            {/* 상품 영역 */}
+            <div
+              className={`mt-4 flex flex-nowrap gap-4 overflow-x-scroll pb-4`}
+              style={{ maxWidth: `${innerWidth}px` }}
+            >
+              {products.data && products.data?.length > 0
+                ? products.data.map((it) => <ProductCard key={it.id} {...it} />)
+                : '해당하는 상품 없음'}
             </div>
           </div>
         </div>
