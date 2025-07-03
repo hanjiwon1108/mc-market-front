@@ -42,8 +42,10 @@ export default function Home() {
   );
 
   return (
-    <div className="h-full">
-      <Banner />
+    <div className="h-full w-full">
+      <div className="w-full">
+        <Banner />
+      </div>
       <Adcard />
       <div>
         <div className="transition-all duration-300 ease-out">
