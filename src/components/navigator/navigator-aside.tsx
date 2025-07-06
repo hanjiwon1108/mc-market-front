@@ -33,7 +33,7 @@ function NavigatorAsideContent() {
   return (
     <>
       <SidebarHeader className="flex flex-row items-center justify-between">
-        {!isCollapsed && <h3 className="text-lg font-semibold">메뉴</h3>}
+        {!isCollapsed && <h3 className="text-xl font-bold">메뉴</h3>}
         <SidebarTrigger />
       </SidebarHeader>
 
@@ -41,8 +41,8 @@ function NavigatorAsideContent() {
         {/* Home button with link */}
         <Link href="/" className="w-full">
           <SidebarMenuButton asChild>
-            <span className="flex items-center gap-2">
-              <HomeIcon className="h-4 w-4" />
+            <span className="flex items-center gap-3 text-base">
+              <HomeIcon className="h-5 w-5" />
               {!isCollapsed && <span>홈</span>}
             </span>
           </SidebarMenuButton>
@@ -50,20 +50,6 @@ function NavigatorAsideContent() {
 
         {!isCollapsed && (
           <SidebarMenuSub>
-            <div className="flex items-center gap-2 p-2">
-              <TablePropertiesIcon className="h-4 w-4" />
-              <span>카테고리</span>
-            </div>
-
-            <Link href="/categories/all" className="w-full">
-              <SidebarMenuSubButton
-                asChild
-                className={cn('w-full justify-start')}
-              >
-                <span>모든 카테고리 보기</span>
-              </SidebarMenuSubButton>
-            </Link>
-
             {Object.values(CATEGORIES)
               .filter((it) => !it.hidden)
               .map((category) => {
@@ -74,10 +60,10 @@ function NavigatorAsideContent() {
                     <Link href={category.link ?? '#'} className="w-full">
                       <SidebarMenuSubButton
                         asChild
-                        className={cn('w-full justify-start')}
+                        className={cn('w-full justify-start py-3 text-base')}
                       >
                         <span>
-                          <Icon className="h-4 w-4" />
+                          <Icon className="h-5 w-5" />
                           {category.name}
                         </span>
                       </SidebarMenuSubButton>
@@ -95,7 +81,9 @@ function NavigatorAsideContent() {
                             >
                               <SidebarMenuSubButton
                                 asChild
-                                className={cn('w-full justify-start pl-6')}
+                                className={cn(
+                                  'w-full justify-start py-2 pl-8 text-sm',
+                                )}
                               >
                                 <span>
                                   <SubIcon className="h-4 w-4" />
@@ -122,21 +110,21 @@ function NavigatorAsideContent() {
                 <Link href="/dashboard" className="w-full">
                   <SidebarMenuButton asChild>
                     <span className="flex items-center justify-center">
-                      <LayoutDashboardIcon className="h-4 w-4" />
+                      <LayoutDashboardIcon className="h-5 w-5" />
                     </span>
                   </SidebarMenuButton>
                 </Link>
                 <Link href="/dashboard/products" className="w-full">
                   <SidebarMenuButton asChild>
                     <span className="flex items-center justify-center">
-                      <PackageIcon className="h-4 w-4" />
+                      <PackageIcon className="h-5 w-5" />
                     </span>
                   </SidebarMenuButton>
                 </Link>
                 <Link href="/dashboard/revenue" className="w-full">
                   <SidebarMenuButton asChild>
                     <span className="flex items-center justify-center">
-                      <CircleDollarSignIcon className="h-4 w-4" />
+                      <CircleDollarSignIcon className="h-5 w-5" />
                     </span>
                   </SidebarMenuButton>
                 </Link>
@@ -144,18 +132,18 @@ function NavigatorAsideContent() {
             ) : (
               // 펼친 상태에서는 전체 메뉴 표시
               <SidebarMenuSub>
-                <div className="flex items-center gap-2 p-2">
-                  <LayoutDashboardIcon className="h-4 w-4" />
+                <div className="flex items-center gap-3 p-2 text-base font-semibold">
+                  <LayoutDashboardIcon className="h-5 w-5" />
                   <span>판매자 대시보드</span>
                 </div>
 
                 <Link href="/dashboard" className="w-full">
                   <SidebarMenuSubButton
                     asChild
-                    className={cn('w-full justify-start')}
+                    className={cn('w-full justify-start py-3 text-base')}
                   >
                     <span>
-                      <LayoutDashboardIcon className="h-4 w-4" />
+                      <LayoutDashboardIcon className="h-5 w-5" />
                       대시보드
                     </span>
                   </SidebarMenuSubButton>
@@ -163,10 +151,10 @@ function NavigatorAsideContent() {
                 <Link href="/dashboard/products" className="w-full">
                   <SidebarMenuSubButton
                     asChild
-                    className={cn('w-full justify-start')}
+                    className={cn('w-full justify-start py-3 text-base')}
                   >
                     <span>
-                      <PackageIcon className="h-4 w-4" />
+                      <PackageIcon className="h-5 w-5" />
                       프로덕트
                     </span>
                   </SidebarMenuSubButton>
@@ -174,10 +162,10 @@ function NavigatorAsideContent() {
                 <Link href="/dashboard/revenue" className="w-full">
                   <SidebarMenuSubButton
                     asChild
-                    className={cn('w-full justify-start')}
+                    className={cn('w-full justify-start py-3 text-base')}
                   >
                     <span>
-                      <CircleDollarSignIcon className="h-4 w-4" />
+                      <CircleDollarSignIcon className="h-5 w-5" />
                       수익
                     </span>
                   </SidebarMenuSubButton>
@@ -189,8 +177,8 @@ function NavigatorAsideContent() {
 
         <Link href="/articles" className="w-full">
           <SidebarMenuButton asChild>
-            <span className="flex items-center gap-2">
-              <NewspaperIcon className="h-4 w-4" />
+            <span className="flex items-center gap-3 text-base">
+              <NewspaperIcon className="h-5 w-5" />
               {!isCollapsed && <span>게시판</span>}
             </span>
           </SidebarMenuButton>
@@ -208,7 +196,8 @@ export function NavigatorAside() {
           variant="inset"
           side="left"
           collapsible="icon"
-          className="mt-[var(--navigator-height)] min-h-[calc(100vh-var(--navigator-height))] border-r"
+          className="mt-[var(--navigator-height)] min-h-[calc(100vh-var(--navigator-height))] w-48 border-r"
+          style={{ '--sidebar-width': '12rem' } as React.CSSProperties}
         >
           <NavigatorAsideContent />
         </Sidebar>
