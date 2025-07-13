@@ -1,16 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { usePathname, useRouter } from 'next/navigation';
-import { ArrowLeftIcon, CheckIcon, SkipForwardIcon } from 'lucide-react';
+import { ArrowLeftIcon, SkipForwardIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo } from 'react';
 import { ChildrenProps } from '@/util/types-props';
-import {
-  SIGNUP_NICKNAME_STORAGE_KEY,
-  SIGNUP_USERNAME_STORAGE_KEY,
-} from '@/app/(auth)/signup/consts';
+import { SIGNUP_USERNAME_STORAGE_KEY } from '@/app/(auth)/signup/consts';
 import useSWRMutation from 'swr/mutation';
 import { User } from '@entropi-co/surge-js';
 import { Key } from 'swr';
@@ -18,7 +14,6 @@ import { isBrowser } from '@/util/browser';
 import { signUpPasswordInputAtom } from '@/app/(auth)/signup/password/atom';
 import { useAtomValue } from 'jotai';
 import { endpoint } from '@/api/market/endpoint';
-import { useSessionStorage } from '@/hooks/use-session-storage';
 import { toast } from 'sonner';
 
 function AnimateInOut({
@@ -119,7 +114,7 @@ export default function Page() {
         </div>
         <div>
           <p>ID: {usernameRef}</p>
-          <p>비밀번호: {password} </p>
+          <p>비밀번호: {'*'.repeat(password.length)} </p>
         </div>
         <div className="mt-4 flex gap-2">
           <Button
@@ -137,7 +132,7 @@ export default function Page() {
             variant="default"
             onClick={handleProceed}
           >
-            <AnimatePresence initial={false}>
+            <AnimatePresence mode="wait" initial={false}>
               <AnimateInOut from="up" key="skip">
                 건너뛰고 완료
                 <SkipForwardIcon />

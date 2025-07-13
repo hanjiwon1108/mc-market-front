@@ -1,21 +1,35 @@
 import { ChildrenProps } from '@/util/types-props';
 import React from 'react';
-import { getSession } from '@/api/surge';
-import { ErrorScreen } from '@/components/error/error-screen';
+import Link from 'next/link';
 
 export default async function Layout({ children }: ChildrenProps) {
-  const session = await getSession();
-  // if (!session) {
-  //   return <ErrorScreen>로그인 필요합니다.</ErrorScreen>;
-  // }
-
   return (
-    <div className="w-full overflow-hidden">
-      <main className="mb-[3.375rem] w-full gap-4 transition-all md:p-16">
-        <div className="mb-4 flex items-center gap-2 px-4 pt-4 text-2xl font-semibold transition-all md:p-0 md:text-5xl">
-          판매자 대쉬보드
+    <div className="flex min-h-screen w-full flex-col">
+      {/* 페이지 내용 */}
+      <main className="flex flex-col">
+        {/* 네비게이션 헤더 바 */}
+        <div className="shadow-sm">
+          <div className="flex">
+            <Link href="/dashboard" className="px-6 py-4 text-2xl font-bold">
+              대시보드
+            </Link>
+            <Link
+              href="/dashboard/products"
+              className="px-6 py-4 text-2xl text-gray-600 hover:text-black"
+            >
+              상품관리
+            </Link>
+            <Link
+              href="/dashboard/revenue"
+              className="px-6 py-4 text-2xl text-gray-600 hover:text-black"
+            >
+              정산관리
+            </Link>
+          </div>
         </div>
-        {children}
+
+        {/* 실제 페이지 컨텐츠 */}
+        <div className="p-4">{children}</div>
       </main>
     </div>
   );

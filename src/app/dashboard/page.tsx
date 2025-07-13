@@ -1,41 +1,42 @@
 'use client';
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import Link from 'next/link';
-import { CircleDollarSignIcon, PlusCircleIcon } from 'lucide-react';
 import { useMapleUser } from '@/api/market/context';
-import { UserAvatar } from '@/components/user/avatar';
+import { ProfileSection } from './components/ProfileSection';
+import { ProfileUrlSection } from './components/ProfileUrlSection';
+import { SettlementAccountSection } from './components/SettlementAccountSection';
+import { StatisticsSection } from './components/StatisticsSection';
+import { SponsorStatsSection } from './components/SponsorStatsSection';
+import { SponsorChartSection } from './components/SponsorChartSection';
 
 export default function Page() {
   const user = useMapleUser();
 
   return (
-    <div className="flex flex-col gap-4">
-      <Card className="flex flex-col items-center gap-4 p-4 md:flex-row">
-        <UserAvatar userId={user?.id} className="h-40 w-40" />
-        <h2 className="text-2xl font-semibold">
-          판매자 정보: {user?.nickname}
-          [id: {user?.id}]
-        </h2>
-      </Card>
-      <div className="flex w-full flex-col gap-2 p-4 *:flex-1 md:flex-row md:p-0 md:*:max-w-64">
-        <Link href="/dashboard/products">
-          <Card>
-            <CardContent className="flex flex-col gap-2 p-10 text-3xl">
-              <PlusCircleIcon size={40} />
-              상품 관리하기
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/dashboard/revenue">
-          <Card>
-            <CardContent className="flex flex-col gap-2 p-10 text-3xl">
-              <CircleDollarSignIcon size={40} />
-              수익 보기
-            </CardContent>
-          </Card>
-        </Link>
+    <>
+      <div className="flex flex-col gap-6 bg-gray-50 p-4">
+        {/* 프로필 섹션과 거래 통계 섹션을 가로로 배치 */}
+        <div className="flex flex-col gap-6 md:flex-row">
+          {/* 프로필 섹션 */}
+          <div className="flex h-full w-full flex-col gap-[85px] rounded-lg bg-white p-6 shadow-sm md:w-1/2">
+            <ProfileSection user={user} />
+            <ProfileUrlSection />
+          </div>
+
+          {/* 거래 통계 섹션 */}
+          <div className="flex h-full w-full flex-col rounded-lg bg-white p-6 shadow-sm md:w-1/2">
+            <StatisticsSection />
+            <div className="mt-6">
+              <SettlementAccountSection />
+            </div>
+          </div>
+        </div>
+
+        {/* 후원 통계 섹션 */}
+        <SponsorStatsSection />
+
+        {/* 후원 수익 그래프 섹션 */}
+        <SponsorChartSection />
       </div>
-    </div>
+    </>
   );
 }
